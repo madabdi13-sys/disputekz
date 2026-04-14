@@ -1,0 +1,490 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Диспуты — disputekz</title>
+  <link rel="stylesheet" href="_shared.css" />
+  <style>
+    /* ============================================================
+       Dashboard layout
+       ============================================================ */
+    .dk-app {
+      min-height: 100vh;
+      background: var(--zinc-50);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top bar */
+    .dk-topbar {
+      background: #fff;
+      border-bottom: 1px solid var(--zinc-200);
+    }
+    .dk-topbar__inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+    .dk-nav {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex: 1;
+    }
+    .dk-nav a {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--zinc-500);
+      text-decoration: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      transition: color 150ms, background-color 150ms;
+    }
+    .dk-nav a:hover {
+      color: var(--zinc-900);
+      background: var(--zinc-100);
+    }
+    .dk-nav a.active {
+      color: var(--zinc-900);
+      background: var(--zinc-100);
+    }
+    .dk-user {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--zinc-600);
+    }
+    .dk-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--zinc-900);
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    /* Page */
+    .dk-page {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 32px 24px 48px;
+      width: 100%;
+      box-sizing: border-box;
+      flex: 1;
+    }
+    .dk-page__head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      gap: 16px;
+    }
+    .dk-page__title {
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--zinc-900);
+      margin: 0 0 4px;
+    }
+    .dk-page__subtitle {
+      font-size: 13px;
+      color: var(--zinc-500);
+      margin: 0;
+    }
+
+    /* Stat cards */
+    .dk-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .dk-stat {
+      background: #fff;
+      border: 1px solid var(--zinc-200);
+      border-radius: 8px;
+      padding: 16px 18px;
+    }
+    .dk-stat__label {
+      font-size: 12px;
+      color: var(--zinc-500);
+      margin: 0 0 6px;
+      font-weight: 500;
+    }
+    .dk-stat__value {
+      font-size: 26px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--zinc-900);
+      line-height: 1.1;
+      font-feature-settings: "tnum";
+    }
+    .dk-stat__delta {
+      font-size: 12px;
+      color: var(--zinc-500);
+      margin-top: 4px;
+    }
+
+    /* Toolbar */
+    .dk-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .dk-search {
+      position: relative;
+      flex: 1;
+      max-width: 320px;
+    }
+    .dk-search input {
+      padding-left: 34px;
+    }
+    .dk-search svg {
+      position: absolute;
+      left: 11px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--zinc-400);
+      pointer-events: none;
+    }
+    .dk-filter {
+      height: 36px;
+      padding: 0 12px;
+      border-radius: 6px;
+      border: 1px solid var(--zinc-200);
+      background: #fff;
+      font-size: 13px;
+      color: var(--zinc-700);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .dk-filter:hover {
+      border-color: var(--zinc-300);
+    }
+    .dk-toolbar__spacer {
+      flex: 1;
+    }
+
+    /* Table */
+    .dk-table-wrap {
+      background: #fff;
+      border: 1px solid var(--zinc-200);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .dk-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .dk-table thead th {
+      text-align: left;
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--zinc-500);
+      padding: 10px 16px;
+      background: var(--zinc-50);
+      border-bottom: 1px solid var(--zinc-200);
+      white-space: nowrap;
+    }
+    .dk-table tbody td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--zinc-100);
+      color: var(--zinc-800);
+      vertical-align: middle;
+    }
+    .dk-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+    .dk-table tbody tr {
+      transition: background-color 120ms;
+      cursor: pointer;
+    }
+    .dk-table tbody tr:hover {
+      background: var(--zinc-50);
+    }
+    .dk-num {
+      font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 12px;
+      color: var(--zinc-600);
+      font-feature-settings: "tnum";
+    }
+    .dk-amount {
+      font-variant-numeric: tabular-nums;
+      font-weight: 500;
+      color: var(--zinc-900);
+    }
+    .dk-muted {
+      color: var(--zinc-500);
+    }
+    .dk-strong {
+      color: var(--zinc-900);
+      font-weight: 500;
+    }
+
+    /* Status badge */
+    .dk-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--zinc-200);
+      background: var(--zinc-50);
+      color: var(--zinc-700);
+      white-space: nowrap;
+    }
+    .dk-badge::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+      opacity: 0.8;
+    }
+    .dk-badge--draft   { color: #71717a; }
+    .dk-badge--review  { color: #b45309; background: #fffbeb; border-color: #fde68a; }
+    .dk-badge--sign    { color: #1d4ed8; background: #eff6ff; border-color: #bfdbfe; }
+    .dk-badge--return  { color: #b91c1c; background: #fef2f2; border-color: #fecaca; }
+    .dk-badge--done    { color: #15803d; background: #f0fdf4; border-color: #bbf7d0; }
+
+    /* Footer */
+    .dk-table-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px;
+      border-top: 1px solid var(--zinc-100);
+      font-size: 12px;
+      color: var(--zinc-500);
+    }
+    .dk-pager {
+      display: flex;
+      gap: 4px;
+    }
+    .dk-pager button {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      border: 1px solid var(--zinc-200);
+      background: #fff;
+      color: var(--zinc-600);
+      font-size: 12px;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .dk-pager button.active {
+      background: var(--zinc-900);
+      color: #fff;
+      border-color: var(--zinc-900);
+    }
+
+    @media (max-width: 900px) {
+      .dk-stats { grid-template-columns: repeat(2, 1fr); }
+      .dk-nav a:not(.active) { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="dk-app">
+    <!-- Top bar -->
+    <header class="dk-topbar">
+      <div class="dk-topbar__inner">
+        <a href="index.html" class="dk-logo">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <rect x="4" y="4" width="12" height="12" transform="rotate(45 10 10)" stroke="currentColor" stroke-width="1.5" fill="none"/>
+            <rect x="10" y="10" width="9" height="9" transform="rotate(45 14.5 14.5)" fill="currentColor"/>
+          </svg>
+          <span class="dk-logo__text">disputekz</span>
+        </a>
+        <nav class="dk-nav">
+          <a href="#" class="active">Диспуты</a>
+          <a href="#">Шаблоны</a>
+          <a href="#">Отчёты</a>
+          <a href="#">Архив</a>
+        </nav>
+        <div class="dk-user">
+          <span>Иванов И.</span>
+          <span class="dk-muted">· Kaspi Bank</span>
+          <span class="dk-avatar">ИИ</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Page -->
+    <main class="dk-page">
+      <div class="dk-page__head">
+        <div>
+          <h1 class="dk-page__title">Активные диспуты</h1>
+          <p class="dk-page__subtitle">Все запросы, требующие действия вашего отделения</p>
+        </div>
+        <button class="dk-btn dk-btn--primary dk-btn--md">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Новый диспут
+        </button>
+      </div>
+
+      <!-- Stats -->
+      <div class="dk-stats">
+        <div class="dk-stat">
+          <p class="dk-stat__label">Всего в работе</p>
+          <div class="dk-stat__value">47</div>
+          <p class="dk-stat__delta">+5 за неделю</p>
+        </div>
+        <div class="dk-stat">
+          <p class="dk-stat__label">На проверке</p>
+          <div class="dk-stat__value">12</div>
+          <p class="dk-stat__delta">3 просрочены</p>
+        </div>
+        <div class="dk-stat">
+          <p class="dk-stat__label">На подписи</p>
+          <div class="dk-stat__value">8</div>
+          <p class="dk-stat__delta">ожидают скан</p>
+        </div>
+        <div class="dk-stat">
+          <p class="dk-stat__label">Завершено за месяц</p>
+          <div class="dk-stat__value">134</div>
+          <p class="dk-stat__delta">SLA 92%</p>
+        </div>
+      </div>
+
+      <!-- Toolbar -->
+      <div class="dk-toolbar">
+        <div class="dk-search">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <input class="dk-input" placeholder="Поиск по номеру, контрагенту..." />
+        </div>
+        <button class="dk-filter">
+          Статус
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <button class="dk-filter">
+          Период
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <button class="dk-filter">
+          Ответственный
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="dk-toolbar__spacer"></div>
+        <button class="dk-filter">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Экспорт
+        </button>
+      </div>
+
+      <!-- Table -->
+      <div class="dk-table-wrap">
+        <table class="dk-table">
+          <thead>
+            <tr>
+              <th>№</th>
+              <th>Тип</th>
+              <th>Контрагент</th>
+              <th>Сумма</th>
+              <th>Статус</th>
+              <th>Ответственный</th>
+              <th>Обновлено</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="dk-num">DSP-2026-000471</td>
+              <td class="dk-strong">Оспаривание транзакции</td>
+              <td>ТОО «Алатау Логистик»</td>
+              <td class="dk-amount">245 000 ₸</td>
+              <td><span class="dk-badge dk-badge--review">На проверке</span></td>
+              <td>Алиева М.</td>
+              <td class="dk-muted">14 апр, 10:24</td>
+            </tr>
+            <tr>
+              <td class="dk-num">DSP-2026-000470</td>
+              <td class="dk-strong">Возврат средств</td>
+              <td>ИП Омаров Б.К.</td>
+              <td class="dk-amount">89 500 ₸</td>
+              <td><span class="dk-badge dk-badge--sign">На подписи</span></td>
+              <td>Иванов И.</td>
+              <td class="dk-muted">14 апр, 09:51</td>
+            </tr>
+            <tr>
+              <td class="dk-num">DSP-2026-000468</td>
+              <td class="dk-strong">Спорная операция POS</td>
+              <td>Satbayev Retail</td>
+              <td class="dk-amount">1 240 000 ₸</td>
+              <td><span class="dk-badge dk-badge--return">Возвращён</span></td>
+              <td>Касымов Е.</td>
+              <td class="dk-muted">13 апр, 17:02</td>
+            </tr>
+            <tr>
+              <td class="dk-num">DSP-2026-000465</td>
+              <td class="dk-strong">Chargeback Visa</td>
+              <td>Chocolife KZ</td>
+              <td class="dk-amount">56 780 ₸</td>
+              <td><span class="dk-badge dk-badge--review">На проверке</span></td>
+              <td>Алиева М.</td>
+              <td class="dk-muted">13 апр, 14:18</td>
+            </tr>
+            <tr>
+              <td class="dk-num">DSP-2026-000463</td>
+              <td class="dk-strong">Возврат средств</td>
+              <td>ТОО «Самрук Строй»</td>
+              <td class="dk-amount">3 150 000 ₸</td>
+              <td><span class="dk-badge dk-badge--sign">На подписи</span></td>
+              <td>Нуртаз Д.</td>
+              <td class="dk-muted">13 апр, 11:40</td>
+            </tr>
+            <tr>
+              <td class="dk-num">DSP-2026-000460</td>
+              <td class="dk-strong">Оспаривание комиссии</td>
+              <td>Kazpost</td>
+              <td class="dk-amount">4 200 ₸</td>
+              <td><span class="dk-badge dk-badge--draft">Черновик</span></td>
+              <td>Иванов И.</td>
+              <td class="dk-muted">12 апр, 18:30</td>
+            </tr>
+            <tr>
+              <td class="dk-num">DSP-2026-000457</td>
+              <td class="dk-strong">Chargeback Mastercard</td>
+              <td>AliExpress (int.)</td>
+              <td class="dk-amount">72 400 ₸</td>
+              <td><span class="dk-badge dk-badge--review">На проверке</span></td>
+              <td>Касымов Е.</td>
+              <td class="dk-muted">12 апр, 16:05</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="dk-table-footer">
+          <span>Показано 7 из 47</span>
+          <div class="dk-pager">
+            <button>‹</button>
+            <button class="active">1</button>
+            <button>2</button>
+            <button>3</button>
+            <button>›</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>
