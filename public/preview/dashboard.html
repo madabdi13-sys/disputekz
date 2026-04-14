@@ -295,8 +295,8 @@
     }
     .dk-search {
       position: relative;
-      flex: 1;
-      max-width: 320px;
+      width: 320px;
+      flex-shrink: 0;
     }
     .dk-search input {
       padding-left: 34px;
@@ -322,11 +322,89 @@
       gap: 6px;
       cursor: pointer;
       font-family: inherit;
+      flex-shrink: 0;
+      white-space: nowrap;
     }
     .dk-filter:hover {
       border-color: var(--zinc-300);
     }
+    .dk-filter.active {
+      background: var(--zinc-900);
+      color: #fff;
+      border-color: var(--zinc-900);
+    }
     .dk-toolbar__spacer {
+      flex: 1;
+    }
+
+    /* Chips row (active filters + count + reset) */
+    .dk-chips-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+      min-height: 28px;
+      flex-wrap: wrap;
+    }
+    .dk-chips-row__count {
+      font-size: 12px;
+      color: var(--zinc-500);
+      font-variant-numeric: tabular-nums;
+    }
+    .dk-chips-row__count strong {
+      color: var(--zinc-900);
+      font-weight: 600;
+    }
+    .dk-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      height: 26px;
+      padding: 0 4px 0 10px;
+      border-radius: 999px;
+      border: 1px solid var(--zinc-200);
+      background: #fff;
+      font-size: 12px;
+      color: var(--zinc-700);
+      white-space: nowrap;
+    }
+    .dk-chip strong {
+      color: var(--zinc-900);
+      font-weight: 500;
+    }
+    .dk-chip__close {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: none;
+      background: transparent;
+      color: var(--zinc-400);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 120ms, color 120ms;
+      font-family: inherit;
+    }
+    .dk-chip__close:hover {
+      background: var(--zinc-100);
+      color: var(--zinc-900);
+    }
+    .dk-chips-row__reset {
+      background: transparent;
+      border: none;
+      font-size: 12px;
+      color: var(--zinc-500);
+      cursor: pointer;
+      font-family: inherit;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      padding: 2px 4px;
+    }
+    .dk-chips-row__reset:hover {
+      color: var(--zinc-900);
+    }
+    .dk-chips-row__spacer {
       flex: 1;
     }
 
@@ -768,11 +846,15 @@
           Статус
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
         </button>
+        <button class="dk-filter active">
+          Канал
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
         <button class="dk-filter">
           Период
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
         </button>
-        <button class="dk-filter">
+        <button class="dk-filter active">
           Ответственный
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
         </button>
@@ -781,6 +863,25 @@
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           Экспорт
         </button>
+      </div>
+
+      <!-- Active filters / result count -->
+      <div class="dk-chips-row" id="chipsRow">
+        <span class="dk-chip">
+          Канал: <strong>Visa, MC</strong>
+          <button class="dk-chip__close" aria-label="Убрать фильтр">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </span>
+        <span class="dk-chip">
+          Ответственный: <strong>Я и Алиева М.</strong>
+          <button class="dk-chip__close" aria-label="Убрать фильтр">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </span>
+        <button class="dk-chips-row__reset" id="chipsReset">Сбросить все</button>
+        <div class="dk-chips-row__spacer"></div>
+        <span class="dk-chips-row__count">Найдено <strong>7</strong> из <strong>47</strong></span>
       </div>
 
       <!-- Table -->
@@ -967,6 +1068,34 @@
       document.addEventListener("keydown", (e) => {
         if (e.key === "Escape") split.classList.remove("open");
       });
+    })();
+
+    // Filter chips (remove individually / reset all)
+    (function () {
+      const row = document.getElementById("chipsRow");
+      const reset = document.getElementById("chipsReset");
+      if (!row) return;
+
+      row.querySelectorAll(".dk-chip__close").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const chip = btn.closest(".dk-chip");
+          if (chip) chip.remove();
+          updateResetVisibility();
+        });
+      });
+
+      if (reset) {
+        reset.addEventListener("click", () => {
+          row.querySelectorAll(".dk-chip").forEach((c) => c.remove());
+          updateResetVisibility();
+        });
+      }
+
+      function updateResetVisibility() {
+        const hasChips = row.querySelectorAll(".dk-chip").length > 0;
+        if (reset) reset.style.display = hasChips ? "" : "none";
+      }
     })();
 
     // Row selection (bulk checkboxes)
