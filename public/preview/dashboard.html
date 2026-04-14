@@ -417,6 +417,130 @@
     .dk-badge--return  { color: #b91c1c; background: #fef2f2; border-color: #fecaca; }
     .dk-badge--done    { color: #15803d; background: #f0fdf4; border-color: #bbf7d0; }
 
+    /* Checkbox */
+    .dk-checkbox {
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+      border: 1.5px solid var(--zinc-300);
+      background: #fff;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      position: relative;
+      transition: background-color 120ms, border-color 120ms;
+      margin: 0;
+      vertical-align: middle;
+    }
+    .dk-checkbox:hover { border-color: var(--zinc-400); }
+    .dk-checkbox:checked {
+      background: var(--zinc-900);
+      border-color: var(--zinc-900);
+    }
+    .dk-checkbox:checked::after {
+      content: "";
+      position: absolute;
+      left: 4px;
+      top: 1px;
+      width: 3px;
+      height: 7px;
+      border-right: 2px solid #fff;
+      border-bottom: 2px solid #fff;
+      transform: rotate(45deg);
+    }
+
+    /* Channel tag */
+    .dk-channel {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: var(--zinc-100);
+      color: var(--zinc-600);
+      border: 1px solid var(--zinc-200);
+      font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    .dk-channel--visa { color: #1a1f71; background: #eef0ff; border-color: #d8def7; }
+    .dk-channel--mc   { color: #b3321f; background: #fef1ee; border-color: #fcd8cd; }
+    .dk-channel--pos  { color: #3f3f46; background: var(--zinc-100); border-color: var(--zinc-200); }
+    .dk-channel--atm  { color: #15803d; background: #f0fdf4; border-color: #bbf7d0; }
+    .dk-channel--int  { color: #52525b; background: #fafafa; border-color: var(--zinc-200); }
+
+    /* SLA / deadline */
+    .dk-sla {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-variant-numeric: tabular-nums;
+      color: var(--zinc-700);
+      white-space: nowrap;
+    }
+    .dk-sla__dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--zinc-300);
+      flex-shrink: 0;
+    }
+    .dk-sla--ok .dk-sla__dot      { background: #22c55e; }
+    .dk-sla--soon                  { color: #b45309; }
+    .dk-sla--soon .dk-sla__dot    { background: #f59e0b; }
+    .dk-sla--today                 { color: #b45309; font-weight: 500; }
+    .dk-sla--today .dk-sla__dot   { background: #f59e0b; }
+    .dk-sla--overdue               { color: #b91c1c; font-weight: 500; }
+    .dk-sla--overdue .dk-sla__dot { background: #dc2626; }
+
+    /* Amount column (right-aligned monospace) */
+    .dk-table th.dk-col-amount,
+    .dk-table td.dk-col-amount {
+      text-align: right;
+    }
+    .dk-amount {
+      font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-weight: 500;
+      color: var(--zinc-900);
+      font-size: 13px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Row actions (hover) */
+    .dk-col-check { width: 36px; }
+    .dk-col-actions { width: 44px; padding-right: 8px !important; padding-left: 8px !important; }
+    .dk-row-actions {
+      opacity: 0;
+      transition: opacity 120ms;
+      display: inline-flex;
+      justify-content: center;
+    }
+    .dk-table tbody tr:hover .dk-row-actions { opacity: 1; }
+    .dk-row-actions button {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--zinc-500);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .dk-row-actions button:hover {
+      background: var(--zinc-100);
+      color: var(--zinc-900);
+    }
+    /* Make header checkbox always visible */
+    .dk-table thead .dk-col-check .dk-checkbox {
+      opacity: 0.7;
+    }
+    .dk-table tbody tr.selected {
+      background: #f5f5f7;
+    }
+
     /* Footer */
     .dk-table-footer {
       display: flex;
@@ -661,81 +785,155 @@
 
       <!-- Table -->
       <div class="dk-table-wrap">
-        <table class="dk-table">
+        <table class="dk-table" id="disputesTable">
           <thead>
             <tr>
+              <th class="dk-col-check"><input type="checkbox" class="dk-checkbox" id="selectAll" aria-label="Выбрать все" /></th>
               <th>№</th>
               <th>Тип</th>
+              <th>Канал</th>
               <th>Контрагент</th>
-              <th>Сумма</th>
+              <th class="dk-col-amount">Сумма</th>
               <th>Статус</th>
+              <th>Срок</th>
               <th>Ответственный</th>
               <th>Обновлено</th>
+              <th class="dk-col-actions"></th>
             </tr>
           </thead>
           <tbody>
             <tr>
+              <td class="dk-col-check"><input type="checkbox" class="dk-checkbox" aria-label="Выбрать" /></td>
               <td class="dk-num">DSP-2026-000471</td>
               <td class="dk-strong">Оспаривание транзакции</td>
+              <td><span class="dk-channel dk-channel--visa">Visa</span></td>
               <td>ТОО «Алатау Логистик»</td>
-              <td class="dk-amount">245 000 ₸</td>
+              <td class="dk-col-amount"><span class="dk-amount">245 000 ₸</span></td>
               <td><span class="dk-badge dk-badge--review">На проверке</span></td>
+              <td><span class="dk-sla dk-sla--today"><span class="dk-sla__dot"></span>сегодня</span></td>
               <td>Алиева М.</td>
               <td class="dk-muted">14 апр, 10:24</td>
+              <td class="dk-col-actions">
+                <span class="dk-row-actions">
+                  <button type="button" aria-label="Действия">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+                  </button>
+                </span>
+              </td>
             </tr>
             <tr>
+              <td class="dk-col-check"><input type="checkbox" class="dk-checkbox" aria-label="Выбрать" /></td>
               <td class="dk-num">DSP-2026-000470</td>
               <td class="dk-strong">Возврат средств</td>
+              <td><span class="dk-channel dk-channel--int">Internal</span></td>
               <td>ИП Омаров Б.К.</td>
-              <td class="dk-amount">89 500 ₸</td>
+              <td class="dk-col-amount"><span class="dk-amount">89 500 ₸</span></td>
               <td><span class="dk-badge dk-badge--sign">На подписи</span></td>
+              <td><span class="dk-sla dk-sla--ok"><span class="dk-sla__dot"></span>осталось 3д</span></td>
               <td>Иванов И.</td>
               <td class="dk-muted">14 апр, 09:51</td>
+              <td class="dk-col-actions">
+                <span class="dk-row-actions">
+                  <button type="button" aria-label="Действия">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+                  </button>
+                </span>
+              </td>
             </tr>
             <tr>
+              <td class="dk-col-check"><input type="checkbox" class="dk-checkbox" aria-label="Выбрать" /></td>
               <td class="dk-num">DSP-2026-000468</td>
               <td class="dk-strong">Спорная операция POS</td>
+              <td><span class="dk-channel dk-channel--pos">POS</span></td>
               <td>Satbayev Retail</td>
-              <td class="dk-amount">1 240 000 ₸</td>
+              <td class="dk-col-amount"><span class="dk-amount">1 240 000 ₸</span></td>
               <td><span class="dk-badge dk-badge--return">Возвращён</span></td>
+              <td><span class="dk-sla dk-sla--overdue"><span class="dk-sla__dot"></span>просрочено 1д</span></td>
               <td>Касымов Е.</td>
               <td class="dk-muted">13 апр, 17:02</td>
+              <td class="dk-col-actions">
+                <span class="dk-row-actions">
+                  <button type="button" aria-label="Действия">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+                  </button>
+                </span>
+              </td>
             </tr>
             <tr>
+              <td class="dk-col-check"><input type="checkbox" class="dk-checkbox" aria-label="Выбрать" /></td>
               <td class="dk-num">DSP-2026-000465</td>
               <td class="dk-strong">Chargeback Visa</td>
+              <td><span class="dk-channel dk-channel--visa">Visa</span></td>
               <td>Chocolife KZ</td>
-              <td class="dk-amount">56 780 ₸</td>
+              <td class="dk-col-amount"><span class="dk-amount">56 780 ₸</span></td>
               <td><span class="dk-badge dk-badge--review">На проверке</span></td>
+              <td><span class="dk-sla dk-sla--ok"><span class="dk-sla__dot"></span>осталось 4д</span></td>
               <td>Алиева М.</td>
               <td class="dk-muted">13 апр, 14:18</td>
+              <td class="dk-col-actions">
+                <span class="dk-row-actions">
+                  <button type="button" aria-label="Действия">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+                  </button>
+                </span>
+              </td>
             </tr>
             <tr>
+              <td class="dk-col-check"><input type="checkbox" class="dk-checkbox" aria-label="Выбрать" /></td>
               <td class="dk-num">DSP-2026-000463</td>
               <td class="dk-strong">Возврат средств</td>
+              <td><span class="dk-channel dk-channel--int">Internal</span></td>
               <td>ТОО «Самрук Строй»</td>
-              <td class="dk-amount">3 150 000 ₸</td>
+              <td class="dk-col-amount"><span class="dk-amount">3 150 000 ₸</span></td>
               <td><span class="dk-badge dk-badge--sign">На подписи</span></td>
+              <td><span class="dk-sla dk-sla--soon"><span class="dk-sla__dot"></span>осталось 2д</span></td>
               <td>Нуртаз Д.</td>
               <td class="dk-muted">13 апр, 11:40</td>
+              <td class="dk-col-actions">
+                <span class="dk-row-actions">
+                  <button type="button" aria-label="Действия">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+                  </button>
+                </span>
+              </td>
             </tr>
             <tr>
+              <td class="dk-col-check"><input type="checkbox" class="dk-checkbox" aria-label="Выбрать" /></td>
               <td class="dk-num">DSP-2026-000460</td>
               <td class="dk-strong">Оспаривание комиссии</td>
+              <td><span class="dk-channel dk-channel--int">Internal</span></td>
               <td>Kazpost</td>
-              <td class="dk-amount">4 200 ₸</td>
+              <td class="dk-col-amount"><span class="dk-amount">4 200 ₸</span></td>
               <td><span class="dk-badge dk-badge--draft">Черновик</span></td>
+              <td><span class="dk-sla"><span class="dk-sla__dot"></span>—</span></td>
               <td>Иванов И.</td>
               <td class="dk-muted">12 апр, 18:30</td>
+              <td class="dk-col-actions">
+                <span class="dk-row-actions">
+                  <button type="button" aria-label="Действия">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+                  </button>
+                </span>
+              </td>
             </tr>
             <tr>
+              <td class="dk-col-check"><input type="checkbox" class="dk-checkbox" aria-label="Выбрать" /></td>
               <td class="dk-num">DSP-2026-000457</td>
               <td class="dk-strong">Chargeback Mastercard</td>
+              <td><span class="dk-channel dk-channel--mc">MC</span></td>
               <td>AliExpress (int.)</td>
-              <td class="dk-amount">72 400 ₸</td>
+              <td class="dk-col-amount"><span class="dk-amount">72 400 ₸</span></td>
               <td><span class="dk-badge dk-badge--review">На проверке</span></td>
+              <td><span class="dk-sla dk-sla--overdue"><span class="dk-sla__dot"></span>просрочено 2д</span></td>
               <td>Касымов Е.</td>
               <td class="dk-muted">12 апр, 16:05</td>
+              <td class="dk-col-actions">
+                <span class="dk-row-actions">
+                  <button type="button" aria-label="Действия">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+                  </button>
+                </span>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -768,6 +966,37 @@
       });
       document.addEventListener("keydown", (e) => {
         if (e.key === "Escape") split.classList.remove("open");
+      });
+    })();
+
+    // Row selection (bulk checkboxes)
+    (function () {
+      const table = document.getElementById("disputesTable");
+      const selectAll = document.getElementById("selectAll");
+      if (!table || !selectAll) return;
+      const rowBoxes = table.querySelectorAll("tbody .dk-checkbox");
+
+      function syncRow(cb) {
+        const tr = cb.closest("tr");
+        if (tr) tr.classList.toggle("selected", cb.checked);
+      }
+
+      selectAll.addEventListener("change", () => {
+        rowBoxes.forEach((cb) => {
+          cb.checked = selectAll.checked;
+          syncRow(cb);
+        });
+      });
+
+      rowBoxes.forEach((cb) => {
+        cb.addEventListener("change", (e) => {
+          e.stopPropagation();
+          syncRow(cb);
+          const all = Array.from(rowBoxes).every((c) => c.checked);
+          const none = Array.from(rowBoxes).every((c) => !c.checked);
+          selectAll.checked = all;
+          selectAll.indeterminate = !all && !none;
+        });
       });
     })();
 
