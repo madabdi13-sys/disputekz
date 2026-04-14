@@ -172,18 +172,12 @@
 
       if (hasErrors) return;
 
-      // Simulate submission
+      // Preview mode: redirect to dashboard
       submitBtn.disabled = true;
       submitBtn.innerHTML = '<span class="dk-spinner"></span> Вход...';
       setTimeout(() => {
-        alert("Вход выполнен (API пока не подключен)");
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = `
-          <span class="dk-btn__label">Войти</span>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M5 12h14"/><path d="M12 5l7 7-7 7"/>
-          </svg>`;
-      }, 600);
+        window.location.href = "dashboard.html";
+      }, 500);
     });
   </script>
 </body>
