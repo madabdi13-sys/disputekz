@@ -552,27 +552,40 @@
     /* SLA / deadline */
     .dk-sla {
       display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 12px;
-      font-variant-numeric: tabular-nums;
-      color: var(--zinc-700);
+      flex-direction: column;
+      gap: 2px;
+      line-height: 1.25;
       white-space: nowrap;
     }
-    .dk-sla__dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--zinc-300);
+    .dk-sla__primary {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-variant-numeric: tabular-nums;
+      color: var(--zinc-700);
+      font-weight: 500;
+    }
+    .dk-sla__icon {
+      width: 13px;
+      height: 13px;
       flex-shrink: 0;
     }
-    .dk-sla--ok .dk-sla__dot      { background: #22c55e; }
-    .dk-sla--soon                  { color: #b45309; }
-    .dk-sla--soon .dk-sla__dot    { background: #f59e0b; }
-    .dk-sla--today                 { color: #b45309; font-weight: 500; }
-    .dk-sla--today .dk-sla__dot   { background: #f59e0b; }
-    .dk-sla--overdue               { color: #b91c1c; font-weight: 500; }
-    .dk-sla--overdue .dk-sla__dot { background: #dc2626; }
+    .dk-sla__secondary {
+      font-size: 11px;
+      color: var(--zinc-500);
+      padding-left: 19px;
+      font-variant-numeric: tabular-nums;
+    }
+    .dk-sla--ok .dk-sla__primary      { color: #15803d; }
+    .dk-sla--ok .dk-sla__icon         { color: #22c55e; }
+    .dk-sla--soon .dk-sla__primary    { color: #b45309; }
+    .dk-sla--soon .dk-sla__icon       { color: #f59e0b; }
+    .dk-sla--today .dk-sla__primary   { color: #b45309; font-weight: 600; }
+    .dk-sla--today .dk-sla__icon      { color: #f59e0b; }
+    .dk-sla--overdue .dk-sla__primary { color: #b91c1c; font-weight: 600; }
+    .dk-sla--overdue .dk-sla__icon    { color: #dc2626; }
+    .dk-sla--overdue .dk-sla__secondary { color: #dc2626; }
 
     /* Amount column (right-aligned monospace) */
     .dk-table th.dk-col-amount,
@@ -895,7 +908,6 @@
               <th>Статус</th>
               <th>Срок</th>
               <th>Ответственный</th>
-              <th>Обновлено</th>
               <th class="dk-col-actions"></th>
             </tr>
           </thead>
@@ -908,9 +920,16 @@
               <td>ТОО «Алатау Логистик»</td>
               <td class="dk-col-amount"><span class="dk-amount">245 000 ₸</span></td>
               <td><span class="dk-badge dk-badge--review">На проверке</span></td>
-              <td><span class="dk-sla dk-sla--today"><span class="dk-sla__dot"></span>сегодня</span></td>
+              <td>
+                <div class="dk-sla dk-sla--today">
+                  <div class="dk-sla__primary">
+                    <svg class="dk-sla__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    сегодня
+                  </div>
+                  <div class="dk-sla__secondary">до 17:00</div>
+                </div>
+              </td>
               <td>Алиева М.</td>
-              <td class="dk-muted" title="14 апр, 10:24">2ч назад</td>
               <td class="dk-col-actions">
                 <span class="dk-row-actions">
                   <button type="button" aria-label="Действия">
@@ -927,9 +946,16 @@
               <td>ИП Омаров Б.К.</td>
               <td class="dk-col-amount"><span class="dk-amount">89 500 ₸</span></td>
               <td><span class="dk-badge dk-badge--sign">На подписи</span></td>
-              <td><span class="dk-sla dk-sla--ok"><span class="dk-sla__dot"></span>осталось 3д</span></td>
+              <td>
+                <div class="dk-sla dk-sla--ok">
+                  <div class="dk-sla__primary">
+                    <svg class="dk-sla__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    осталось 3д
+                  </div>
+                  <div class="dk-sla__secondary">до 17 апр</div>
+                </div>
+              </td>
               <td>Иванов И.</td>
-              <td class="dk-muted" title="14 апр, 09:51">3ч назад</td>
               <td class="dk-col-actions">
                 <span class="dk-row-actions">
                   <button type="button" aria-label="Действия">
@@ -946,9 +972,16 @@
               <td>Satbayev Retail</td>
               <td class="dk-col-amount"><span class="dk-amount">1 240 000 ₸</span></td>
               <td><span class="dk-badge dk-badge--return">Возвращён</span></td>
-              <td><span class="dk-sla dk-sla--overdue"><span class="dk-sla__dot"></span>просрочено 1д</span></td>
+              <td>
+                <div class="dk-sla dk-sla--overdue">
+                  <div class="dk-sla__primary">
+                    <svg class="dk-sla__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    просрочено 1д
+                  </div>
+                  <div class="dk-sla__secondary">было до 13 апр</div>
+                </div>
+              </td>
               <td>Касымов Е.</td>
-              <td class="dk-muted" title="13 апр, 17:02">вчера, 17:02</td>
               <td class="dk-col-actions">
                 <span class="dk-row-actions">
                   <button type="button" aria-label="Действия">
@@ -965,9 +998,16 @@
               <td>Chocolife KZ</td>
               <td class="dk-col-amount"><span class="dk-amount">56 780 ₸</span></td>
               <td><span class="dk-badge dk-badge--review">На проверке</span></td>
-              <td><span class="dk-sla dk-sla--ok"><span class="dk-sla__dot"></span>осталось 4д</span></td>
+              <td>
+                <div class="dk-sla dk-sla--ok">
+                  <div class="dk-sla__primary">
+                    <svg class="dk-sla__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    осталось 4д
+                  </div>
+                  <div class="dk-sla__secondary">до 18 апр</div>
+                </div>
+              </td>
               <td>Алиева М.</td>
-              <td class="dk-muted" title="13 апр, 14:18">вчера, 14:18</td>
               <td class="dk-col-actions">
                 <span class="dk-row-actions">
                   <button type="button" aria-label="Действия">
@@ -984,9 +1024,16 @@
               <td>ТОО «Самрук Строй»</td>
               <td class="dk-col-amount"><span class="dk-amount">3 150 000 ₸</span></td>
               <td><span class="dk-badge dk-badge--sign">На подписи</span></td>
-              <td><span class="dk-sla dk-sla--soon"><span class="dk-sla__dot"></span>осталось 2д</span></td>
+              <td>
+                <div class="dk-sla dk-sla--soon">
+                  <div class="dk-sla__primary">
+                    <svg class="dk-sla__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    осталось 2д
+                  </div>
+                  <div class="dk-sla__secondary">до 16 апр</div>
+                </div>
+              </td>
               <td>Нуртаз Д.</td>
-              <td class="dk-muted" title="13 апр, 11:40">вчера, 11:40</td>
               <td class="dk-col-actions">
                 <span class="dk-row-actions">
                   <button type="button" aria-label="Действия">
@@ -1003,9 +1050,16 @@
               <td>AliExpress (int.)</td>
               <td class="dk-col-amount"><span class="dk-amount">72 400 ₸</span></td>
               <td><span class="dk-badge dk-badge--review">На проверке</span></td>
-              <td><span class="dk-sla dk-sla--overdue"><span class="dk-sla__dot"></span>просрочено 2д</span></td>
+              <td>
+                <div class="dk-sla dk-sla--overdue">
+                  <div class="dk-sla__primary">
+                    <svg class="dk-sla__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    просрочено 2д
+                  </div>
+                  <div class="dk-sla__secondary">было до 12 апр</div>
+                </div>
+              </td>
               <td>Касымов Е.</td>
-              <td class="dk-muted" title="12 апр, 16:05">2 дня назад</td>
               <td class="dk-col-actions">
                 <span class="dk-row-actions">
                   <button type="button" aria-label="Действия">
