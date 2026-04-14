@@ -167,6 +167,125 @@
       margin-top: 4px;
     }
 
+    /* Compact summary bar */
+    .dk-summary {
+      display: flex;
+      background: #fff;
+      border: 1px solid var(--zinc-200);
+      border-radius: 8px;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+    .dk-summary__item {
+      flex: 1;
+      padding: 14px 18px;
+      cursor: pointer;
+      border-right: 1px solid var(--zinc-100);
+      transition: background-color 120ms;
+      background: transparent;
+      border-top: none;
+      border-bottom: none;
+      border-left: none;
+      text-align: left;
+      font-family: inherit;
+    }
+    .dk-summary__item:last-child { border-right: none; }
+    .dk-summary__item:hover { background: var(--zinc-50); }
+    .dk-summary__item.active { background: var(--zinc-50); }
+    .dk-summary__label {
+      font-size: 12px;
+      color: var(--zinc-500);
+      margin: 0 0 4px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .dk-summary__value {
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--zinc-900);
+      line-height: 1.1;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -0.02em;
+    }
+    .dk-summary__meta {
+      font-size: 11px;
+      color: var(--zinc-500);
+      margin-top: 4px;
+    }
+    .dk-summary__item--alert .dk-summary__value { color: #b91c1c; }
+    .dk-summary__item--alert .dk-summary__meta { color: #dc2626; }
+    .dk-summary__dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #dc2626;
+    }
+
+    /* Tabs (inbox-style) */
+    .dk-tabs {
+      display: flex;
+      gap: 2px;
+      border-bottom: 1px solid var(--zinc-200);
+      margin-bottom: 16px;
+      overflow-x: auto;
+    }
+    .dk-tab {
+      padding: 10px 14px 12px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--zinc-500);
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: inherit;
+      white-space: nowrap;
+    }
+    .dk-tab:hover { color: var(--zinc-900); }
+    .dk-tab.active { color: var(--zinc-900); }
+    .dk-tab.active::after {
+      content: "";
+      position: absolute;
+      left: 10px;
+      right: 10px;
+      bottom: -1px;
+      height: 2px;
+      background: var(--zinc-900);
+      border-radius: 2px;
+    }
+    .dk-tab__count {
+      font-size: 11px;
+      color: var(--zinc-500);
+      background: var(--zinc-100);
+      padding: 1px 6px;
+      border-radius: 999px;
+      font-variant-numeric: tabular-nums;
+      font-weight: 500;
+    }
+    .dk-tab.active .dk-tab__count {
+      background: var(--zinc-900);
+      color: #fff;
+    }
+    .dk-tab--alert .dk-tab__count {
+      background: #fef2f2;
+      color: #b91c1c;
+    }
+    .dk-tab--alert.active {
+      color: #b91c1c;
+    }
+    .dk-tab--alert.active::after {
+      background: #dc2626;
+    }
+    .dk-tab--alert.active .dk-tab__count {
+      background: #dc2626;
+      color: #fff;
+    }
+
     /* Toolbar */
     .dk-toolbar {
       display: flex;
@@ -462,28 +581,55 @@
         </div>
       </div>
 
-      <!-- Stats -->
-      <div class="dk-stats">
-        <div class="dk-stat">
-          <p class="dk-stat__label">Всего в работе</p>
-          <div class="dk-stat__value">47</div>
-          <p class="dk-stat__delta">+5 за неделю</p>
-        </div>
-        <div class="dk-stat">
-          <p class="dk-stat__label">На проверке</p>
-          <div class="dk-stat__value">12</div>
-          <p class="dk-stat__delta">3 просрочены</p>
-        </div>
-        <div class="dk-stat">
-          <p class="dk-stat__label">На подписи</p>
-          <div class="dk-stat__value">8</div>
-          <p class="dk-stat__delta">ожидают скан</p>
-        </div>
-        <div class="dk-stat">
-          <p class="dk-stat__label">Завершено за месяц</p>
-          <div class="dk-stat__value">134</div>
-          <p class="dk-stat__delta">SLA 92%</p>
-        </div>
+      <!-- Summary bar -->
+      <div class="dk-summary">
+        <button class="dk-summary__item active" data-tab-link="all">
+          <p class="dk-summary__label">Всего в работе</p>
+          <div class="dk-summary__value">47</div>
+          <p class="dk-summary__meta">+5 за неделю</p>
+        </button>
+        <button class="dk-summary__item" data-tab-link="review">
+          <p class="dk-summary__label">На проверке</p>
+          <div class="dk-summary__value">12</div>
+          <p class="dk-summary__meta">средний срок 2д</p>
+        </button>
+        <button class="dk-summary__item" data-tab-link="sign">
+          <p class="dk-summary__label">На подписи</p>
+          <div class="dk-summary__value">8</div>
+          <p class="dk-summary__meta">ожидают скан</p>
+        </button>
+        <button class="dk-summary__item dk-summary__item--alert" data-tab-link="overdue">
+          <p class="dk-summary__label"><span class="dk-summary__dot"></span>Просрочено</p>
+          <div class="dk-summary__value">3</div>
+          <p class="dk-summary__meta">требуют действия</p>
+        </button>
+        <button class="dk-summary__item">
+          <p class="dk-summary__label">Завершено за месяц</p>
+          <div class="dk-summary__value">134</div>
+          <p class="dk-summary__meta">SLA 92%</p>
+        </button>
+      </div>
+
+      <!-- Tabs -->
+      <div class="dk-tabs" id="disputeTabs">
+        <button class="dk-tab active" data-tab="all">
+          Все <span class="dk-tab__count">47</span>
+        </button>
+        <button class="dk-tab" data-tab="mine">
+          Мои <span class="dk-tab__count">12</span>
+        </button>
+        <button class="dk-tab" data-tab="review">
+          На проверке <span class="dk-tab__count">12</span>
+        </button>
+        <button class="dk-tab" data-tab="sign">
+          На подписи <span class="dk-tab__count">8</span>
+        </button>
+        <button class="dk-tab dk-tab--alert" data-tab="overdue">
+          Просрочены <span class="dk-tab__count">3</span>
+        </button>
+        <button class="dk-tab" data-tab="drafts">
+          Черновики <span class="dk-tab__count">2</span>
+        </button>
       </div>
 
       <!-- Toolbar -->
@@ -622,6 +768,34 @@
       });
       document.addEventListener("keydown", (e) => {
         if (e.key === "Escape") split.classList.remove("open");
+      });
+    })();
+
+    // Tabs + summary bar linking
+    (function () {
+      const tabs = document.querySelectorAll("#disputeTabs .dk-tab");
+      const summaryItems = document.querySelectorAll(".dk-summary__item");
+
+      function setActiveTab(tabKey) {
+        tabs.forEach((t) => {
+          t.classList.toggle("active", t.dataset.tab === tabKey);
+        });
+        summaryItems.forEach((s) => {
+          s.classList.toggle(
+            "active",
+            s.dataset.tabLink === tabKey ||
+              (tabKey === "all" && s.dataset.tabLink === "all")
+          );
+        });
+      }
+
+      tabs.forEach((tab) => {
+        tab.addEventListener("click", () => setActiveTab(tab.dataset.tab));
+      });
+
+      summaryItems.forEach((item) => {
+        if (!item.dataset.tabLink) return;
+        item.addEventListener("click", () => setActiveTab(item.dataset.tabLink));
       });
     })();
   </script>
