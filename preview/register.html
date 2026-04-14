@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Регистрация — disputekz</title>
+  <link rel="stylesheet" href="_shared.css" />
+</head>
+<body>
+  <div class="dk-auth">
+    <!-- Header -->
+    <header class="dk-header">
+      <div class="dk-header__inner">
+        <a href="index.html" class="dk-logo">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="4" y="4" width="12" height="12" transform="rotate(45 10 10)" stroke="currentColor" stroke-width="1.5" fill="none"/>
+            <rect x="10" y="10" width="9" height="9" transform="rotate(45 14.5 14.5)" fill="currentColor"/>
+          </svg>
+          <span class="dk-logo__text">disputekz</span>
+        </a>
+        <div class="dk-header__support">
+          Служба поддержки:
+          <a href="mailto:support@disputekz.kz">support@disputekz.kz</a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main -->
+    <main class="dk-main">
+      <div class="dk-main__inner">
+        <!-- Heading -->
+        <div style="margin-bottom: 32px;">
+          <h1 class="dk-h1">Заявка на регистрацию</h1>
+          <p class="dk-sub">Заполните данные сотрудника. После отправки заявка будет рассмотрена администратором вашего банка.</p>
+        </div>
+
+        <!-- Info banner -->
+        <div class="dk-info" style="margin-bottom: 24px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 16v-4"/>
+            <path d="M12 8h.01"/>
+          </svg>
+          <p style="margin: 0;">
+            Доступ открывается только после проверки номера приказа о приёме
+            на работу. Обычно это занимает до 1 рабочего дня.
+          </p>
+        </div>
+
+        <form id="registerForm" class="dk-stack" novalidate>
+          <!-- Bank -->
+          <div class="dk-field">
+            <label class="dk-label" for="organization">Банк</label>
+            <div class="dk-select-wrap">
+              <select id="organization" class="dk-select" name="organization">
+                <option value="">Выберите из списка</option>
+                <option value="org-1">АО Народный Банк Казахстана</option>
+                <option value="org-2">АО Kaspi Bank</option>
+                <option value="org-3">АО Банк ЦентрКредит</option>
+                <option value="org-4">АО ForteBank</option>
+                <option value="org-5">АО Евразийский Банк</option>
+              </select>
+              <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+            </div>
+            <p class="dk-error" data-error-for="organization" style="display:none;"></p>
+          </div>
+
+          <!-- Name -->
+          <div class="dk-field">
+            <label class="dk-label" for="name">ФИО</label>
+            <input id="name" class="dk-input" name="name" placeholder="Иванов Иван Иванович" />
+            <p class="dk-error" data-error-for="name" style="display:none;"></p>
+          </div>
+
+          <!-- Email + Phone -->
+          <div class="dk-row-2">
+            <div class="dk-field">
+              <label class="dk-label" for="email">Email</label>
+              <input id="email" class="dk-input" name="email" type="email" placeholder="ivanov@bank.kz" />
+              <p class="dk-error" data-error-for="email" style="display:none;"></p>
+            </div>
+            <div class="dk-field">
+              <label class="dk-label" for="phone">Телефон</label>
+              <input id="phone" class="dk-input" name="phone" type="tel" placeholder="+7 700 000 00 00" />
+              <p class="dk-error" data-error-for="phone" style="display:none;"></p>
+            </div>
+          </div>
+
+          <!-- Role -->
+          <div class="dk-field">
+            <label class="dk-label" for="role">Должность</label>
+            <div class="dk-select-wrap">
+              <select id="role" class="dk-select" name="role">
+                <option value="BRANCH_MANAGER">Менеджер отделения</option>
+                <option value="HQ_MANAGER">Менеджер головного офиса</option>
+              </select>
+              <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+            </div>
+          </div>
+
+          <!-- Branch -->
+          <div class="dk-field" id="branchField">
+            <label class="dk-label" for="branch">Отделение</label>
+            <div class="dk-select-wrap">
+              <select id="branch" class="dk-select" name="branch">
+                <option value="">Выберите отделение</option>
+                <option value="br-1">Отделение №1, г. Алматы, пр. Абая 150</option>
+                <option value="br-2">Отделение №5, г. Алматы, ул. Гагарина 45</option>
+                <option value="br-3">Отделение №12, г. Астана, пр. Республики 24</option>
+                <option value="br-4">Отделение №3, г. Шымкент, ул. Байтурсынова 8</option>
+              </select>
+              <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+            </div>
+            <p class="dk-error" data-error-for="branch" style="display:none;"></p>
+          </div>
+
+          <!-- Order number -->
+          <div class="dk-field">
+            <label class="dk-label" for="orderNumber">Номер приказа о приёме на работу</label>
+            <input id="orderNumber" class="dk-input" name="orderNumber" placeholder="Например, №123-к от 01.01.2026" />
+            <p class="dk-hint" data-hint-for="orderNumber">Указан во внутренних документах отдела кадров</p>
+            <p class="dk-error" data-error-for="orderNumber" style="display:none;"></p>
+          </div>
+
+          <!-- Password -->
+          <div class="dk-field">
+            <label class="dk-label" for="password">Пароль</label>
+            <div class="dk-relative">
+              <input id="password" class="dk-input dk-pr-10" name="password" type="password" placeholder="Минимум 8 символов" />
+              <button type="button" class="dk-pwd-toggle" aria-label="Показать пароль" data-toggle="password">
+                <svg data-icon="eye" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+                <svg data-icon="eye-off" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+                  <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/>
+                  <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/>
+                  <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/>
+                  <line x1="2" y1="2" x2="22" y2="22"/>
+                </svg>
+              </button>
+            </div>
+            <p class="dk-error" data-error-for="password" style="display:none;"></p>
+          </div>
+
+          <!-- Confirm password -->
+          <div class="dk-field">
+            <label class="dk-label" for="confirmPassword">Повторите пароль</label>
+            <input id="confirmPassword" class="dk-input" name="confirmPassword" type="password" placeholder="Введите пароль ещё раз" />
+            <p class="dk-error" data-error-for="confirmPassword" style="display:none;"></p>
+          </div>
+
+          <!-- Submit -->
+          <div style="padding-top: 8px;">
+            <button type="submit" class="dk-btn dk-btn--primary dk-btn--lg dk-btn--full" id="submitBtn">
+              <span class="dk-btn__label">Отправить заявку</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14"/><path d="M12 5l7 7-7 7"/>
+              </svg>
+            </button>
+          </div>
+        </form>
+
+        <!-- Link to login -->
+        <div class="dk-divider">
+          <p>
+            Уже есть аккаунт?
+            <a href="login.html">Войти</a>
+          </p>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="dk-footer">
+      <div class="dk-footer__inner">
+        <span>© 2026 disputekz. Все права защищены.</span>
+        <div class="dk-footer__links">
+          <a href="#">Условия использования</a>
+          <a href="#">Конфиденциальность</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // ------------------------------------------------------------
+    // Password visibility toggle
+    // ------------------------------------------------------------
+    document.querySelectorAll("[data-toggle]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const targetId = btn.getAttribute("data-toggle");
+        const input = document.getElementById(targetId);
+        const eyeIcon = btn.querySelector('[data-icon="eye"]');
+        const eyeOffIcon = btn.querySelector('[data-icon="eye-off"]');
+        if (input.type === "password") {
+          input.type = "text";
+          eyeIcon.style.display = "none";
+          eyeOffIcon.style.display = "";
+        } else {
+          input.type = "password";
+          eyeIcon.style.display = "";
+          eyeOffIcon.style.display = "none";
+        }
+      });
+    });
+
+    // ------------------------------------------------------------
+    // Branch field visibility based on role
+    // ------------------------------------------------------------
+    const roleSelect = document.getElementById("role");
+    const branchField = document.getElementById("branchField");
+    function updateBranchVisibility() {
+      branchField.style.display =
+        roleSelect.value === "BRANCH_MANAGER" ? "flex" : "none";
+    }
+    roleSelect.addEventListener("change", updateBranchVisibility);
+    updateBranchVisibility();
+
+    // ------------------------------------------------------------
+    // Form validation
+    // ------------------------------------------------------------
+    function setError(name, msg) {
+      const input = document.querySelector(`[name="${name}"]`);
+      const err = document.querySelector(`[data-error-for="${name}"]`);
+      const hint = document.querySelector(`[data-hint-for="${name}"]`);
+      if (input) input.classList.add("error");
+      if (err) {
+        err.textContent = msg;
+        err.style.display = "";
+      }
+      if (hint) hint.style.display = "none";
+    }
+    function clearError(name) {
+      const input = document.querySelector(`[name="${name}"]`);
+      const err = document.querySelector(`[data-error-for="${name}"]`);
+      const hint = document.querySelector(`[data-hint-for="${name}"]`);
+      if (input) input.classList.remove("error");
+      if (err) {
+        err.textContent = "";
+        err.style.display = "none";
+      }
+      if (hint) hint.style.display = "";
+    }
+    function clearAll() {
+      ["organization", "name", "email", "phone", "branch", "orderNumber", "password", "confirmPassword"]
+        .forEach(clearError);
+    }
+
+    const form = document.getElementById("registerForm");
+    const submitBtn = document.getElementById("submitBtn");
+
+    // Clear error on input
+    form.querySelectorAll("input, select").forEach((el) => {
+      el.addEventListener("input", () => clearError(el.name));
+      el.addEventListener("change", () => clearError(el.name));
+    });
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      clearAll();
+
+      const data = Object.fromEntries(new FormData(form).entries());
+      let hasErrors = false;
+
+      if (!data.organization) { setError("organization", "Выберите банк"); hasErrors = true; }
+      if (!data.name?.trim()) { setError("name", "Введите ФИО"); hasErrors = true; }
+      if (!data.email?.trim()) { setError("email", "Введите email"); hasErrors = true; }
+      else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) { setError("email", "Некорректный email"); hasErrors = true; }
+      if (!data.phone?.trim()) { setError("phone", "Введите телефон"); hasErrors = true; }
+      if (data.role === "BRANCH_MANAGER" && !data.branch) { setError("branch", "Выберите отделение"); hasErrors = true; }
+      if (!data.orderNumber?.trim()) { setError("orderNumber", "Введите номер приказа"); hasErrors = true; }
+      if (!data.password) { setError("password", "Введите пароль"); hasErrors = true; }
+      else if (data.password.length < 8) { setError("password", "Минимум 8 символов"); hasErrors = true; }
+      if (data.password !== data.confirmPassword) { setError("confirmPassword", "Пароли не совпадают"); hasErrors = true; }
+
+      if (hasErrors) return;
+
+      // Simulate submission
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="dk-spinner"></span> Отправка...';
+      setTimeout(() => {
+        alert("Заявка отправлена на рассмотрение администратору банка");
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = `
+          <span class="dk-btn__label">Отправить заявку</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14"/><path d="M12 5l7 7-7 7"/>
+          </svg>`;
+      }, 600);
+    });
+  </script>
+</body>
+</html>
