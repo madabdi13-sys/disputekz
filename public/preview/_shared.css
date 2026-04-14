@@ -68,6 +68,7 @@ body {
   display: flex;
   height: 36px;
   width: 100%;
+  box-sizing: border-box;
   border-radius: 6px;
   border: 1px solid var(--zinc-200);
   background: #fff;
@@ -104,6 +105,7 @@ body {
   display: flex;
   height: 36px;
   width: 100%;
+  box-sizing: border-box;
   border-radius: 6px;
   border: 1px solid var(--zinc-200);
   background: #fff;
