@@ -1,19 +1,37 @@
 import * as React from "react";
+import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const Select = React.forwardRef<HTMLSelectElement, React.SelectHTMLAttributes<HTMLSelectElement>>(
-  ({ className, children, ...props }, ref) => {
+interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
+  error?: boolean;
+}
+
+const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
+  ({ className, children, error, ...props }, ref) => {
     return (
-      <select
-        className={cn(
-          "flex h-10 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
-          className
-        )}
-        ref={ref}
-        {...props}
-      >
-        {children}
-      </select>
+      <div className="relative">
+        <select
+          ref={ref}
+          className={cn(
+            "flex h-9 w-full rounded-md border bg-white px-3 pr-9 text-[14px] text-zinc-900 appearance-none",
+            "transition-colors duration-150",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:border-zinc-900",
+            "disabled:cursor-not-allowed disabled:opacity-50",
+            error
+              ? "border-red-400 focus-visible:ring-red-400"
+              : "border-zinc-200 hover:border-zinc-300",
+            className
+          )}
+          {...props}
+        >
+          {children}
+        </select>
+        <ChevronDown
+          size={16}
+          strokeWidth={1.5}
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none"
+        />
+      </div>
     );
   }
 );

@@ -1,40 +1,104 @@
 @import "tailwindcss";
 
+/* =============================================================
+   DisputeKZ Design Tokens
+   Basis: Tailwind zinc palette (warm neutrals)
+   Accent: zinc-900 (near-black)
+   ============================================================= */
+
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
+  --background: #fafafa;      /* zinc-50 */
+  --foreground: #18181b;      /* zinc-900 */
+
   --card: #ffffff;
-  --primary: #1e40af;
+  --card-foreground: #18181b;
+
+  --muted: #f4f4f5;           /* zinc-100 */
+  --muted-foreground: #71717a;/* zinc-500 */
+
+  --border: #e4e4e7;          /* zinc-200 */
+  --border-hover: #d4d4d8;    /* zinc-300 */
+  --input: #e4e4e7;
+  --ring: #18181b;
+
+  --primary: #18181b;         /* zinc-900 */
   --primary-foreground: #ffffff;
-  --muted: #f1f5f9;
-  --muted-foreground: #64748b;
-  --border: #e2e8f0;
-  --accent: #2563eb;
-  --success: #16a34a;
-  --warning: #d97706;
-  --destructive: #dc2626;
+
+  --destructive: #dc2626;     /* red-600 */
+  --destructive-foreground: #ffffff;
+
+  --success: #047857;         /* emerald-700 */
+  --warning: #b45309;         /* amber-700 */
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
+  --color-card-foreground: var(--card-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
   --color-border: var(--border);
-  --color-accent: var(--accent);
-  --color-success: var(--success);
-  --color-warning: var(--warning);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
   --color-destructive: var(--destructive);
-  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", Menlo, Consolas, monospace;
+}
+
+* {
+  border-color: var(--border);
+}
+
+html {
+  font-family: var(--font-sans);
+  font-feature-settings: "cv11", "ss01", "ss03";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0;
+}
+
+/* Focus ring system */
+*:focus {
+  outline: none;
+}
+*:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Selection */
+::selection {
+  background: #18181b;
+  color: #ffffff;
+}
+
+/* Scrollbar — thin and neutral */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #e4e4e7;
+  border-radius: 10px;
+  border: 2px solid var(--background);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #d4d4d8;
 }
