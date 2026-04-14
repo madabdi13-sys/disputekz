@@ -434,6 +434,41 @@
       border-bottom: 1px solid var(--zinc-200);
       white-space: nowrap;
     }
+    .dk-table thead th.sortable {
+      cursor: pointer;
+      user-select: none;
+      transition: color 120ms, background-color 120ms;
+    }
+    .dk-table thead th.sortable:hover {
+      color: var(--zinc-900);
+      background: var(--zinc-100);
+    }
+    .dk-table thead th.sortable .dk-sort-icon {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      margin-left: 4px;
+      vertical-align: -1px;
+      opacity: 0;
+      transition: opacity 120ms, transform 120ms;
+      color: currentColor;
+    }
+    .dk-table thead th.sortable:hover .dk-sort-icon {
+      opacity: 0.45;
+    }
+    .dk-table thead th.sortable.sorted {
+      color: var(--zinc-900);
+    }
+    .dk-table thead th.sortable.sorted .dk-sort-icon {
+      opacity: 1;
+    }
+    .dk-table thead th.sortable.sorted-desc .dk-sort-icon {
+      transform: rotate(180deg);
+    }
+    .dk-table thead th.dk-col-amount.sortable .dk-sort-icon {
+      margin-left: 3px;
+      margin-right: -2px;
+    }
     .dk-table tbody td {
       padding: 14px 16px;
       border-bottom: 1px solid var(--zinc-100);
@@ -900,14 +935,14 @@
           <thead>
             <tr>
               <th class="dk-col-check"><input type="checkbox" class="dk-checkbox" id="selectAll" aria-label="Выбрать все" /></th>
-              <th>№</th>
-              <th>Тип</th>
-              <th>Канал</th>
-              <th>Контрагент</th>
-              <th class="dk-col-amount">Сумма</th>
-              <th>Статус</th>
-              <th>Срок</th>
-              <th>Ответственный</th>
+              <th class="sortable" data-col="1" data-type="text">№<svg class="dk-sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg></th>
+              <th class="sortable" data-col="2" data-type="text">Тип<svg class="dk-sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg></th>
+              <th class="sortable" data-col="3" data-type="text">Канал<svg class="dk-sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg></th>
+              <th class="sortable" data-col="4" data-type="text">Контрагент<svg class="dk-sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg></th>
+              <th class="dk-col-amount sortable" data-col="5" data-type="number">Сумма<svg class="dk-sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg></th>
+              <th class="sortable" data-col="6" data-type="text">Статус<svg class="dk-sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg></th>
+              <th class="sortable" data-col="7" data-type="number">Срок<svg class="dk-sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg></th>
+              <th class="sortable" data-col="8" data-type="text">Ответственный<svg class="dk-sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg></th>
               <th class="dk-col-actions"></th>
             </tr>
           </thead>
@@ -918,9 +953,9 @@
               <td class="dk-strong">Оспаривание транзакции</td>
               <td><span class="dk-channel dk-channel--visa">Visa</span></td>
               <td>ТОО «Алатау Логистик»</td>
-              <td class="dk-col-amount"><span class="dk-amount">245 000 ₸</span></td>
+              <td class="dk-col-amount" data-sort-value="245000"><span class="dk-amount">245 000 ₸</span></td>
               <td><span class="dk-badge dk-badge--review">На проверке</span></td>
-              <td>
+              <td data-sort-value="0">
                 <div class="dk-sla dk-sla--today">
                   <div class="dk-sla__primary">
                     <svg class="dk-sla__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
@@ -944,9 +979,9 @@
               <td class="dk-strong">Возврат средств</td>
               <td><span class="dk-channel dk-channel--int">Internal</span></td>
               <td>ИП Омаров Б.К.</td>
-              <td class="dk-col-amount"><span class="dk-amount">89 500 ₸</span></td>
+              <td class="dk-col-amount" data-sort-value="89500"><span class="dk-amount">89 500 ₸</span></td>
               <td><span class="dk-badge dk-badge--sign">На подписи</span></td>
-              <td>
+              <td data-sort-value="3">
                 <div class="dk-sla dk-sla--ok">
                   <div class="dk-sla__primary">
                     <svg class="dk-sla__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
@@ -970,9 +1005,9 @@
               <td class="dk-strong">Спорная операция POS</td>
               <td><span class="dk-channel dk-channel--pos">POS</span></td>
               <td>Satbayev Retail</td>
-              <td class="dk-col-amount"><span class="dk-amount">1 240 000 ₸</span></td>
+              <td class="dk-col-amount" data-sort-value="1240000"><span class="dk-amount">1 240 000 ₸</span></td>
               <td><span class="dk-badge dk-badge--return">Возвращён</span></td>
-              <td>
+              <td data-sort-value="-1">
                 <div class="dk-sla dk-sla--overdue">
                   <div class="dk-sla__primary">
                     <svg class="dk-sla__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
@@ -996,9 +1031,9 @@
               <td class="dk-strong">Chargeback Visa</td>
               <td><span class="dk-channel dk-channel--visa">Visa</span></td>
               <td>Chocolife KZ</td>
-              <td class="dk-col-amount"><span class="dk-amount">56 780 ₸</span></td>
+              <td class="dk-col-amount" data-sort-value="56780"><span class="dk-amount">56 780 ₸</span></td>
               <td><span class="dk-badge dk-badge--review">На проверке</span></td>
-              <td>
+              <td data-sort-value="4">
                 <div class="dk-sla dk-sla--ok">
                   <div class="dk-sla__primary">
                     <svg class="dk-sla__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
@@ -1022,9 +1057,9 @@
               <td class="dk-strong">Возврат средств</td>
               <td><span class="dk-channel dk-channel--int">Internal</span></td>
               <td>ТОО «Самрук Строй»</td>
-              <td class="dk-col-amount"><span class="dk-amount">3 150 000 ₸</span></td>
+              <td class="dk-col-amount" data-sort-value="3150000"><span class="dk-amount">3 150 000 ₸</span></td>
               <td><span class="dk-badge dk-badge--sign">На подписи</span></td>
-              <td>
+              <td data-sort-value="2">
                 <div class="dk-sla dk-sla--soon">
                   <div class="dk-sla__primary">
                     <svg class="dk-sla__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
@@ -1048,9 +1083,9 @@
               <td class="dk-strong">Chargeback Mastercard</td>
               <td><span class="dk-channel dk-channel--mc">MC</span></td>
               <td>AliExpress (int.)</td>
-              <td class="dk-col-amount"><span class="dk-amount">72 400 ₸</span></td>
+              <td class="dk-col-amount" data-sort-value="72400"><span class="dk-amount">72 400 ₸</span></td>
               <td><span class="dk-badge dk-badge--review">На проверке</span></td>
-              <td>
+              <td data-sort-value="-2">
                 <div class="dk-sla dk-sla--overdue">
                   <div class="dk-sla__primary">
                     <svg class="dk-sla__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
@@ -1157,6 +1192,85 @@
           const none = Array.from(rowBoxes).every((c) => !c.checked);
           selectAll.checked = all;
           selectAll.indeterminate = !all && !none;
+        });
+      });
+    })();
+
+    // Sortable column headers (3-state cycle: asc → desc → off)
+    (function () {
+      const table = document.getElementById("disputesTable");
+      if (!table) return;
+      const tbody = table.querySelector("tbody");
+      const headers = table.querySelectorAll("thead th.sortable");
+      const originalOrder = Array.from(tbody.querySelectorAll("tr"));
+
+      let sortCol = null;
+      let sortDir = null; // "asc" | "desc" | null
+
+      function getCellValue(tr, colIdx, type) {
+        const cell = tr.children[colIdx];
+        if (!cell) return type === "number" ? 0 : "";
+        if (cell.hasAttribute("data-sort-value")) {
+          const v = cell.getAttribute("data-sort-value");
+          return type === "number" ? parseFloat(v) : v.toLowerCase();
+        }
+        const text = cell.textContent.trim();
+        if (type === "number") {
+          const n = parseFloat(text.replace(/[^\d.-]/g, ""));
+          return isNaN(n) ? 0 : n;
+        }
+        return text.toLowerCase();
+      }
+
+      function applySort() {
+        headers.forEach((h) => {
+          h.classList.remove("sorted", "sorted-desc");
+        });
+
+        if (sortCol === null || sortDir === null) {
+          originalOrder.forEach((tr) => tbody.appendChild(tr));
+          return;
+        }
+
+        const header = Array.from(headers).find(
+          (h) => parseInt(h.dataset.col, 10) === sortCol
+        );
+        if (header) {
+          header.classList.add("sorted");
+          if (sortDir === "desc") header.classList.add("sorted-desc");
+        }
+
+        const type = header ? header.dataset.type : "text";
+        const rows = Array.from(tbody.querySelectorAll("tr"));
+        rows.sort((a, b) => {
+          const av = getCellValue(a, sortCol, type);
+          const bv = getCellValue(b, sortCol, type);
+          let cmp;
+          if (type === "number") {
+            cmp = av - bv;
+          } else {
+            cmp = av < bv ? -1 : av > bv ? 1 : 0;
+          }
+          return sortDir === "asc" ? cmp : -cmp;
+        });
+        rows.forEach((tr) => tbody.appendChild(tr));
+      }
+
+      headers.forEach((h) => {
+        h.addEventListener("click", () => {
+          const col = parseInt(h.dataset.col, 10);
+          if (sortCol !== col) {
+            sortCol = col;
+            sortDir = "asc";
+          } else if (sortDir === "asc") {
+            sortDir = "desc";
+          } else if (sortDir === "desc") {
+            sortCol = null;
+            sortDir = null;
+          } else {
+            sortDir = "asc";
+          }
+          applySort();
         });
       });
     })();
