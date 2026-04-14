@@ -758,9 +758,348 @@
       margin: 4px 2px;
     }
 
+    /* ============================================================
+       Popover (filter dropdowns, menus)
+       ============================================================ */
+    .dk-popover-wrap {
+      position: relative;
+      display: inline-block;
+    }
+    .dk-popover {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      min-width: 220px;
+      background: #fff;
+      border: 1px solid var(--zinc-200);
+      border-radius: 8px;
+      box-shadow: 0 10px 28px rgba(0,0,0,0.10), 0 2px 6px rgba(0,0,0,0.04);
+      padding: 6px;
+      z-index: 30;
+      display: none;
+      animation: dk-pop 120ms ease-out;
+    }
+    .dk-popover.open { display: block; }
+    .dk-popover--right { left: auto; right: 0; }
+    @keyframes dk-pop {
+      from { opacity: 0; transform: translateY(-4px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .dk-popover__header {
+      padding: 8px 10px 4px;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--zinc-500);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .dk-popover__option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 7px 10px;
+      border-radius: 6px;
+      font-size: 13px;
+      color: var(--zinc-800);
+      cursor: pointer;
+      transition: background-color 100ms;
+      user-select: none;
+    }
+    .dk-popover__option:hover { background: var(--zinc-50); }
+    .dk-popover__option input[type="checkbox"],
+    .dk-popover__option input[type="radio"] {
+      margin: 0;
+      accent-color: var(--zinc-900);
+      width: 14px;
+      height: 14px;
+    }
+    .dk-popover__option--icon {
+      color: var(--zinc-700);
+    }
+    .dk-popover__option--icon svg {
+      width: 14px;
+      height: 14px;
+      color: var(--zinc-500);
+      flex-shrink: 0;
+    }
+    .dk-popover__option--danger { color: #b91c1c; }
+    .dk-popover__option--danger svg { color: #dc2626; }
+    .dk-popover__divider {
+      height: 1px;
+      background: var(--zinc-100);
+      margin: 4px 2px;
+    }
+    .dk-popover__footer {
+      display: flex;
+      gap: 6px;
+      padding: 6px 4px 2px;
+      margin-top: 4px;
+      border-top: 1px solid var(--zinc-100);
+    }
+    .dk-popover__btn {
+      flex: 1;
+      height: 28px;
+      border-radius: 6px;
+      border: 1px solid var(--zinc-200);
+      background: #fff;
+      font-size: 12px;
+      color: var(--zinc-700);
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .dk-popover__btn:hover { background: var(--zinc-50); }
+    .dk-popover__btn--primary {
+      background: var(--zinc-900);
+      color: #fff;
+      border-color: var(--zinc-900);
+    }
+    .dk-popover__btn--primary:hover { background: var(--zinc-800); }
+
+    /* Filter button active state dots */
+    .dk-filter__dot {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 16px;
+      height: 16px;
+      padding: 0 4px;
+      border-radius: 999px;
+      background: #fff;
+      color: var(--zinc-900);
+      font-size: 10px;
+      font-weight: 600;
+      margin-left: -2px;
+      font-variant-numeric: tabular-nums;
+    }
+    .dk-filter:not(.active) .dk-filter__dot { display: none; }
+
+    /* User menu */
+    .dk-user {
+      cursor: pointer;
+      padding: 4px 6px;
+      border-radius: 8px;
+      transition: background-color 120ms;
+    }
+    .dk-user:hover { background: var(--zinc-100); }
+
+    /* Drawer (dispute detail) */
+    .dk-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(24, 24, 27, 0.45);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 200ms;
+      z-index: 40;
+    }
+    .dk-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .dk-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 560px;
+      max-width: calc(100vw - 40px);
+      background: #fff;
+      border-left: 1px solid var(--zinc-200);
+      box-shadow: -16px 0 40px rgba(0,0,0,0.08);
+      transform: translateX(100%);
+      transition: transform 260ms cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 50;
+      display: flex;
+      flex-direction: column;
+    }
+    .dk-drawer.open { transform: translateX(0); }
+    .dk-drawer__head {
+      padding: 20px 24px 16px;
+      border-bottom: 1px solid var(--zinc-200);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .dk-drawer__num {
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+      font-size: 12px;
+      color: var(--zinc-500);
+      margin: 0 0 6px;
+    }
+    .dk-drawer__title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--zinc-900);
+      letter-spacing: -0.01em;
+      margin: 0 0 10px;
+    }
+    .dk-drawer__meta {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .dk-drawer__close {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      border: 1px solid var(--zinc-200);
+      background: #fff;
+      color: var(--zinc-500);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .dk-drawer__close:hover { background: var(--zinc-50); color: var(--zinc-900); }
+    .dk-drawer__body {
+      padding: 20px 24px;
+      overflow-y: auto;
+      flex: 1;
+    }
+    .dk-drawer__section {
+      margin-bottom: 24px;
+    }
+    .dk-drawer__section-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--zinc-500);
+      font-weight: 500;
+      margin: 0 0 10px;
+    }
+    .dk-drawer__grid {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      row-gap: 10px;
+      column-gap: 16px;
+      font-size: 13px;
+    }
+    .dk-drawer__grid dt {
+      color: var(--zinc-500);
+      margin: 0;
+    }
+    .dk-drawer__grid dd {
+      color: var(--zinc-900);
+      margin: 0;
+      font-weight: 500;
+    }
+    .dk-drawer__timeline {
+      position: relative;
+      padding-left: 20px;
+    }
+    .dk-drawer__timeline::before {
+      content: "";
+      position: absolute;
+      left: 5px;
+      top: 6px;
+      bottom: 6px;
+      width: 1px;
+      background: var(--zinc-200);
+    }
+    .dk-tl-item {
+      position: relative;
+      padding: 0 0 14px;
+      font-size: 13px;
+    }
+    .dk-tl-item:last-child { padding-bottom: 0; }
+    .dk-tl-item::before {
+      content: "";
+      position: absolute;
+      left: -20px;
+      top: 6px;
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: #fff;
+      border: 2px solid var(--zinc-400);
+    }
+    .dk-tl-item--done::before { background: #22c55e; border-color: #22c55e; }
+    .dk-tl-item--active::before { background: var(--zinc-900); border-color: var(--zinc-900); }
+    .dk-tl-item__title { color: var(--zinc-900); font-weight: 500; }
+    .dk-tl-item__meta { color: var(--zinc-500); font-size: 12px; margin-top: 2px; }
+    .dk-drawer__footer {
+      padding: 14px 24px;
+      border-top: 1px solid var(--zinc-200);
+      display: flex;
+      gap: 8px;
+      background: var(--zinc-50);
+    }
+    .dk-drawer__footer .dk-btn { flex: 1; }
+
+    /* Row number hoverable link appearance */
+    .dk-table tbody td.dk-num {
+      color: var(--zinc-600);
+    }
+    .dk-table tbody tr:hover td.dk-num {
+      color: var(--zinc-900);
+    }
+
+    /* Empty state */
+    .dk-empty {
+      padding: 60px 24px;
+      text-align: center;
+      color: var(--zinc-500);
+      font-size: 13px;
+    }
+    .dk-empty svg {
+      color: var(--zinc-300);
+      margin-bottom: 10px;
+    }
+    .dk-empty__title {
+      color: var(--zinc-700);
+      font-weight: 500;
+      font-size: 14px;
+      margin: 0 0 4px;
+    }
+
+    /* Toast */
+    .dk-toasts {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column-reverse;
+      gap: 8px;
+      z-index: 100;
+      pointer-events: none;
+    }
+    .dk-toast {
+      background: var(--zinc-900);
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      box-shadow: 0 10px 28px rgba(0,0,0,0.18);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      animation: dk-toast-in 200ms ease-out;
+      pointer-events: auto;
+      max-width: 420px;
+    }
+    .dk-toast svg { color: #a1a1aa; flex-shrink: 0; }
+    .dk-toast.removing { animation: dk-toast-out 200ms ease-in forwards; }
+    @keyframes dk-toast-in {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes dk-toast-out {
+      from { opacity: 1; transform: translateY(0); }
+      to   { opacity: 0; transform: translateY(10px); }
+    }
+
+    /* Pager hover */
+    .dk-pager button:hover:not(.active) { background: var(--zinc-50); }
+    .dk-pager button:disabled { opacity: 0.4; cursor: not-allowed; }
+
     @media (max-width: 900px) {
       .dk-stats { grid-template-columns: repeat(2, 1fr); }
       .dk-nav a:not(.active) { display: none; }
+      .dk-drawer { width: 100%; }
     }
   </style>
 </head>
@@ -776,18 +1115,39 @@
           </svg>
           <span class="dk-logo__text">disputekz</span>
         </a>
-        <nav class="dk-nav">
-          <a href="#" class="active">Диспуты <span class="dk-nav__badge">45</span></a>
-          <a href="#">Шаблоны</a>
-          <a href="#">Отчёты</a>
-          <a href="#">Архив</a>
+        <nav class="dk-nav" id="mainNav">
+          <a href="#" class="active" data-nav="disputes">Диспуты <span class="dk-nav__badge">45</span></a>
+          <a href="#" data-nav="templates">Шаблоны</a>
+          <a href="#" data-nav="reports">Отчёты</a>
+          <a href="#" data-nav="archive">Архив</a>
         </nav>
-        <div class="dk-user">
-          <div class="dk-user__meta">
-            <span class="dk-user__name">Иванов Иван</span>
-            <span class="dk-user__role">Kaspi Bank · Отделение №5, Алматы</span>
+        <div class="dk-popover-wrap">
+          <div class="dk-user" data-popover-trigger>
+            <div class="dk-user__meta">
+              <span class="dk-user__name">Иванов Иван</span>
+              <span class="dk-user__role">Kaspi Bank · Отделение №5, Алматы</span>
+            </div>
+            <span class="dk-avatar">И.И.</span>
           </div>
-          <span class="dk-avatar">И.И.</span>
+          <div class="dk-popover dk-popover--right" style="min-width: 220px;">
+            <div class="dk-popover__option dk-popover__option--icon" data-action="profile">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              Профиль
+            </div>
+            <div class="dk-popover__option dk-popover__option--icon" data-action="settings">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+              Настройки
+            </div>
+            <div class="dk-popover__option dk-popover__option--icon" data-action="help">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              Помощь
+            </div>
+            <div class="dk-popover__divider"></div>
+            <div class="dk-popover__option dk-popover__option--icon dk-popover__option--danger" data-action="logout">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+              Выйти
+            </div>
+          </div>
         </div>
       </div>
     </header>
@@ -885,46 +1245,109 @@
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
           </svg>
-          <input class="dk-input" placeholder="Поиск по номеру, контрагенту..." />
+          <input class="dk-input" id="searchInput" placeholder="Поиск по номеру, контрагенту..." />
         </div>
-        <button class="dk-filter">
-          Статус
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-        </button>
-        <button class="dk-filter active">
-          Канал
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-        </button>
-        <button class="dk-filter">
-          Период
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-        </button>
-        <button class="dk-filter active">
-          Ответственный
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-        </button>
+
+        <div class="dk-popover-wrap" data-filter-group="status">
+          <button class="dk-filter" data-popover-trigger>
+            Статус <span class="dk-filter__dot"></span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="dk-popover">
+            <div class="dk-popover__header">Статус</div>
+            <label class="dk-popover__option"><input type="checkbox" value="review"/>На проверке</label>
+            <label class="dk-popover__option"><input type="checkbox" value="sign"/>На подписи</label>
+            <label class="dk-popover__option"><input type="checkbox" value="return"/>Возвращён</label>
+            <label class="dk-popover__option"><input type="checkbox" value="done"/>Завершён</label>
+            <div class="dk-popover__footer">
+              <button class="dk-popover__btn" data-popover-clear>Сбросить</button>
+              <button class="dk-popover__btn dk-popover__btn--primary" data-popover-apply>Применить</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="dk-popover-wrap" data-filter-group="channel">
+          <button class="dk-filter" data-popover-trigger>
+            Канал <span class="dk-filter__dot"></span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="dk-popover">
+            <div class="dk-popover__header">Канал</div>
+            <label class="dk-popover__option"><input type="checkbox" value="visa"/>Visa</label>
+            <label class="dk-popover__option"><input type="checkbox" value="mc"/>Mastercard</label>
+            <label class="dk-popover__option"><input type="checkbox" value="pos"/>POS</label>
+            <label class="dk-popover__option"><input type="checkbox" value="atm"/>ATM</label>
+            <label class="dk-popover__option"><input type="checkbox" value="int"/>Internal</label>
+            <div class="dk-popover__footer">
+              <button class="dk-popover__btn" data-popover-clear>Сбросить</button>
+              <button class="dk-popover__btn dk-popover__btn--primary" data-popover-apply>Применить</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="dk-popover-wrap" data-filter-group="period">
+          <button class="dk-filter" data-popover-trigger>
+            Период <span class="dk-filter__dot"></span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="dk-popover">
+            <div class="dk-popover__header">Период</div>
+            <label class="dk-popover__option"><input type="radio" name="period" value="today"/>Сегодня</label>
+            <label class="dk-popover__option"><input type="radio" name="period" value="week"/>За неделю</label>
+            <label class="dk-popover__option"><input type="radio" name="period" value="month"/>За месяц</label>
+            <label class="dk-popover__option"><input type="radio" name="period" value="quarter"/>За квартал</label>
+            <label class="dk-popover__option"><input type="radio" name="period" value="all" checked/>За всё время</label>
+            <div class="dk-popover__footer">
+              <button class="dk-popover__btn" data-popover-clear>Сбросить</button>
+              <button class="dk-popover__btn dk-popover__btn--primary" data-popover-apply>Применить</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="dk-popover-wrap" data-filter-group="assignee">
+          <button class="dk-filter" data-popover-trigger>
+            Ответственный <span class="dk-filter__dot"></span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="dk-popover">
+            <div class="dk-popover__header">Ответственный</div>
+            <label class="dk-popover__option"><input type="checkbox" value="ivanov"/>Иванов И. (я)</label>
+            <label class="dk-popover__option"><input type="checkbox" value="alieva"/>Алиева М.</label>
+            <label class="dk-popover__option"><input type="checkbox" value="kasymov"/>Касымов Е.</label>
+            <label class="dk-popover__option"><input type="checkbox" value="nurtaz"/>Нуртаз Д.</label>
+            <div class="dk-popover__footer">
+              <button class="dk-popover__btn" data-popover-clear>Сбросить</button>
+              <button class="dk-popover__btn dk-popover__btn--primary" data-popover-apply>Применить</button>
+            </div>
+          </div>
+        </div>
+
         <div class="dk-toolbar__spacer"></div>
-        <button class="dk-filter">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          Экспорт
-        </button>
+
+        <div class="dk-popover-wrap">
+          <button class="dk-filter" id="exportBtn" data-popover-trigger>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Экспорт
+          </button>
+          <div class="dk-popover dk-popover--right">
+            <div class="dk-popover__option dk-popover__option--icon" data-export="xlsx">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              Excel (.xlsx)
+            </div>
+            <div class="dk-popover__option dk-popover__option--icon" data-export="csv">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              CSV
+            </div>
+            <div class="dk-popover__option dk-popover__option--icon" data-export="pdf">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              PDF
+            </div>
+          </div>
+        </div>
       </div>
 
-      <!-- Active filters / result count -->
+      <!-- Active filters / result count (populated by JS) -->
       <div class="dk-chips-row" id="chipsRow">
-        <span class="dk-chip">
-          Канал: <strong>Visa, MC</strong>
-          <button class="dk-chip__close" aria-label="Убрать фильтр">
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-          </button>
-        </span>
-        <span class="dk-chip">
-          Ответственный: <strong>Я и Алиева М.</strong>
-          <button class="dk-chip__close" aria-label="Убрать фильтр">
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-          </button>
-        </span>
-        <button class="dk-chips-row__reset" id="chipsReset">Сбросить все</button>
         <div class="dk-chips-row__spacer"></div>
         <span class="dk-chips-row__count">Найдено <strong>6</strong> из <strong>45</strong></span>
       </div>
@@ -947,7 +1370,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
+            <tr data-id="DSP-2026-000471" data-status="review" data-channel="visa" data-assignee="alieva" data-type="dispute" data-search="dsp-2026-000471 оспаривание транзакции алатау логистик visa 245000 алиева">
               <td class="dk-col-check"><input type="checkbox" class="dk-checkbox" aria-label="Выбрать" /></td>
               <td class="dk-num">DSP-2026-000471</td>
               <td class="dk-strong">Оспаривание транзакции</td>
@@ -973,7 +1396,7 @@
                 </span>
               </td>
             </tr>
-            <tr>
+            <tr data-id="DSP-2026-000470" data-status="sign" data-channel="int" data-assignee="ivanov" data-type="refund" data-search="dsp-2026-000470 возврат средств омаров internal 89500 иванов">
               <td class="dk-col-check"><input type="checkbox" class="dk-checkbox" aria-label="Выбрать" /></td>
               <td class="dk-num">DSP-2026-000470</td>
               <td class="dk-strong">Возврат средств</td>
@@ -999,7 +1422,7 @@
                 </span>
               </td>
             </tr>
-            <tr>
+            <tr data-id="DSP-2026-000468" data-status="return" data-channel="pos" data-assignee="kasymov" data-type="pos" data-search="dsp-2026-000468 спорная операция pos satbayev retail 1240000 касымов">
               <td class="dk-col-check"><input type="checkbox" class="dk-checkbox" aria-label="Выбрать" /></td>
               <td class="dk-num">DSP-2026-000468</td>
               <td class="dk-strong">Спорная операция POS</td>
@@ -1025,7 +1448,7 @@
                 </span>
               </td>
             </tr>
-            <tr>
+            <tr data-id="DSP-2026-000465" data-status="review" data-channel="visa" data-assignee="alieva" data-type="dispute" data-search="dsp-2026-000465 chargeback visa chocolife 56780 алиева">
               <td class="dk-col-check"><input type="checkbox" class="dk-checkbox" aria-label="Выбрать" /></td>
               <td class="dk-num">DSP-2026-000465</td>
               <td class="dk-strong">Chargeback Visa</td>
@@ -1051,7 +1474,7 @@
                 </span>
               </td>
             </tr>
-            <tr>
+            <tr data-id="DSP-2026-000463" data-status="sign" data-channel="int" data-assignee="nurtaz" data-type="refund" data-search="dsp-2026-000463 возврат средств самрук строй internal 3150000 нуртаз">
               <td class="dk-col-check"><input type="checkbox" class="dk-checkbox" aria-label="Выбрать" /></td>
               <td class="dk-num">DSP-2026-000463</td>
               <td class="dk-strong">Возврат средств</td>
@@ -1077,7 +1500,7 @@
                 </span>
               </td>
             </tr>
-            <tr>
+            <tr data-id="DSP-2026-000457" data-status="review" data-channel="mc" data-assignee="kasymov" data-type="dispute" data-search="dsp-2026-000457 chargeback mastercard mc aliexpress 72400 касымов">
               <td class="dk-col-check"><input type="checkbox" class="dk-checkbox" aria-label="Выбрать" /></td>
               <td class="dk-num">DSP-2026-000457</td>
               <td class="dk-strong">Chargeback Mastercard</td>
@@ -1103,10 +1526,19 @@
                 </span>
               </td>
             </tr>
+            <tr id="emptyRow" style="display: none;">
+              <td colspan="10">
+                <div class="dk-empty">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                  <p class="dk-empty__title">Ничего не найдено</p>
+                  <p>Попробуйте изменить фильтры или очистить поиск.</p>
+                </div>
+              </td>
+            </tr>
           </tbody>
         </table>
         <div class="dk-table-footer">
-          <span>Показано 6 из 45</span>
+          <span id="tableFooterCount">Показано 6 из 45</span>
           <div class="dk-pager">
             <button>‹</button>
             <button class="active">1</button>
@@ -1119,93 +1551,459 @@
     </main>
   </div>
 
+  <!-- Overlay -->
+  <div class="dk-overlay" id="overlay"></div>
+
+  <!-- Drawer (dispute detail) -->
+  <aside class="dk-drawer" id="drawer" aria-hidden="true">
+    <div class="dk-drawer__head">
+      <div>
+        <p class="dk-drawer__num" id="drawerNum">DSP-2026-000471</p>
+        <h2 class="dk-drawer__title" id="drawerTitle">Оспаривание транзакции</h2>
+        <div class="dk-drawer__meta" id="drawerMeta"></div>
+      </div>
+      <button class="dk-drawer__close" id="drawerClose" aria-label="Закрыть">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="dk-drawer__body">
+      <div class="dk-drawer__section">
+        <h3 class="dk-drawer__section-title">Детали</h3>
+        <dl class="dk-drawer__grid" id="drawerDetails">
+          <!-- filled by JS -->
+        </dl>
+      </div>
+      <div class="dk-drawer__section">
+        <h3 class="dk-drawer__section-title">История</h3>
+        <div class="dk-drawer__timeline">
+          <div class="dk-tl-item dk-tl-item--done">
+            <div class="dk-tl-item__title">Диспут создан</div>
+            <div class="dk-tl-item__meta">11 апр, 09:24 · Иванов И.</div>
+          </div>
+          <div class="dk-tl-item dk-tl-item--done">
+            <div class="dk-tl-item__title">Документы загружены</div>
+            <div class="dk-tl-item__meta">11 апр, 11:02 · 4 файла</div>
+          </div>
+          <div class="dk-tl-item dk-tl-item--active">
+            <div class="dk-tl-item__title" id="drawerCurrentStep">Передан на проверку</div>
+            <div class="dk-tl-item__meta" id="drawerCurrentMeta">12 апр, 14:17 · ожидает действия</div>
+          </div>
+          <div class="dk-tl-item">
+            <div class="dk-tl-item__title">Отправка в платёжную систему</div>
+            <div class="dk-tl-item__meta">—</div>
+          </div>
+          <div class="dk-tl-item">
+            <div class="dk-tl-item__title">Закрытие диспута</div>
+            <div class="dk-tl-item__meta">—</div>
+          </div>
+        </div>
+      </div>
+      <div class="dk-drawer__section">
+        <h3 class="dk-drawer__section-title">Документы</h3>
+        <dl class="dk-drawer__grid">
+          <dt>Выписка по счёту</dt><dd>statement.pdf · 248 КБ</dd>
+          <dt>Чек операции</dt><dd>receipt.jpg · 1.2 МБ</dd>
+          <dt>Заявление клиента</dt><dd>claim.pdf · 96 КБ</dd>
+          <dt>Ответ мерчанта</dt><dd>merchant_reply.pdf · 182 КБ</dd>
+        </dl>
+      </div>
+    </div>
+    <div class="dk-drawer__footer">
+      <button class="dk-btn dk-btn--md" style="background:#fff; border:1px solid var(--zinc-200); color: var(--zinc-700);" data-drawer-action="comment">Комментарий</button>
+      <button class="dk-btn dk-btn--primary dk-btn--md" data-drawer-action="approve">Одобрить</button>
+    </div>
+  </aside>
+
+  <!-- Toast container -->
+  <div class="dk-toasts" id="toasts"></div>
+
+  <!-- Floating row action menu (shared) -->
+  <div class="dk-popover" id="rowMenu" style="position: fixed; min-width: 200px;">
+    <div class="dk-popover__option dk-popover__option--icon" data-row-action="open">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14L21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
+      Открыть
+    </div>
+    <div class="dk-popover__option dk-popover__option--icon" data-row-action="edit">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      Редактировать
+    </div>
+    <div class="dk-popover__option dk-popover__option--icon" data-row-action="duplicate">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      Дублировать
+    </div>
+    <div class="dk-popover__option dk-popover__option--icon" data-row-action="assign">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+      Переназначить
+    </div>
+    <div class="dk-popover__divider"></div>
+    <div class="dk-popover__option dk-popover__option--icon" data-row-action="archive">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+      В архив
+    </div>
+    <div class="dk-popover__option dk-popover__option--icon dk-popover__option--danger" data-row-action="delete">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+      Удалить
+    </div>
+  </div>
+
   <script>
-    // Split button dropdown
-    (function () {
+  (function () {
+    // ============================================================
+    // Toast
+    // ============================================================
+    const toastContainer = document.getElementById("toasts");
+    function toast(msg, opts = {}) {
+      if (!toastContainer) return;
+      const el = document.createElement("div");
+      el.className = "dk-toast";
+      el.innerHTML =
+        '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' +
+        '<span></span>';
+      el.querySelector("span").textContent = msg;
+      toastContainer.appendChild(el);
+      setTimeout(() => {
+        el.classList.add("removing");
+        setTimeout(() => el.remove(), 220);
+      }, opts.duration || 2400);
+    }
+
+    // ============================================================
+    // Popover controller (generic [data-popover-trigger])
+    // ============================================================
+    function closeAllPopovers(except) {
+      document.querySelectorAll(".dk-popover.open").forEach((p) => {
+        if (p !== except) p.classList.remove("open");
+      });
       const split = document.getElementById("newDisputeSplit");
-      const caret = document.getElementById("newDisputeCaret");
-      if (!split || !caret) return;
+      if (split && split !== except) split.classList.remove("open");
+    }
+
+    document.querySelectorAll("[data-popover-trigger]").forEach((trigger) => {
+      const wrap = trigger.closest(".dk-popover-wrap");
+      if (!wrap) return;
+      const pop = wrap.querySelector(".dk-popover");
+      if (!pop) return;
+      trigger.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const willOpen = !pop.classList.contains("open");
+        closeAllPopovers(pop);
+        pop.classList.toggle("open", willOpen);
+      });
+      pop.addEventListener("click", (e) => e.stopPropagation());
+    });
+
+    document.addEventListener("click", () => closeAllPopovers());
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        closeAllPopovers();
+        closeDrawer();
+      }
+      if (e.key === "/" && document.activeElement.tagName !== "INPUT") {
+        e.preventDefault();
+        const s = document.getElementById("searchInput");
+        if (s) s.focus();
+      }
+    });
+
+    // ============================================================
+    // Split button (Новый диспут)
+    // ============================================================
+    const split = document.getElementById("newDisputeSplit");
+    const caret = document.getElementById("newDisputeCaret");
+    if (split && caret) {
       caret.addEventListener("click", (e) => {
         e.stopPropagation();
-        split.classList.toggle("open");
+        const willOpen = !split.classList.contains("open");
+        closeAllPopovers(split);
+        split.classList.toggle("open", willOpen);
       });
-      document.addEventListener("click", (e) => {
-        if (!split.contains(e.target)) split.classList.remove("open");
-      });
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") split.classList.remove("open");
-      });
-    })();
-
-    // Filter chips (remove individually / reset all)
-    (function () {
-      const row = document.getElementById("chipsRow");
-      const reset = document.getElementById("chipsReset");
-      if (!row) return;
-
-      row.querySelectorAll(".dk-chip__close").forEach((btn) => {
-        btn.addEventListener("click", (e) => {
-          e.stopPropagation();
-          const chip = btn.closest(".dk-chip");
-          if (chip) chip.remove();
-          updateResetVisibility();
+      split.querySelectorAll(".dk-split__item").forEach((item) => {
+        item.addEventListener("click", (e) => {
+          e.preventDefault();
+          split.classList.remove("open");
+          const title = item.querySelector(".dk-split__item-title").textContent;
+          toast("Создание: " + title);
         });
       });
+      const mainBtn = split.querySelector(".dk-split__main");
+      if (mainBtn) {
+        mainBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          toast("Новый диспут: открываю форму…");
+        });
+      }
+    }
 
-      if (reset) {
+    // ============================================================
+    // State + data model
+    // ============================================================
+    const state = {
+      tab: "all",
+      search: "",
+      status: new Set(),
+      channel: new Set(),
+      period: "all",
+      assignee: new Set(),
+    };
+
+    const table = document.getElementById("disputesTable");
+    const tbody = table.querySelector("tbody");
+    const allRows = Array.from(tbody.querySelectorAll("tr[data-id]"));
+    const originalOrder = allRows.slice();
+    const emptyRow = document.getElementById("emptyRow");
+
+    const CHANNEL_LABELS = { visa: "Visa", mc: "Mastercard", pos: "POS", atm: "ATM", int: "Internal" };
+    const STATUS_LABELS  = { review: "На проверке", sign: "На подписи", return: "Возвращён", done: "Завершён" };
+    const ASSIGNEE_LABELS = { ivanov: "Иванов И.", alieva: "Алиева М.", kasymov: "Касымов Е.", nurtaz: "Нуртаз Д." };
+    const PERIOD_LABELS  = { today: "сегодня", week: "неделя", month: "месяц", quarter: "квартал", all: "всё время" };
+
+    function rowMatchesTab(tr, tab) {
+      if (tab === "all") return true;
+      if (tab === "mine") return tr.dataset.assignee === "ivanov";
+      if (tab === "review") return tr.dataset.status === "review";
+      if (tab === "sign") return tr.dataset.status === "sign";
+      if (tab === "overdue") {
+        const sla = tr.children[7];
+        const v = sla && sla.hasAttribute("data-sort-value")
+          ? parseFloat(sla.getAttribute("data-sort-value"))
+          : 99;
+        return v < 0;
+      }
+      if (tab === "drafts") return false;
+      return true;
+    }
+
+    function rowMatchesFilters(tr) {
+      if (state.status.size && !state.status.has(tr.dataset.status)) return false;
+      if (state.channel.size && !state.channel.has(tr.dataset.channel)) return false;
+      if (state.assignee.size && !state.assignee.has(tr.dataset.assignee)) return false;
+      if (state.search) {
+        const q = state.search.toLowerCase().trim();
+        if (q && !tr.dataset.search.includes(q)) return false;
+      }
+      return true;
+    }
+
+    // ============================================================
+    // Chips (active filters)
+    // ============================================================
+    const chipsRow = document.getElementById("chipsRow");
+    const countEl = chipsRow.querySelector(".dk-chips-row__count");
+
+    function renderChips() {
+      chipsRow.querySelectorAll(".dk-chip, .dk-chips-row__reset").forEach((e) => e.remove());
+
+      const chips = [];
+      if (state.status.size) chips.push({ key: "status", label: "Статус", val: [...state.status].map((k) => STATUS_LABELS[k]).join(", ") });
+      if (state.channel.size) chips.push({ key: "channel", label: "Канал", val: [...state.channel].map((k) => CHANNEL_LABELS[k]).join(", ") });
+      if (state.assignee.size) chips.push({ key: "assignee", label: "Ответственный", val: [...state.assignee].map((k) => ASSIGNEE_LABELS[k]).join(", ") });
+      if (state.period !== "all") chips.push({ key: "period", label: "Период", val: PERIOD_LABELS[state.period] });
+      if (state.search.trim()) chips.push({ key: "search", label: "Поиск", val: '"' + state.search.trim() + '"' });
+
+      const spacer = chipsRow.querySelector(".dk-chips-row__spacer");
+
+      chips.forEach((c) => {
+        const chip = document.createElement("span");
+        chip.className = "dk-chip";
+        chip.innerHTML = c.label + ': <strong></strong> <button class="dk-chip__close" aria-label="Убрать фильтр"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>';
+        chip.querySelector("strong").textContent = c.val;
+        chip.querySelector(".dk-chip__close").addEventListener("click", (e) => {
+          e.stopPropagation();
+          clearFilter(c.key);
+          render();
+        });
+        chipsRow.insertBefore(chip, spacer);
+      });
+
+      if (chips.length) {
+        const reset = document.createElement("button");
+        reset.className = "dk-chips-row__reset";
+        reset.textContent = "Сбросить все";
         reset.addEventListener("click", () => {
-          row.querySelectorAll(".dk-chip").forEach((c) => c.remove());
-          updateResetVisibility();
+          clearAllFilters();
+          render();
+        });
+        chipsRow.insertBefore(reset, spacer);
+      }
+    }
+
+    function clearFilter(key) {
+      if (key === "status") { state.status.clear(); syncPopoverInputs("status"); }
+      if (key === "channel") { state.channel.clear(); syncPopoverInputs("channel"); }
+      if (key === "assignee") { state.assignee.clear(); syncPopoverInputs("assignee"); }
+      if (key === "period") { state.period = "all"; syncPopoverInputs("period"); }
+      if (key === "search") {
+        state.search = "";
+        const s = document.getElementById("searchInput");
+        if (s) s.value = "";
+      }
+    }
+
+    function clearAllFilters() {
+      state.status.clear();
+      state.channel.clear();
+      state.assignee.clear();
+      state.period = "all";
+      state.search = "";
+      const s = document.getElementById("searchInput");
+      if (s) s.value = "";
+      ["status", "channel", "assignee", "period"].forEach(syncPopoverInputs);
+    }
+
+    function syncPopoverInputs(group) {
+      const wrap = document.querySelector('[data-filter-group="' + group + '"]');
+      if (!wrap) return;
+      wrap.querySelectorAll("input").forEach((inp) => {
+        if (group === "period") {
+          inp.checked = inp.value === state.period;
+        } else {
+          inp.checked = state[group].has(inp.value);
+        }
+      });
+    }
+
+    function updateFilterButtonStates() {
+      document.querySelectorAll(".dk-popover-wrap[data-filter-group]").forEach((wrap) => {
+        const group = wrap.dataset.filterGroup;
+        const btn = wrap.querySelector(".dk-filter");
+        const dot = btn.querySelector(".dk-filter__dot");
+        let count = 0;
+        if (group === "period") count = state.period !== "all" ? 1 : 0;
+        else count = state[group].size;
+        btn.classList.toggle("active", count > 0);
+        if (dot) dot.textContent = count > 0 ? String(count) : "";
+      });
+    }
+
+    // ============================================================
+    // Render (apply all filters, update counts, empty state)
+    // ============================================================
+    function render() {
+      let visible = 0;
+      allRows.forEach((tr) => {
+        const show = rowMatchesTab(tr, state.tab) && rowMatchesFilters(tr);
+        tr.style.display = show ? "" : "none";
+        if (show) visible++;
+      });
+
+      emptyRow.style.display = visible === 0 ? "" : "none";
+
+      countEl.innerHTML = "Найдено <strong>" + visible + "</strong> из <strong>45</strong>";
+      const footer = document.getElementById("tableFooterCount");
+      if (footer) footer.textContent = "Показано " + visible + " из 45";
+
+      renderChips();
+      updateFilterButtonStates();
+    }
+
+    // ============================================================
+    // Filter popovers
+    // ============================================================
+    document.querySelectorAll(".dk-popover-wrap[data-filter-group]").forEach((wrap) => {
+      const group = wrap.dataset.filterGroup;
+      const apply = wrap.querySelector("[data-popover-apply]");
+      const clear = wrap.querySelector("[data-popover-clear]");
+
+      if (apply) {
+        apply.addEventListener("click", () => {
+          if (group === "period") {
+            const sel = wrap.querySelector('input[name="period"]:checked');
+            state.period = sel ? sel.value : "all";
+          } else {
+            state[group].clear();
+            wrap.querySelectorAll('input[type="checkbox"]:checked').forEach((c) => {
+              state[group].add(c.value);
+            });
+          }
+          wrap.querySelector(".dk-popover").classList.remove("open");
+          render();
         });
       }
-
-      function updateResetVisibility() {
-        const hasChips = row.querySelectorAll(".dk-chip").length > 0;
-        if (reset) reset.style.display = hasChips ? "" : "none";
+      if (clear) {
+        clear.addEventListener("click", () => {
+          clearFilter(group);
+          render();
+        });
       }
-    })();
+    });
 
+    // ============================================================
+    // Search (live, debounced)
+    // ============================================================
+    const searchInput = document.getElementById("searchInput");
+    if (searchInput) {
+      let t;
+      searchInput.addEventListener("input", (e) => {
+        clearTimeout(t);
+        t = setTimeout(() => {
+          state.search = e.target.value;
+          render();
+        }, 120);
+      });
+    }
+
+    // ============================================================
+    // Tabs + summary bar linking
+    // ============================================================
+    const tabs = document.querySelectorAll("#disputeTabs .dk-tab");
+    const summaryItems = document.querySelectorAll(".dk-summary__item");
+
+    function setActiveTab(tabKey) {
+      state.tab = tabKey;
+      tabs.forEach((t) => t.classList.toggle("active", t.dataset.tab === tabKey));
+      summaryItems.forEach((s) => {
+        s.classList.toggle(
+          "active",
+          s.dataset.tabLink === tabKey || (tabKey === "all" && s.dataset.tabLink === "all")
+        );
+      });
+      render();
+    }
+    tabs.forEach((tab) => tab.addEventListener("click", () => setActiveTab(tab.dataset.tab)));
+    summaryItems.forEach((item) => {
+      if (!item.dataset.tabLink) return;
+      item.addEventListener("click", () => setActiveTab(item.dataset.tabLink));
+    });
+
+    // ============================================================
     // Row selection (bulk checkboxes)
-    (function () {
-      const table = document.getElementById("disputesTable");
-      const selectAll = document.getElementById("selectAll");
-      if (!table || !selectAll) return;
-      const rowBoxes = table.querySelectorAll("tbody .dk-checkbox");
+    // ============================================================
+    const selectAll = document.getElementById("selectAll");
+    const rowBoxes = table.querySelectorAll("tbody .dk-checkbox:not(#selectAll)");
 
-      function syncRow(cb) {
-        const tr = cb.closest("tr");
-        if (tr) tr.classList.toggle("selected", cb.checked);
-      }
+    function syncRowSelection(cb) {
+      const tr = cb.closest("tr");
+      if (tr) tr.classList.toggle("selected", cb.checked);
+    }
 
-      selectAll.addEventListener("change", () => {
-        rowBoxes.forEach((cb) => {
-          cb.checked = selectAll.checked;
-          syncRow(cb);
-        });
-      });
-
+    selectAll.addEventListener("click", (e) => e.stopPropagation());
+    selectAll.addEventListener("change", () => {
       rowBoxes.forEach((cb) => {
-        cb.addEventListener("change", (e) => {
-          e.stopPropagation();
-          syncRow(cb);
-          const all = Array.from(rowBoxes).every((c) => c.checked);
-          const none = Array.from(rowBoxes).every((c) => !c.checked);
-          selectAll.checked = all;
-          selectAll.indeterminate = !all && !none;
-        });
+        if (cb.closest("tr").style.display !== "none") {
+          cb.checked = selectAll.checked;
+          syncRowSelection(cb);
+        }
       });
-    })();
+    });
+    rowBoxes.forEach((cb) => {
+      cb.addEventListener("click", (e) => e.stopPropagation());
+      cb.addEventListener("change", () => {
+        syncRowSelection(cb);
+        const visible = Array.from(rowBoxes).filter((c) => c.closest("tr").style.display !== "none");
+        const all = visible.every((c) => c.checked);
+        const none = visible.every((c) => !c.checked);
+        selectAll.checked = all && visible.length > 0;
+        selectAll.indeterminate = !all && !none;
+      });
+    });
 
-    // Sortable column headers (3-state cycle: asc → desc → off)
+    // ============================================================
+    // Sortable column headers (3-state cycle)
+    // ============================================================
     (function () {
-      const table = document.getElementById("disputesTable");
-      if (!table) return;
-      const tbody = table.querySelector("tbody");
       const headers = table.querySelectorAll("thead th.sortable");
-      const originalOrder = Array.from(tbody.querySelectorAll("tr"));
-
       let sortCol = null;
-      let sortDir = null; // "asc" | "desc" | null
+      let sortDir = null;
 
       function getCellValue(tr, colIdx, type) {
         const cell = tr.children[colIdx];
@@ -1223,85 +2021,227 @@
       }
 
       function applySort() {
-        headers.forEach((h) => {
-          h.classList.remove("sorted", "sorted-desc");
-        });
-
+        headers.forEach((h) => h.classList.remove("sorted", "sorted-desc"));
         if (sortCol === null || sortDir === null) {
-          originalOrder.forEach((tr) => tbody.appendChild(tr));
+          originalOrder.forEach((tr) => tbody.insertBefore(tr, emptyRow));
           return;
         }
-
-        const header = Array.from(headers).find(
-          (h) => parseInt(h.dataset.col, 10) === sortCol
-        );
+        const header = Array.from(headers).find((h) => parseInt(h.dataset.col, 10) === sortCol);
         if (header) {
           header.classList.add("sorted");
           if (sortDir === "desc") header.classList.add("sorted-desc");
         }
-
         const type = header ? header.dataset.type : "text";
-        const rows = Array.from(tbody.querySelectorAll("tr"));
+        const rows = allRows.slice();
         rows.sort((a, b) => {
           const av = getCellValue(a, sortCol, type);
           const bv = getCellValue(b, sortCol, type);
           let cmp;
-          if (type === "number") {
-            cmp = av - bv;
-          } else {
-            cmp = av < bv ? -1 : av > bv ? 1 : 0;
-          }
+          if (type === "number") cmp = av - bv;
+          else cmp = av < bv ? -1 : av > bv ? 1 : 0;
           return sortDir === "asc" ? cmp : -cmp;
         });
-        rows.forEach((tr) => tbody.appendChild(tr));
+        rows.forEach((tr) => tbody.insertBefore(tr, emptyRow));
       }
 
       headers.forEach((h) => {
         h.addEventListener("click", () => {
           const col = parseInt(h.dataset.col, 10);
-          if (sortCol !== col) {
-            sortCol = col;
-            sortDir = "asc";
-          } else if (sortDir === "asc") {
-            sortDir = "desc";
-          } else if (sortDir === "desc") {
-            sortCol = null;
-            sortDir = null;
-          } else {
-            sortDir = "asc";
-          }
+          if (sortCol !== col) { sortCol = col; sortDir = "asc"; }
+          else if (sortDir === "asc") sortDir = "desc";
+          else if (sortDir === "desc") { sortCol = null; sortDir = null; }
+          else sortDir = "asc";
           applySort();
         });
       });
     })();
 
-    // Tabs + summary bar linking
-    (function () {
-      const tabs = document.querySelectorAll("#disputeTabs .dk-tab");
-      const summaryItems = document.querySelectorAll(".dk-summary__item");
+    // ============================================================
+    // Drawer (dispute detail)
+    // ============================================================
+    const drawer = document.getElementById("drawer");
+    const overlay = document.getElementById("overlay");
+    const drawerClose = document.getElementById("drawerClose");
 
-      function setActiveTab(tabKey) {
-        tabs.forEach((t) => {
-          t.classList.toggle("active", t.dataset.tab === tabKey);
-        });
-        summaryItems.forEach((s) => {
-          s.classList.toggle(
-            "active",
-            s.dataset.tabLink === tabKey ||
-              (tabKey === "all" && s.dataset.tabLink === "all")
-          );
-        });
-      }
+    function openDrawer(tr) {
+      if (!tr) return;
+      document.getElementById("drawerNum").textContent = tr.dataset.id;
+      document.getElementById("drawerTitle").textContent = tr.children[2].textContent.trim();
 
-      tabs.forEach((tab) => {
-        tab.addEventListener("click", () => setActiveTab(tab.dataset.tab));
+      const meta = document.getElementById("drawerMeta");
+      const channel = tr.children[3].innerHTML;
+      const status = tr.children[6].innerHTML;
+      const amount = tr.children[5].textContent.trim();
+      meta.innerHTML = channel + " " + status + ' <span style="font-family: JetBrains Mono, monospace; font-weight:500; color: var(--zinc-900)">' + amount + "</span>";
+
+      const details = document.getElementById("drawerDetails");
+      details.innerHTML = "";
+      const rows = [
+        ["Номер", tr.dataset.id],
+        ["Тип", tr.children[2].textContent.trim()],
+        ["Контрагент", tr.children[4].textContent.trim()],
+        ["Канал", CHANNEL_LABELS[tr.dataset.channel] || tr.dataset.channel],
+        ["Сумма", amount],
+        ["Статус", STATUS_LABELS[tr.dataset.status] || tr.dataset.status],
+        ["Ответственный", ASSIGNEE_LABELS[tr.dataset.assignee] || tr.dataset.assignee],
+        ["Срок", tr.children[7].textContent.trim().replace(/\s+/g, " ")],
+        ["Создан", "11 апр 2026, 09:24"],
+        ["Отделение", "Kaspi Bank · №5, Алматы"],
+      ];
+      rows.forEach(([k, v]) => {
+        const dt = document.createElement("dt");
+        dt.textContent = k;
+        const dd = document.createElement("dd");
+        dd.textContent = v;
+        details.appendChild(dt);
+        details.appendChild(dd);
       });
 
-      summaryItems.forEach((item) => {
-        if (!item.dataset.tabLink) return;
-        item.addEventListener("click", () => setActiveTab(item.dataset.tabLink));
+      drawer.classList.add("open");
+      overlay.classList.add("open");
+      drawer.setAttribute("aria-hidden", "false");
+    }
+
+    function closeDrawer() {
+      drawer.classList.remove("open");
+      overlay.classList.remove("open");
+      drawer.setAttribute("aria-hidden", "true");
+    }
+
+    if (drawerClose) drawerClose.addEventListener("click", closeDrawer);
+    if (overlay) overlay.addEventListener("click", closeDrawer);
+
+    drawer.querySelectorAll("[data-drawer-action]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const action = btn.dataset.drawerAction;
+        if (action === "approve") {
+          toast("Диспут одобрен: " + document.getElementById("drawerNum").textContent);
+          closeDrawer();
+        } else if (action === "comment") {
+          toast("Окно комментария (в разработке)");
+        }
       });
-    })();
+    });
+
+    // Row click → drawer (but ignore clicks on checkbox / action button)
+    allRows.forEach((tr) => {
+      tr.addEventListener("click", (e) => {
+        if (e.target.closest(".dk-col-check") || e.target.closest(".dk-col-actions")) return;
+        openDrawer(tr);
+      });
+    });
+
+    // ============================================================
+    // Row action menu (floating, shared)
+    // ============================================================
+    const rowMenu = document.getElementById("rowMenu");
+    let currentRowId = null;
+
+    document.querySelectorAll(".dk-row-actions button").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const tr = btn.closest("tr");
+        currentRowId = tr ? tr.dataset.id : null;
+        const rect = btn.getBoundingClientRect();
+        const willOpen = !rowMenu.classList.contains("open");
+        closeAllPopovers(rowMenu);
+        if (willOpen) {
+          rowMenu.style.top = rect.bottom + 4 + "px";
+          rowMenu.style.left = Math.max(8, rect.right - 200) + "px";
+          rowMenu.classList.add("open");
+        } else {
+          rowMenu.classList.remove("open");
+        }
+      });
+    });
+
+    rowMenu.addEventListener("click", (e) => e.stopPropagation());
+    rowMenu.querySelectorAll("[data-row-action]").forEach((opt) => {
+      opt.addEventListener("click", () => {
+        const action = opt.dataset.rowAction;
+        rowMenu.classList.remove("open");
+        const labels = {
+          open: "Открываю " + currentRowId,
+          edit: "Редактирование " + currentRowId,
+          duplicate: "Диспут " + currentRowId + " продублирован",
+          assign: "Переназначение " + currentRowId,
+          archive: currentRowId + " перемещён в архив",
+          delete: currentRowId + " удалён",
+        };
+        toast(labels[action] || action);
+        if (action === "open") {
+          const tr = allRows.find((r) => r.dataset.id === currentRowId);
+          openDrawer(tr);
+        }
+      });
+    });
+
+    // ============================================================
+    // Nav link switching
+    // ============================================================
+    document.querySelectorAll("#mainNav a").forEach((link) => {
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+        document.querySelectorAll("#mainNav a").forEach((l) => l.classList.remove("active"));
+        link.classList.add("active");
+        const labels = { disputes: "Диспуты", templates: "Шаблоны", reports: "Отчёты", archive: "Архив" };
+        if (link.dataset.nav !== "disputes") {
+          toast("Раздел «" + labels[link.dataset.nav] + "» — в разработке");
+        }
+      });
+    });
+
+    // ============================================================
+    // User menu actions
+    // ============================================================
+    document.querySelectorAll("[data-action]").forEach((opt) => {
+      opt.addEventListener("click", () => {
+        closeAllPopovers();
+        const map = { profile: "Профиль пользователя", settings: "Настройки", help: "Помощь", logout: "Выход из системы" };
+        toast(map[opt.dataset.action] || opt.dataset.action);
+        if (opt.dataset.action === "logout") {
+          setTimeout(() => (window.location.href = "login.html"), 700);
+        }
+      });
+    });
+
+    // ============================================================
+    // Export menu
+    // ============================================================
+    document.querySelectorAll("[data-export]").forEach((opt) => {
+      opt.addEventListener("click", () => {
+        closeAllPopovers();
+        toast("Экспорт в " + opt.dataset.export.toUpperCase() + "…");
+      });
+    });
+
+    // ============================================================
+    // Pager
+    // ============================================================
+    document.querySelectorAll(".dk-pager button").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const label = btn.textContent.trim();
+        if (label === "‹") {
+          toast("Предыдущая страница");
+          return;
+        }
+        if (label === "›") {
+          toast("Следующая страница");
+          return;
+        }
+        if (btn.classList.contains("active")) return;
+        document.querySelectorAll(".dk-pager button").forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        toast("Страница " + label);
+      });
+    });
+
+    // Logo → home
+    // (already <a href>)
+
+    // Initial render
+    render();
+  })();
   </script>
 </body>
 </html>
