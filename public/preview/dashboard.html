@@ -44,6 +44,9 @@
       padding: 6px 12px;
       border-radius: 6px;
       transition: color 150ms, background-color 150ms;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
     }
     .dk-nav a:hover {
       color: var(--zinc-900);
@@ -53,12 +56,41 @@
       color: var(--zinc-900);
       background: var(--zinc-100);
     }
+    .dk-nav__badge {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--zinc-500);
+      background: var(--zinc-100);
+      padding: 1px 6px;
+      border-radius: 999px;
+      font-variant-numeric: tabular-nums;
+    }
+    .dk-nav a.active .dk-nav__badge {
+      background: #fff;
+      color: var(--zinc-700);
+      border: 1px solid var(--zinc-200);
+    }
     .dk-user {
       display: flex;
       align-items: center;
       gap: 10px;
       font-size: 13px;
       color: var(--zinc-600);
+    }
+    .dk-user__meta {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      line-height: 1.25;
+    }
+    .dk-user__name {
+      color: var(--zinc-900);
+      font-weight: 500;
+      font-size: 13px;
+    }
+    .dk-user__role {
+      color: var(--zinc-500);
+      font-size: 11px;
     }
     .dk-avatar {
       width: 28px;
@@ -297,6 +329,64 @@
       border-color: var(--zinc-900);
     }
 
+    /* Split button */
+    .dk-split {
+      position: relative;
+      display: inline-flex;
+    }
+    .dk-split__main {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+      padding-right: 14px;
+    }
+    .dk-split__caret {
+      height: 36px;
+      width: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--zinc-900);
+      color: #fff;
+      border: none;
+      border-left: 1px solid rgba(255,255,255,0.18);
+      border-top-right-radius: 6px;
+      border-bottom-right-radius: 6px;
+      cursor: pointer;
+      transition: background-color 150ms;
+    }
+    .dk-split__caret:hover { background: var(--zinc-800); }
+    .dk-split__menu {
+      position: absolute;
+      top: calc(100% + 4px);
+      right: 0;
+      min-width: 260px;
+      background: #fff;
+      border: 1px solid var(--zinc-200);
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.04);
+      padding: 6px;
+      display: none;
+      z-index: 20;
+    }
+    .dk-split.open .dk-split__menu { display: block; }
+    .dk-split__item {
+      display: block;
+      padding: 8px 10px;
+      border-radius: 6px;
+      font-size: 13px;
+      color: var(--zinc-800);
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .dk-split__item:hover { background: var(--zinc-50); }
+    .dk-split__item-title { font-weight: 500; color: var(--zinc-900); }
+    .dk-split__item-desc { font-size: 12px; color: var(--zinc-500); margin-top: 2px; }
+    .dk-split__divider {
+      height: 1px;
+      background: var(--zinc-100);
+      margin: 4px 2px;
+    }
+
     @media (max-width: 900px) {
       .dk-stats { grid-template-columns: repeat(2, 1fr); }
       .dk-nav a:not(.active) { display: none; }
@@ -316,15 +406,17 @@
           <span class="dk-logo__text">disputekz</span>
         </a>
         <nav class="dk-nav">
-          <a href="#" class="active">Диспуты</a>
+          <a href="#" class="active">Диспуты <span class="dk-nav__badge">47</span></a>
           <a href="#">Шаблоны</a>
           <a href="#">Отчёты</a>
           <a href="#">Архив</a>
         </nav>
         <div class="dk-user">
-          <span>Иванов И.</span>
-          <span class="dk-muted">· Kaspi Bank</span>
-          <span class="dk-avatar">ИИ</span>
+          <div class="dk-user__meta">
+            <span class="dk-user__name">Иванов Иван</span>
+            <span class="dk-user__role">Kaspi Bank · Отделение №5, Алматы</span>
+          </div>
+          <span class="dk-avatar">И.И.</span>
         </div>
       </div>
     </header>
@@ -336,10 +428,38 @@
           <h1 class="dk-page__title">Активные диспуты</h1>
           <p class="dk-page__subtitle">Все запросы, требующие действия вашего отделения</p>
         </div>
-        <button class="dk-btn dk-btn--primary dk-btn--md">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Новый диспут
-        </button>
+        <div class="dk-split" id="newDisputeSplit">
+          <button class="dk-btn dk-btn--primary dk-btn--md dk-split__main">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Новый диспут
+          </button>
+          <button class="dk-split__caret" aria-label="Выбрать шаблон" id="newDisputeCaret">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="dk-split__menu">
+            <a class="dk-split__item" href="#">
+              <div class="dk-split__item-title">Оспаривание транзакции (Visa)</div>
+              <div class="dk-split__item-desc">Chargeback по карте Visa, reason 10.4</div>
+            </a>
+            <a class="dk-split__item" href="#">
+              <div class="dk-split__item-title">Оспаривание транзакции (Mastercard)</div>
+              <div class="dk-split__item-desc">Chargeback по карте MC, reason 4837</div>
+            </a>
+            <a class="dk-split__item" href="#">
+              <div class="dk-split__item-title">Возврат средств клиенту</div>
+              <div class="dk-split__item-desc">Внутренний спор, без карточных систем</div>
+            </a>
+            <a class="dk-split__item" href="#">
+              <div class="dk-split__item-title">Спорная операция POS / ATM</div>
+              <div class="dk-split__item-desc">Двойное списание, inkasso</div>
+            </a>
+            <div class="dk-split__divider"></div>
+            <a class="dk-split__item" href="#">
+              <div class="dk-split__item-title">Пустой диспут</div>
+              <div class="dk-split__item-desc">Заполнить поля вручную</div>
+            </a>
+          </div>
+        </div>
       </div>
 
       <!-- Stats -->
@@ -486,5 +606,24 @@
       </div>
     </main>
   </div>
+
+  <script>
+    // Split button dropdown
+    (function () {
+      const split = document.getElementById("newDisputeSplit");
+      const caret = document.getElementById("newDisputeCaret");
+      if (!split || !caret) return;
+      caret.addEventListener("click", (e) => {
+        e.stopPropagation();
+        split.classList.toggle("open");
+      });
+      document.addEventListener("click", (e) => {
+        if (!split.contains(e.target)) split.classList.remove("open");
+      });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") split.classList.remove("open");
+      });
+    })();
+  </script>
 </body>
 </html>
