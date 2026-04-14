@@ -18,9 +18,9 @@ export default function LoginPage() {
     e.preventDefault();
     setError(null);
     setIsLoading(true);
-    await new Promise((r) => setTimeout(r, 800));
-    setIsLoading(false);
-    alert("Вход выполнен (API пока не подключен)");
+    await new Promise((r) => setTimeout(r, 500));
+    // Preview mode: redirect to static dashboard preview
+    window.location.href = "/preview/dashboard.html";
   }
 
   return (
