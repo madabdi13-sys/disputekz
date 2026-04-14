@@ -179,7 +179,6 @@
     .dk-summary__item {
       flex: 1;
       padding: 14px 18px;
-      cursor: pointer;
       border-right: 1px solid var(--zinc-100);
       transition: background-color 120ms;
       background: transparent;
@@ -190,7 +189,8 @@
       font-family: inherit;
     }
     .dk-summary__item:last-child { border-right: none; }
-    .dk-summary__item:hover { background: var(--zinc-50); }
+    button.dk-summary__item { cursor: pointer; }
+    button.dk-summary__item:hover { background: var(--zinc-50); }
     .dk-summary__item.active { background: var(--zinc-50); }
     .dk-summary__label {
       font-size: 12px;
@@ -787,31 +787,21 @@
 
       <!-- Summary bar -->
       <div class="dk-summary">
+        <div class="dk-summary__item">
+          <p class="dk-summary__label">Всего</p>
+          <div class="dk-summary__value">1 247</div>
+          <p class="dk-summary__meta">за всё время</p>
+        </div>
         <button class="dk-summary__item active" data-tab-link="all">
-          <p class="dk-summary__label">Всего в работе</p>
+          <p class="dk-summary__label">В работе</p>
           <div class="dk-summary__value">45</div>
           <p class="dk-summary__meta">+5 за неделю</p>
         </button>
-        <button class="dk-summary__item" data-tab-link="review">
-          <p class="dk-summary__label">На проверке</p>
-          <div class="dk-summary__value">12</div>
-          <p class="dk-summary__meta">средний срок 2д</p>
-        </button>
-        <button class="dk-summary__item" data-tab-link="sign">
-          <p class="dk-summary__label">На подписи</p>
-          <div class="dk-summary__value">8</div>
-          <p class="dk-summary__meta">ожидают скан</p>
-        </button>
-        <button class="dk-summary__item dk-summary__item--alert" data-tab-link="overdue">
-          <p class="dk-summary__label"><span class="dk-summary__dot"></span>Просрочено</p>
-          <div class="dk-summary__value">3</div>
-          <p class="dk-summary__meta">требуют действия</p>
-        </button>
-        <button class="dk-summary__item">
-          <p class="dk-summary__label">Завершено за месяц</p>
+        <div class="dk-summary__item">
+          <p class="dk-summary__label">Завершено</p>
           <div class="dk-summary__value">134</div>
-          <p class="dk-summary__meta">SLA 92%</p>
-        </button>
+          <p class="dk-summary__meta">за месяц · SLA 92%</p>
+        </div>
       </div>
 
       <!-- Tabs -->
