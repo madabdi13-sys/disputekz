@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Отчёты — disputekz</title>
+  <link rel="stylesheet" href="_shared.css" />
+  <link rel="stylesheet" href="_app.css" />
+</head>
+<body>
+  <div class="dk-app">
+    <header class="dk-topbar">
+      <div class="dk-topbar__inner">
+        <a href="dashboard.html" class="dk-logo">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="12" height="12" transform="rotate(45 10 10)" stroke="currentColor" stroke-width="1.5" fill="none"/><rect x="10" y="10" width="9" height="9" transform="rotate(45 14.5 14.5)" fill="currentColor"/></svg>
+          <span class="dk-logo__text">disputekz</span>
+        </a>
+        <nav class="dk-nav" id="mainNav">
+          <a href="dashboard.html" data-nav="disputes">Диспуты <span class="dk-nav__badge">18</span></a>
+          <a href="templates.html" data-nav="templates">Шаблоны</a>
+          <a href="reports.html" class="active" data-nav="reports">Отчёты</a>
+          <a href="archive.html" data-nav="archive">Архив</a>
+        </nav>
+        <div class="dk-popover-wrap">
+          <div class="dk-user" data-popover-trigger>
+            <div class="dk-user__meta">
+              <span class="dk-user__name">Иванов Иван</span>
+              <span class="dk-user__role">Kaspi Bank · Отделение №5, Алматы</span>
+            </div>
+            <span class="dk-avatar">И.И.</span>
+          </div>
+          <div class="dk-popover dk-popover--right">
+            <div class="dk-popover__option" data-action="profile">Профиль</div>
+            <div class="dk-popover__option" data-action="settings">Настройки</div>
+            <div class="dk-popover__option" data-action="help">Помощь</div>
+            <div class="dk-popover__divider"></div>
+            <div class="dk-popover__option dk-popover__option--danger" data-action="logout">Выйти</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="dk-page">
+      <div class="dk-page__head">
+        <div>
+          <h1 class="dk-page__title">Отчёты</h1>
+          <p class="dk-page__subtitle">Сводная аналитика по диспутам за выбранный период</p>
+        </div>
+        <div class="dk-select-wrap" style="width: 200px;">
+          <select class="dk-select" id="periodSelect">
+            <option value="month">За текущий месяц</option>
+            <option value="quarter" selected>За квартал</option>
+            <option value="year">За год</option>
+            <option value="ytd">С начала года</option>
+          </select>
+          <svg class="chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+      </div>
+
+      <div class="dk-kpi-grid" id="kpiGrid"></div>
+
+      <section class="dk-section">
+        <h2 class="dk-section__title">Готовые отчёты</h2>
+        <p class="dk-section__sub">Скачайте нужный отчёт в формате Excel или PDF</p>
+        <div class="dk-report-list" id="reportList"></div>
+      </section>
+    </main>
+  </div>
+
+  <div class="dk-toasts" id="toasts"></div>
+  <script src="_app.js"></script>
+  <script>
+  (function () {
+    const KPI = {
+      quarter: [
+        { label: "Всего диспутов", value: "1 247", delta: "+12%", trend: "up" },
+        { label: "Resolution rate", value: "94,3%", delta: "+2,1 п.п.", trend: "up" },
+        { label: "Среднее время", value: "6,2 дн", delta: "−0,8 дн", trend: "up" },
+        { label: "Возвращено клиентам", value: "142 млн ₸", delta: "+18%", trend: "up" },
+      ],
+      month: [
+        { label: "Всего диспутов", value: "418", delta: "+6%", trend: "up" },
+        { label: "Resolution rate", value: "95,1%", delta: "+0,8 п.п.", trend: "up" },
+        { label: "Среднее время", value: "5,9 дн", delta: "−0,3 дн", trend: "up" },
+        { label: "Возвращено клиентам", value: "48 млн ₸", delta: "+9%", trend: "up" },
+      ],
+      year: [
+        { label: "Всего диспутов", value: "4 812", delta: "+24%", trend: "up" },
+        { label: "Resolution rate", value: "93,8%", delta: "+3,4 п.п.", trend: "up" },
+        { label: "Среднее время", value: "6,4 дн", delta: "−1,1 дн", trend: "up" },
+        { label: "Возвращено клиентам", value: "582 млн ₸", delta: "+31%", trend: "up" },
+      ],
+      ytd: [
+        { label: "Всего диспутов", value: "1 247", delta: "+12%", trend: "up" },
+        { label: "Resolution rate", value: "94,3%", delta: "+2,1 п.п.", trend: "up" },
+        { label: "Среднее время", value: "6,2 дн", delta: "−0,8 дн", trend: "up" },
+        { label: "Возвращено клиентам", value: "142 млн ₸", delta: "+18%", trend: "up" },
+      ],
+    };
+
+    const REPORTS = [
+      { title: "Отчёт по SLA", desc: "Соблюдение сроков по каждому диспуту, с разбивкой по исполнителям.", icon: "clock", badge: "Excel" },
+      { title: "Структура по каналам", desc: "Visa / Mastercard / POS / ATM / Internal — количество и суммы.", icon: "pie", badge: "Excel" },
+      { title: "По отделениям", desc: "Эффективность отделений банка: доля выигранных, среднее время.", icon: "building", badge: "Excel" },
+      { title: "Chargeback-операции", desc: "Все операции chargeback с reason code и финальным статусом.", icon: "card", badge: "Excel" },
+      { title: "Аудит и compliance", desc: "Отчёт для регулятора: полная выгрузка с журналом действий.", icon: "shield", badge: "PDF" },
+      { title: "Финансовая сводка", desc: "Возвраты, штрафы, комиссии — для бухгалтерии.", icon: "bank", badge: "Excel" },
+    ];
+
+    const ICONS = {
+      clock: '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
+      pie: '<path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/>',
+      building: '<rect x="4" y="2" width="16" height="20" rx="2"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/><line x1="9" y1="15" x2="15" y2="15"/>',
+      card: '<rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/>',
+      shield: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
+      bank: '<line x1="3" y1="22" x2="21" y2="22"/><line x1="6" y1="18" x2="6" y2="11"/><line x1="10" y1="18" x2="10" y2="11"/><line x1="14" y1="18" x2="14" y2="11"/><line x1="18" y1="18" x2="18" y2="11"/><polygon points="12 2 20 7 4 7"/>',
+    };
+
+    function renderKpi(period) {
+      const grid = document.getElementById("kpiGrid");
+      grid.innerHTML = KPI[period].map((k) => `
+        <div class="dk-kpi">
+          <div class="dk-kpi__label">${k.label}</div>
+          <div class="dk-kpi__value">${k.value}</div>
+          <div class="dk-kpi__delta dk-kpi__delta--${k.trend}">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+            ${k.delta} к прошлому периоду
+          </div>
+        </div>`).join("");
+    }
+
+    function renderReports() {
+      const list = document.getElementById("reportList");
+      list.innerHTML = REPORTS.map((r) => `
+        <div class="dk-report" data-title="${r.title}">
+          <div class="dk-report__icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">${ICONS[r.icon]}</svg>
+          </div>
+          <div class="dk-report__body">
+            <div class="dk-report__title">${r.title} <span class="dk-report__badge">${r.badge}</span></div>
+            <div class="dk-report__desc">${r.desc}</div>
+          </div>
+          <button class="dk-btn dk-btn--primary dk-btn--md" data-download>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Скачать
+          </button>
+        </div>`).join("");
+      list.querySelectorAll("[data-download]").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const title = btn.closest(".dk-report").dataset.title;
+          window.dkToast && window.dkToast("Готовим файл: " + title);
+        });
+      });
+    }
+
+    renderKpi("quarter");
+    renderReports();
+
+    document.getElementById("periodSelect").addEventListener("change", (e) => {
+      renderKpi(e.target.value);
+      window.dkToast && window.dkToast("Период обновлён");
+    });
+  })();
+  </script>
+</body>
+</html>
