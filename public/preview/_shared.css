@@ -157,6 +157,7 @@ body {
   white-space: nowrap;
   font-family: inherit;
   border: 1px solid transparent;
+  text-decoration: none;
 }
 .dk-btn:focus-visible {
   outline: 2px solid var(--zinc-900);
