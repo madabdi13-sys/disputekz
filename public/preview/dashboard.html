@@ -1894,8 +1894,9 @@
     // Render (apply all filters, paginate, update counts, empty state)
     // ============================================================
     function render() {
-      // 1. Determine matching rows
-      const matching = allRows.filter(
+      // 1. Determine matching rows — read in current DOM order so sorting is respected
+      const currentOrder = Array.from(tbody.querySelectorAll("tr[data-id]"));
+      const matching = currentOrder.filter(
         (tr) => rowMatchesTab(tr, state.tab) && rowMatchesFilters(tr)
       );
 
@@ -2153,6 +2154,7 @@
         headers.forEach((h) => h.classList.remove("sorted", "sorted-desc"));
         if (sortCol === null || sortDir === null) {
           originalOrder.forEach((tr) => tbody.insertBefore(tr, emptyRow));
+          render();
           return;
         }
         const header = Array.from(headers).find((h) => parseInt(h.dataset.col, 10) === sortCol);
@@ -2171,6 +2173,8 @@
           return sortDir === "asc" ? cmp : -cmp;
         });
         rows.forEach((tr) => tbody.insertBefore(tr, emptyRow));
+        state.page = 1;
+        render();
       }
 
       headers.forEach((h) => {
