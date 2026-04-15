@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Шаблоны — disputekz</title>
+  <link rel="stylesheet" href="_shared.css" />
+  <style>
+    /* ============================================================
+       Shared app shell (topbar, nav, user, page, popover, toast)
+       ============================================================ */
+    .dk-app { min-height: 100vh; background: var(--zinc-50); display: flex; flex-direction: column; }
+    .dk-topbar { background: #fff; border-bottom: 1px solid var(--zinc-200); }
+    .dk-topbar__inner { max-width: 1280px; margin: 0 auto; padding: 0 24px; height: 56px; display: flex; align-items: center; gap: 32px; }
+    .dk-nav { display: flex; align-items: center; gap: 4px; flex: 1; }
+    .dk-nav a { font-size: 13px; font-weight: 500; color: var(--zinc-500); text-decoration: none; padding: 6px 12px; border-radius: 6px; transition: color 150ms, background-color 150ms; display: inline-flex; align-items: center; gap: 6px; }
+    .dk-nav a:hover { color: var(--zinc-900); background: var(--zinc-100); }
+    .dk-nav a.active { color: var(--zinc-900); background: var(--zinc-100); }
+    .dk-nav__badge { font-size: 11px; font-weight: 500; color: var(--zinc-500); background: var(--zinc-100); padding: 1px 6px; border-radius: 999px; font-variant-numeric: tabular-nums; }
+    .dk-nav a.active .dk-nav__badge { background: #fff; color: var(--zinc-700); border: 1px solid var(--zinc-200); }
+    .dk-user { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--zinc-600); cursor: pointer; padding: 4px 6px; border-radius: 8px; transition: background-color 120ms; }
+    .dk-user:hover { background: var(--zinc-100); }
+    .dk-user__meta { display: flex; flex-direction: column; align-items: flex-end; line-height: 1.25; }
+    .dk-user__name { color: var(--zinc-900); font-weight: 500; font-size: 13px; }
+    .dk-user__role { color: var(--zinc-500); font-size: 11px; }
+    .dk-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--zinc-900); color: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; }
+
+    .dk-page { max-width: 1280px; margin: 0 auto; padding: 32px 24px 48px; width: 100%; box-sizing: border-box; flex: 1; }
+    .dk-page__head { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 24px; gap: 16px; }
+    .dk-page__title { font-size: 24px; font-weight: 600; letter-spacing: -0.02em; color: var(--zinc-900); margin: 0 0 4px; }
+    .dk-page__subtitle { font-size: 13px; color: var(--zinc-500); margin: 0; }
+
+    /* Popover (user menu) */
+    .dk-popover-wrap { position: relative; display: inline-block; }
+    .dk-popover { position: absolute; top: calc(100% + 6px); left: 0; min-width: 220px; background: #fff; border: 1px solid var(--zinc-200); border-radius: 8px; box-shadow: 0 10px 28px rgba(0,0,0,0.10), 0 2px 6px rgba(0,0,0,0.04); padding: 6px; z-index: 30; display: none; }
+    .dk-popover.open { display: block; }
+    .dk-popover--right { left: auto; right: 0; }
+    .dk-popover__option { display: flex; align-items: center; gap: 10px; padding: 7px 10px; border-radius: 6px; font-size: 13px; color: var(--zinc-800); cursor: pointer; transition: background-color 100ms; }
+    .dk-popover__option:hover { background: var(--zinc-50); }
+    .dk-popover__option svg { width: 14px; height: 14px; color: var(--zinc-500); flex-shrink: 0; }
+    .dk-popover__option--danger { color: #b91c1c; }
+    .dk-popover__option--danger svg { color: #dc2626; }
+    .dk-popover__divider { height: 1px; background: var(--zinc-100); margin: 4px 2px; }
+
+    /* Toast */
+    .dk-toasts { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column-reverse; gap: 8px; z-index: 100; pointer-events: none; }
+    .dk-toast { background: var(--zinc-900); color: #fff; padding: 10px 16px; border-radius: 8px; font-size: 13px; box-shadow: 0 10px 28px rgba(0,0,0,0.18); display: flex; align-items: center; gap: 10px; animation: dk-toast-in 200ms ease-out; pointer-events: auto; max-width: 420px; }
+    .dk-toast svg { color: #a1a1aa; flex-shrink: 0; }
+    .dk-toast.removing { animation: dk-toast-out 200ms ease-in forwards; }
+    @keyframes dk-toast-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes dk-toast-out { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(10px); } }
+
+    /* ============================================================
+       Templates page-specific
+       ============================================================ */
+    .dk-tpl-toolbar { display: flex; align-items: center; gap: 10px; margin-bottom: 24px; }
+    .dk-search { position: relative; width: 320px; flex-shrink: 0; }
+    .dk-search input { padding-left: 34px; width: 100%; box-sizing: border-box; }
+    .dk-search svg { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--zinc-400); pointer-events: none; }
+
+    .dk-tpl-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    @media (max-width: 980px) { .dk-tpl-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 640px) { .dk-tpl-grid { grid-template-columns: 1fr; } }
+
+    .dk-tpl-card { background: #fff; border: 1px solid var(--zinc-200); border-radius: 10px; padding: 20px; transition: border-color 150ms, box-shadow 150ms, transform 150ms; cursor: pointer; display: flex; flex-direction: column; min-height: 180px; }
+    .dk-tpl-card:hover { border-color: var(--zinc-300); box-shadow: 0 4px 16px rgba(0,0,0,0.04); transform: translateY(-1px); }
+
+    .dk-tpl-card__head { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
+    .dk-tpl-card__icon { width: 40px; height: 40px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; background: var(--zinc-100); color: var(--zinc-700); }
+    .dk-tpl-card__icon--visa { background: #eef0ff; color: #1a1f71; }
+    .dk-tpl-card__icon--mc { background: #fef1ee; color: #b3321f; }
+    .dk-tpl-card__icon--pos { background: var(--zinc-100); color: var(--zinc-700); }
+    .dk-tpl-card__icon--int { background: #f0fdf4; color: #15803d; }
+    .dk-tpl-card__icon--atm { background: #fffbeb; color: #b45309; }
+    .dk-tpl-card__icon--blank { background: var(--zinc-50); color: var(--zinc-400); border: 1px dashed var(--zinc-300); }
+    .dk-tpl-card__title { font-size: 15px; font-weight: 600; color: var(--zinc-900); margin: 0 0 2px; letter-spacing: -0.01em; }
+    .dk-tpl-card__sub { font-size: 12px; color: var(--zinc-500); }
+    .dk-tpl-card__desc { font-size: 13px; color: var(--zinc-600); line-height: 1.5; margin: 0 0 16px; flex: 1; }
+    .dk-tpl-card__footer { display: flex; align-items: center; justify-content: space-between; padding-top: 12px; border-top: 1px solid var(--zinc-100); }
+    .dk-tpl-card__usage { font-size: 12px; color: var(--zinc-500); font-variant-numeric: tabular-nums; }
+    .dk-tpl-card__edit { background: transparent; border: none; color: var(--zinc-500); cursor: pointer; font-size: 12px; font-family: inherit; padding: 4px 8px; border-radius: 4px; transition: background-color 120ms, color 120ms; }
+    .dk-tpl-card__edit:hover { background: var(--zinc-100); color: var(--zinc-900); }
+  </style>
+</head>
+<body>
+  <div class="dk-app">
+    <header class="dk-topbar">
+      <div class="dk-topbar__inner">
+        <a href="dashboard.html" class="dk-logo">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <rect x="4" y="4" width="12" height="12" transform="rotate(45 10 10)" stroke="currentColor" stroke-width="1.5" fill="none"/>
+            <rect x="10" y="10" width="9" height="9" transform="rotate(45 14.5 14.5)" fill="currentColor"/>
+          </svg>
+          <span class="dk-logo__text">disputekz</span>
+        </a>
+        <nav class="dk-nav" id="mainNav">
+          <a href="dashboard.html" data-nav="disputes">Диспуты <span class="dk-nav__badge">18</span></a>
+          <a href="templates.html" class="active" data-nav="templates">Шаблоны</a>
+          <a href="reports.html" data-nav="reports">Отчёты</a>
+          <a href="archive.html" data-nav="archive">Архив</a>
+        </nav>
+        <div class="dk-popover-wrap">
+          <div class="dk-user" data-popover-trigger>
+            <div class="dk-user__meta">
+              <span class="dk-user__name">Иванов Иван</span>
+              <span class="dk-user__role">Kaspi Bank · Отделение №5, Алматы</span>
+            </div>
+            <span class="dk-avatar">И.И.</span>
+          </div>
+          <div class="dk-popover dk-popover--right" style="min-width: 220px;">
+            <div class="dk-popover__option" data-action="profile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Профиль</div>
+            <div class="dk-popover__option" data-action="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Настройки</div>
+            <div class="dk-popover__option" data-action="help"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Помощь</div>
+            <div class="dk-popover__divider"></div>
+            <div class="dk-popover__option dk-popover__option--danger" data-action="logout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Выйти</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="dk-page">
+      <div class="dk-page__head">
+        <div>
+          <h1 class="dk-page__title">Шаблоны диспутов</h1>
+          <p class="dk-page__subtitle">Готовые формы для типовых ситуаций — заполняются за пару минут</p>
+        </div>
+        <button class="dk-btn dk-btn--primary dk-btn--md" id="newTemplateBtn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Новый шаблон
+        </button>
+      </div>
+
+      <div class="dk-tpl-toolbar">
+        <div class="dk-search">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input class="dk-input" id="tplSearch" placeholder="Найти шаблон..." />
+        </div>
+      </div>
+
+      <div class="dk-tpl-grid" id="tplGrid">
+        <div class="dk-tpl-card" data-name="visa chargeback оспаривание транзакции">
+          <div class="dk-tpl-card__head">
+            <div class="dk-tpl-card__icon dk-tpl-card__icon--visa">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+            </div>
+            <div>
+              <h3 class="dk-tpl-card__title">Chargeback Visa</h3>
+              <p class="dk-tpl-card__sub">Reason 10.4 · Несанкционированная операция</p>
+            </div>
+          </div>
+          <p class="dk-tpl-card__desc">Оспаривание транзакции по карте Visa. Включает поля для номера карты, суммы, мерчанта и приложений.</p>
+          <div class="dk-tpl-card__footer">
+            <span class="dk-tpl-card__usage">Использован 247 раз</span>
+            <button class="dk-tpl-card__edit" data-edit>Редактировать</button>
+          </div>
+        </div>
+
+        <div class="dk-tpl-card" data-name="mastercard chargeback оспаривание">
+          <div class="dk-tpl-card__head">
+            <div class="dk-tpl-card__icon dk-tpl-card__icon--mc">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="12" r="6"/><circle cx="15" cy="12" r="6"/></svg>
+            </div>
+            <div>
+              <h3 class="dk-tpl-card__title">Chargeback Mastercard</h3>
+              <p class="dk-tpl-card__sub">Reason 4837 · Не получены товары/услуги</p>
+            </div>
+          </div>
+          <p class="dk-tpl-card__desc">Стандартная форма для chargeback по картам Mastercard. SLA 30 дней.</p>
+          <div class="dk-tpl-card__footer">
+            <span class="dk-tpl-card__usage">Использован 184 раза</span>
+            <button class="dk-tpl-card__edit" data-edit>Редактировать</button>
+          </div>
+        </div>
+
+        <div class="dk-tpl-card" data-name="возврат средств internal">
+          <div class="dk-tpl-card__head">
+            <div class="dk-tpl-card__icon dk-tpl-card__icon--int">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9"/><polyline points="3 4 3 12 11 12"/></svg>
+            </div>
+            <div>
+              <h3 class="dk-tpl-card__title">Возврат средств</h3>
+              <p class="dk-tpl-card__sub">Internal · Без карточных систем</p>
+            </div>
+          </div>
+          <p class="dk-tpl-card__desc">Внутренний спор между банком и клиентом. Используется для возврата комиссий, ошибочных списаний.</p>
+          <div class="dk-tpl-card__footer">
+            <span class="dk-tpl-card__usage">Использован 156 раз</span>
+            <button class="dk-tpl-card__edit" data-edit>Редактировать</button>
+          </div>
+        </div>
+
+        <div class="dk-tpl-card" data-name="спорная операция pos">
+          <div class="dk-tpl-card__head">
+            <div class="dk-tpl-card__icon dk-tpl-card__icon--pos">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><line x1="7" y1="20" x2="17" y2="20"/><line x1="12" y1="18" x2="12" y2="20"/></svg>
+            </div>
+            <div>
+              <h3 class="dk-tpl-card__title">Спорная операция POS</h3>
+              <p class="dk-tpl-card__sub">Двойное списание · Ошибка терминала</p>
+            </div>
+          </div>
+          <p class="dk-tpl-card__desc">Для случаев двойного списания, технических ошибок POS-терминалов и инкассо-расхождений.</p>
+          <div class="dk-tpl-card__footer">
+            <span class="dk-tpl-card__usage">Использован 89 раз</span>
+            <button class="dk-tpl-card__edit" data-edit>Редактировать</button>
+          </div>
+        </div>
+
+        <div class="dk-tpl-card" data-name="спорная операция atm банкомат">
+          <div class="dk-tpl-card__head">
+            <div class="dk-tpl-card__icon dk-tpl-card__icon--atm">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="9" y1="13" x2="15" y2="13"/></svg>
+            </div>
+            <div>
+              <h3 class="dk-tpl-card__title">Спорная операция ATM</h3>
+              <p class="dk-tpl-card__sub">Не выданы купюры · Невозврат карты</p>
+            </div>
+          </div>
+          <p class="dk-tpl-card__desc">Расследование инцидентов на банкоматах. Требует отчёта по логам и сверки кассеты.</p>
+          <div class="dk-tpl-card__footer">
+            <span class="dk-tpl-card__usage">Использован 62 раза</span>
+            <button class="dk-tpl-card__edit" data-edit>Редактировать</button>
+          </div>
+        </div>
+
+        <div class="dk-tpl-card" data-name="пустой шаблон blank">
+          <div class="dk-tpl-card__head">
+            <div class="dk-tpl-card__icon dk-tpl-card__icon--blank">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </div>
+            <div>
+              <h3 class="dk-tpl-card__title">Пустой диспут</h3>
+              <p class="dk-tpl-card__sub">Заполнить все поля вручную</p>
+            </div>
+          </div>
+          <p class="dk-tpl-card__desc">Свободная форма без предзаполненных значений. Для нестандартных случаев.</p>
+          <div class="dk-tpl-card__footer">
+            <span class="dk-tpl-card__usage">Использован 23 раза</span>
+            <button class="dk-tpl-card__edit" data-edit>Редактировать</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="dk-toasts" id="toasts"></div>
+
+  <script>
+  (function () {
+    const toastContainer = document.getElementById("toasts");
+    function toast(msg) {
+      if (!toastContainer) return;
+      const el = document.createElement("div");
+      el.className = "dk-toast";
+      el.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span></span>';
+      el.querySelector("span").textContent = msg;
+      toastContainer.appendChild(el);
+      setTimeout(() => { el.classList.add("removing"); setTimeout(() => el.remove(), 220); }, 2400);
+    }
+
+    // User menu
+    document.querySelectorAll("[data-popover-trigger]").forEach((trigger) => {
+      const wrap = trigger.closest(".dk-popover-wrap");
+      const pop = wrap.querySelector(".dk-popover");
+      trigger.addEventListener("click", (e) => {
+        e.stopPropagation();
+        document.querySelectorAll(".dk-popover.open").forEach((p) => { if (p !== pop) p.classList.remove("open"); });
+        pop.classList.toggle("open");
+      });
+      pop.addEventListener("click", (e) => e.stopPropagation());
+    });
+    document.addEventListener("click", () => {
+      document.querySelectorAll(".dk-popover.open").forEach((p) => p.classList.remove("open"));
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") document.querySelectorAll(".dk-popover.open").forEach((p) => p.classList.remove("open"));
+    });
+
+    document.querySelectorAll("[data-action]").forEach((opt) => {
+      opt.addEventListener("click", () => {
+        document.querySelectorAll(".dk-popover.open").forEach((p) => p.classList.remove("open"));
+        const map = { profile: "Профиль пользователя", settings: "Настройки", help: "Помощь", logout: "Выход из системы" };
+        toast(map[opt.dataset.action]);
+        if (opt.dataset.action === "logout") setTimeout(() => (window.location.href = "login.html"), 700);
+      });
+    });
+
+    // Template cards
+    document.querySelectorAll(".dk-tpl-card").forEach((card) => {
+      card.addEventListener("click", (e) => {
+        if (e.target.closest("[data-edit]")) return;
+        const title = card.querySelector(".dk-tpl-card__title").textContent;
+        toast("Создание диспута: " + title);
+      });
+    });
+    document.querySelectorAll("[data-edit]").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const card = btn.closest(".dk-tpl-card");
+        const title = card.querySelector(".dk-tpl-card__title").textContent;
+        toast("Редактирование шаблона: " + title);
+      });
+    });
+
+    document.getElementById("newTemplateBtn").addEventListener("click", () => toast("Создание нового шаблона"));
+
+    // Search
+    const search = document.getElementById("tplSearch");
+    search.addEventListener("input", (e) => {
+      const q = e.target.value.toLowerCase().trim();
+      document.querySelectorAll(".dk-tpl-card").forEach((card) => {
+        const name = card.dataset.name;
+        const text = card.textContent.toLowerCase();
+        card.style.display = !q || name.includes(q) || text.includes(q) ? "" : "none";
+      });
+    });
+  })();
+  </script>
+</body>
+</html>

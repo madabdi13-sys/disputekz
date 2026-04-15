@@ -2599,21 +2599,6 @@
     });
 
     // ============================================================
-    // Nav link switching
-    // ============================================================
-    document.querySelectorAll("#mainNav a").forEach((link) => {
-      link.addEventListener("click", (e) => {
-        e.preventDefault();
-        document.querySelectorAll("#mainNav a").forEach((l) => l.classList.remove("active"));
-        link.classList.add("active");
-        const labels = { disputes: "Диспуты", templates: "Шаблоны", reports: "Отчёты", archive: "Архив" };
-        if (link.dataset.nav !== "disputes") {
-          toast("Раздел «" + labels[link.dataset.nav] + "» — в разработке");
-        }
-      });
-    });
-
-    // ============================================================
     // User menu actions
     // ============================================================
     document.querySelectorAll("[data-action]").forEach((opt) => {
