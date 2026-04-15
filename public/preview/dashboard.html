@@ -581,6 +581,10 @@
     .dk-channel--int  { color: #52525b; background: #fafafa; border-color: var(--zinc-200); }
 
     /* Days remaining */
+    .dk-table th.dk-col-days,
+    .dk-table td.dk-days {
+      text-align: center;
+    }
     .dk-days {
       font-variant-numeric: tabular-nums;
       font-size: 13px;
@@ -1243,7 +1247,7 @@
               <th class="sortable" data-col="4" data-type="text">Контрагент<svg class="dk-sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg></th>
               <th class="sortable" data-col="5" data-type="number">Сумма<svg class="dk-sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg></th>
               <th class="sortable" data-col="6" data-type="text">Статус<svg class="dk-sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg></th>
-              <th class="sortable" data-col="7" data-type="number">Осталось дней<svg class="dk-sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg></th>
+              <th class="sortable dk-col-days" data-col="7" data-type="number">Осталось дней<svg class="dk-sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg></th>
               <th class="sortable" data-col="8" data-type="text">Ответственный<svg class="dk-sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg></th>
               <th class="dk-col-actions"></th>
             </tr>
@@ -1257,7 +1261,7 @@
               <td>ТОО «Алатау Логистик»</td>
               <td data-sort-value="245000"><span class="dk-amount">245 000 ₸</span></td>
               <td><span class="dk-badge dk-badge--review">На проверке</span></td>
-              <td class="dk-days dk-days--soon" data-sort-value="0">0</td>
+              <td class="dk-days dk-days--overdue" data-sort-value="0">0</td>
               <td>Алиева М.</td>
               <td class="dk-col-actions">
                 <span class="dk-row-actions">
