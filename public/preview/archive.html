@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Архив — disputekz</title>
+  <link rel="stylesheet" href="_shared.css" />
+  <link rel="stylesheet" href="_app.css" />
+</head>
+<body>
+  <div class="dk-app">
+    <header class="dk-topbar">
+      <div class="dk-topbar__inner">
+        <a href="dashboard.html" class="dk-logo">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="12" height="12" transform="rotate(45 10 10)" stroke="currentColor" stroke-width="1.5" fill="none"/><rect x="10" y="10" width="9" height="9" transform="rotate(45 14.5 14.5)" fill="currentColor"/></svg>
+          <span class="dk-logo__text">disputekz</span>
+        </a>
+        <nav class="dk-nav" id="mainNav">
+          <a href="dashboard.html" data-nav="disputes">Диспуты <span class="dk-nav__badge">18</span></a>
+          <a href="templates.html" data-nav="templates">Шаблоны</a>
+          <a href="reports.html" data-nav="reports">Отчёты</a>
+          <a href="archive.html" class="active" data-nav="archive">Архив</a>
+        </nav>
+        <div class="dk-popover-wrap">
+          <div class="dk-user" data-popover-trigger>
+            <div class="dk-user__meta">
+              <span class="dk-user__name">Иванов Иван</span>
+              <span class="dk-user__role">Kaspi Bank · Отделение №5, Алматы</span>
+            </div>
+            <span class="dk-avatar">И.И.</span>
+          </div>
+          <div class="dk-popover dk-popover--right">
+            <div class="dk-popover__option" data-action="profile">Профиль</div>
+            <div class="dk-popover__option" data-action="settings">Настройки</div>
+            <div class="dk-popover__option" data-action="help">Помощь</div>
+            <div class="dk-popover__divider"></div>
+            <div class="dk-popover__option dk-popover__option--danger" data-action="logout">Выйти</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="dk-page">
+      <div class="dk-page__head">
+        <div>
+          <h1 class="dk-page__title">Архив</h1>
+          <p class="dk-page__subtitle">Завершённые диспуты — 1 229 записей за всё время</p>
+        </div>
+        <button class="dk-btn dk-btn--primary dk-btn--md" id="exportBtn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Выгрузить
+        </button>
+      </div>
+
+      <div class="dk-arch-toolbar">
+        <div class="dk-arch-search">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input class="dk-input" id="archSearch" placeholder="Номер диспута или клиент..." />
+        </div>
+        <div class="dk-select-wrap" style="width: 170px;">
+          <select class="dk-select" id="statusFilter">
+            <option value="all">Все исходы</option>
+            <option value="won">Выигран</option>
+            <option value="lost">Проигран</option>
+            <option value="cancel">Отменён</option>
+          </select>
+          <svg class="chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="dk-select-wrap" style="width: 170px;">
+          <select class="dk-select" id="periodFilter">
+            <option value="all">Весь период</option>
+            <option value="month">Последний месяц</option>
+            <option value="quarter">Последний квартал</option>
+            <option value="year">Последний год</option>
+          </select>
+          <svg class="chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="dk-arch-count" id="archCount">—</div>
+      </div>
+
+      <table class="dk-arch-table">
+        <thead>
+          <tr>
+            <th>Номер</th>
+            <th>Клиент</th>
+            <th>Канал</th>
+            <th>Исход</th>
+            <th>Закрыт</th>
+            <th style="text-align:right;">Сумма</th>
+          </tr>
+        </thead>
+        <tbody id="archBody"></tbody>
+      </table>
+    </main>
+  </div>
+
+  <div class="dk-toasts" id="toasts"></div>
+  <script src="_app.js"></script>
+  <script>
+  (function () {
+    const ROWS = [
+      { num: "DSP-2026-000425", client: "Абдуллаев Б.", channel: "Visa", outcome: "won", closed: "12 апр 2026", amount: 245000 },
+      { num: "DSP-2026-000424", client: "Нуртазина А.", channel: "Mastercard", outcome: "won", closed: "11 апр 2026", amount: 89500 },
+      { num: "DSP-2026-000423", client: "Сулейменов К.", channel: "POS", outcome: "won", closed: "10 апр 2026", amount: 156000 },
+      { num: "DSP-2026-000422", client: "Жумабекова Д.", channel: "ATM", outcome: "won", closed: "9 апр 2026", amount: 42000 },
+      { num: "DSP-2026-000421", client: "Иванов С.", channel: "Visa", outcome: "lost", closed: "9 апр 2026", amount: 1250000 },
+      { num: "DSP-2026-000420", client: "Касымов Т.", channel: "Mastercard", outcome: "won", closed: "8 апр 2026", amount: 78900 },
+      { num: "DSP-2026-000419", client: "Токтарова М.", channel: "Internal", outcome: "cancel", closed: "8 апр 2026", amount: 15000 },
+      { num: "DSP-2026-000418", client: "Омаров Р.", channel: "Visa", outcome: "won", closed: "7 апр 2026", amount: 312000 },
+      { num: "DSP-2026-000417", client: "Бекова А.", channel: "POS", outcome: "won", closed: "7 апр 2026", amount: 67400 },
+      { num: "DSP-2026-000416", client: "Смагулов Н.", channel: "ATM", outcome: "lost", closed: "6 апр 2026", amount: 28000 },
+      { num: "DSP-2026-000415", client: "Карипова Г.", channel: "Mastercard", outcome: "won", closed: "5 апр 2026", amount: 198500 },
+      { num: "DSP-2026-000414", client: "Дюсенов А.", channel: "Visa", outcome: "won", closed: "4 апр 2026", amount: 445000 },
+      { num: "DSP-2026-000413", client: "Ахметова З.", channel: "Internal", outcome: "won", closed: "3 апр 2026", amount: 32000 },
+      { num: "DSP-2026-000412", client: "Рахимов Е.", channel: "Visa", outcome: "cancel", closed: "3 апр 2026", amount: 58000 },
+      { num: "DSP-2026-000411", client: "Нурланова Л.", channel: "POS", outcome: "won", closed: "2 апр 2026", amount: 125000 },
+    ];
+    const STATUS_TEXT = { won: "Выигран", lost: "Проигран", cancel: "Отменён" };
+
+    function fmtAmount(n) {
+      return n.toLocaleString("ru-RU").replace(/,/g, " ") + " ₸";
+    }
+
+    const body = document.getElementById("archBody");
+    const countEl = document.getElementById("archCount");
+    const search = document.getElementById("archSearch");
+    const statusFilter = document.getElementById("statusFilter");
+    const periodFilter = document.getElementById("periodFilter");
+
+    function render() {
+      const q = search.value.toLowerCase().trim();
+      const st = statusFilter.value;
+      const matching = ROWS.filter((r) => {
+        if (st !== "all" && r.outcome !== st) return false;
+        if (q && !(r.num.toLowerCase().includes(q) || r.client.toLowerCase().includes(q))) return false;
+        return true;
+      });
+      body.innerHTML = matching.map((r) => `
+        <tr data-num="${r.num}">
+          <td><span class="dk-arch-num">${r.num}</span></td>
+          <td>${r.client}</td>
+          <td>${r.channel}</td>
+          <td><span class="dk-arch-status dk-arch-status--${r.outcome}">${STATUS_TEXT[r.outcome]}</span></td>
+          <td>${r.closed}</td>
+          <td class="dk-arch-amount">${fmtAmount(r.amount)}</td>
+        </tr>`).join("") || '<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--zinc-500);">Ничего не найдено</td></tr>';
+      countEl.textContent = "Показано " + matching.length + " из 1 229";
+      body.querySelectorAll("tr[data-num]").forEach((tr) => {
+        tr.addEventListener("click", () => window.dkToast && window.dkToast("Открываем " + tr.dataset.num));
+      });
+    }
+
+    search.addEventListener("input", render);
+    statusFilter.addEventListener("change", render);
+    periodFilter.addEventListener("change", () => { render(); window.dkToast && window.dkToast("Период обновлён"); });
+    document.getElementById("exportBtn").addEventListener("click", () => window.dkToast && window.dkToast("Готовим архив к выгрузке..."));
+
+    render();
+  })();
+  </script>
+</body>
+</html>
