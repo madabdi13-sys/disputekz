@@ -421,7 +421,19 @@
       width: 100%;
       border-collapse: collapse;
       font-size: 13px;
+      table-layout: fixed;
     }
+    .dk-table .dk-col-check { width: 40px; }
+    .dk-table .dk-col-num { width: 13%; }
+    .dk-table .dk-col-date { width: 7%; }
+    .dk-table .dk-col-type { width: 15%; }
+    .dk-table .dk-col-channel { width: 8%; }
+    .dk-table .dk-col-client { width: auto; }
+    .dk-table .dk-col-amount { width: 10%; }
+    .dk-table .dk-col-status { width: 11%; }
+    .dk-table .dk-col-days { width: 9%; }
+    .dk-table .dk-col-assignee { width: 10%; }
+    .dk-table .dk-col-actions { width: 40px; }
     .dk-table thead th {
       text-align: left;
       font-size: 11px;
@@ -1246,15 +1258,15 @@
           <thead>
             <tr>
               <th class="dk-col-check"><input type="checkbox" class="dk-checkbox" id="selectAll" aria-label="Выбрать все" /></th>
-              <th class="sortable" data-col="1" data-type="text">№<svg class="dk-sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg></th>
-              <th class="sortable" data-col="2" data-type="text">Дата<svg class="dk-sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg></th>
-              <th class="sortable" data-col="3" data-type="text">Тип<svg class="dk-sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg></th>
-              <th class="sortable" data-col="4" data-type="text">Канал<svg class="dk-sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg></th>
-              <th class="sortable" data-col="5" data-type="text">Контрагент<svg class="dk-sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg></th>
-              <th class="sortable" data-col="6" data-type="number">Сумма<svg class="dk-sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg></th>
-              <th class="sortable" data-col="7" data-type="text">Статус<svg class="dk-sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg></th>
+              <th class="sortable dk-col-num" data-col="1" data-type="text">№<svg class="dk-sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg></th>
+              <th class="sortable dk-col-date" data-col="2" data-type="text">Дата<svg class="dk-sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg></th>
+              <th class="sortable dk-col-type" data-col="3" data-type="text">Тип<svg class="dk-sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg></th>
+              <th class="sortable dk-col-channel" data-col="4" data-type="text">Канал<svg class="dk-sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg></th>
+              <th class="sortable dk-col-client" data-col="5" data-type="text">Контрагент<svg class="dk-sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg></th>
+              <th class="sortable dk-col-amount" data-col="6" data-type="number">Сумма<svg class="dk-sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg></th>
+              <th class="sortable dk-col-status" data-col="7" data-type="text">Статус<svg class="dk-sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg></th>
               <th class="sortable dk-col-days" data-col="8" data-type="number">Осталось дней<svg class="dk-sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg></th>
-              <th class="sortable" data-col="9" data-type="text">Ответственный<svg class="dk-sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg></th>
+              <th class="sortable dk-col-assignee" data-col="9" data-type="text">Ответственный<svg class="dk-sort-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg></th>
               <th class="dk-col-actions"></th>
             </tr>
           </thead>
