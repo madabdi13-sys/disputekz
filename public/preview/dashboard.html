@@ -2335,107 +2335,113 @@
     // Export
     // ============================================================
     function getExportRows() {
-      const currentOrder = Array.from(tbody.querySelectorAll("tr[data-id]"));
-      return currentOrder.filter(
-        (tr) => rowMatchesTab(tr, state.tab) && rowMatchesFilters(tr)
-      );
+      var rows = Array.from(tbody.querySelectorAll("tr[data-id]"));
+      return rows.filter(function (tr) {
+        return rowMatchesTab(tr, state.tab) && rowMatchesFilters(tr);
+      });
     }
 
     function extractRow(tr) {
-      const cells = tr.children;
+      var cells = tr.children;
       return {
         num: cells[1].textContent.trim(),
         type: cells[2].textContent.trim(),
         channel: cells[3].textContent.trim(),
         client: cells[4].textContent.trim(),
-        amount: cells[5].getAttribute("data-sort-value"),
+        amount: cells[5].getAttribute("data-sort-value") || "0",
         status: cells[6].textContent.trim(),
-        days: cells[7].getAttribute("data-sort-value"),
+        days: cells[7].getAttribute("data-sort-value") || "0",
         assignee: cells[8].textContent.trim(),
       };
     }
 
-    const EXPORT_HEADERS = ["№", "Тип", "Канал", "Контрагент", "Сумма (₸)", "Статус", "Осталось дней", "Ответственный"];
+    var EXPORT_HEADERS = ["№", "Тип", "Канал", "Контрагент", "Сумма (₸)", "Статус", "Осталось дней", "Ответственный"];
 
-    function toCSVValue(v) {
-      const s = String(v);
-      if (s.includes(",") || s.includes('"') || s.includes("\n")) {
+    function csvEscape(v) {
+      var s = String(v);
+      if (s.indexOf(";") >= 0 || s.indexOf('"') >= 0 || s.indexOf("\n") >= 0) {
         return '"' + s.replace(/"/g, '""') + '"';
       }
       return s;
     }
 
-    function downloadBlob(blob, filename) {
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
+    function triggerDownload(dataURI, filename) {
+      var a = document.createElement("a");
+      a.href = dataURI;
       a.download = filename;
+      a.style.display = "none";
       document.body.appendChild(a);
       a.click();
-      setTimeout(() => { a.remove(); URL.revokeObjectURL(url); }, 100);
+      setTimeout(function () { a.remove(); }, 200);
     }
 
-    function exportCSV() {
-      const rows = getExportRows().map(extractRow);
-      if (!rows.length) { toast("Нет данных для экспорта"); return; }
-      const bom = "\uFEFF";
-      const lines = [EXPORT_HEADERS.join(";")];
-      rows.forEach((r) => {
-        lines.push([r.num, r.type, r.channel, r.client, r.amount, r.status, r.days, r.assignee].map(toCSVValue).join(";"));
-      });
-      const blob = new Blob([bom + lines.join("\r\n")], { type: "text/csv;charset=utf-8" });
-      downloadBlob(blob, "disputes_export.csv");
-      toast("CSV скачан — " + rows.length + " записей");
+    function doExport(fmt) {
+      try {
+        var matched = getExportRows();
+        var rows = [];
+        for (var i = 0; i < matched.length; i++) {
+          rows.push(extractRow(matched[i]));
+        }
+        if (rows.length === 0) { toast("Нет данных для экспорта"); return; }
+
+        if (fmt === "csv") {
+          var bom = "\uFEFF";
+          var lines = [EXPORT_HEADERS.join(";")];
+          for (var j = 0; j < rows.length; j++) {
+            var r = rows[j];
+            lines.push([r.num, r.type, r.channel, r.client, r.amount, r.status, r.days, r.assignee].map(csvEscape).join(";"));
+          }
+          var csvText = bom + lines.join("\r\n");
+          var uri = "data:text/csv;charset=utf-8," + encodeURIComponent(csvText);
+          triggerDownload(uri, "disputes_export.csv");
+          toast("CSV скачан — " + rows.length + " записей");
+
+        } else if (fmt === "xlsx") {
+          var thRow = EXPORT_HEADERS.map(function (h) { return "<th>" + h + "</th>"; }).join("");
+          var tbRows = rows.map(function (r) {
+            return "<tr>" + [r.num, r.type, r.channel, r.client, r.amount, r.status, r.days, r.assignee]
+              .map(function (v) { return "<td>" + v + "</td>"; }).join("") + "</tr>";
+          }).join("");
+          var xlsHtml = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">' +
+            '<head><meta charset="utf-8"></head><body>' +
+            "<table><thead><tr>" + thRow + "</tr></thead><tbody>" + tbRows + "</tbody></table>" +
+            "</body></html>";
+          var xlsUri = "data:application/vnd.ms-excel;charset=utf-8," + encodeURIComponent(xlsHtml);
+          triggerDownload(xlsUri, "disputes_export.xls");
+          toast("Excel скачан — " + rows.length + " записей");
+
+        } else if (fmt === "pdf") {
+          var pthRow = EXPORT_HEADERS.map(function (h) {
+            return "<th style='border:1px solid #d4d4d8;padding:8px 10px;font-size:11px;text-transform:uppercase;background:#fafafa;text-align:left;'>" + h + "</th>";
+          }).join("");
+          var ptbRows = rows.map(function (r) {
+            return "<tr>" + [r.num, r.type, r.channel, r.client,
+              Number(r.amount).toLocaleString("ru-RU") + " ₸", r.status, r.days, r.assignee]
+              .map(function (v) { return "<td style='border:1px solid #e4e4e7;padding:8px 10px;font-size:13px;'>" + v + "</td>"; }).join("") + "</tr>";
+          }).join("");
+          var pdfWin = window.open("", "_blank");
+          if (!pdfWin) { toast("Разрешите всплывающие окна для PDF"); return; }
+          pdfWin.document.write("<!doctype html><html><head><meta charset='utf-8'><title>Экспорт диспутов</title>" +
+            "<style>body{font-family:Inter,system-ui,sans-serif;margin:40px;color:#18181b;}h1{font-size:18px;font-weight:600;margin:0 0 4px;}p{font-size:13px;color:#71717a;margin:0 0 20px;}table{width:100%;border-collapse:collapse;}@media print{body{margin:20px;}}</style>" +
+            "</head><body>" +
+            "<h1>Реестр диспутов — Kaspi Bank</h1><p>Дата выгрузки: " + new Date().toLocaleDateString("ru-RU") + " · " + rows.length + " записей</p>" +
+            "<table><thead><tr>" + pthRow + "</tr></thead><tbody>" + ptbRows + "</tbody></table>" +
+            "</body></html>");
+          pdfWin.document.close();
+          setTimeout(function () { pdfWin.print(); }, 400);
+          toast("PDF — откройте диалог печати");
+        }
+      } catch (err) {
+        toast("Ошибка экспорта: " + err.message);
+      }
     }
 
-    function exportXLSX() {
-      const rows = getExportRows().map(extractRow);
-      if (!rows.length) { toast("Нет данных для экспорта"); return; }
-      const header = EXPORT_HEADERS.map((h) => "<th>" + h + "</th>").join("");
-      const body = rows.map((r) =>
-        "<tr>" +
-        [r.num, r.type, r.channel, r.client, r.amount, r.status, r.days, r.assignee]
-          .map((v) => "<td>" + v + "</td>").join("") +
-        "</tr>"
-      ).join("");
-      const html = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">' +
-        "<head><meta charset=\"utf-8\"></head><body>" +
-        "<table><thead><tr>" + header + "</tr></thead><tbody>" + body + "</tbody></table>" +
-        "</body></html>";
-      const blob = new Blob([html], { type: "application/vnd.ms-excel;charset=utf-8" });
-      downloadBlob(blob, "disputes_export.xls");
-      toast("Excel скачан — " + rows.length + " записей");
-    }
-
-    function exportPDF() {
-      const rows = getExportRows().map(extractRow);
-      if (!rows.length) { toast("Нет данных для экспорта"); return; }
-      const header = EXPORT_HEADERS.map((h) => "<th style='border:1px solid #d4d4d8;padding:8px 10px;font-size:11px;text-transform:uppercase;background:#fafafa;text-align:left;'>" + h + "</th>").join("");
-      const body = rows.map((r) =>
-        "<tr>" +
-        [r.num, r.type, r.channel, r.client, Number(r.amount).toLocaleString("ru-RU") + " ₸", r.status, r.days, r.assignee]
-          .map((v) => "<td style='border:1px solid #e4e4e7;padding:8px 10px;font-size:13px;'>" + v + "</td>").join("") +
-        "</tr>"
-      ).join("");
-      const w = window.open("", "_blank");
-      w.document.write("<!doctype html><html><head><meta charset='utf-8'><title>Экспорт диспутов</title>" +
-        "<style>body{font-family:Inter,system-ui,sans-serif;margin:40px;color:#18181b;}h1{font-size:18px;font-weight:600;margin:0 0 4px;}p{font-size:13px;color:#71717a;margin:0 0 20px;}table{width:100%;border-collapse:collapse;}@media print{body{margin:20px;}}</style>" +
-        "</head><body>" +
-        "<h1>Реестр диспутов — Kaspi Bank</h1><p>Дата выгрузки: " + new Date().toLocaleDateString("ru-RU") + " · " + rows.length + " записей</p>" +
-        "<table><thead><tr>" + header + "</tr></thead><tbody>" + body + "</tbody></table>" +
-        "</body></html>");
-      w.document.close();
-      setTimeout(() => w.print(), 300);
-      toast("PDF — откройте диалог печати");
-    }
-
-    document.querySelectorAll("[data-export]").forEach((opt) => {
-      opt.addEventListener("click", () => {
+    document.querySelectorAll("[data-export]").forEach(function (opt) {
+      opt.addEventListener("click", function (e) {
+        e.stopPropagation();
+        var fmt = opt.getAttribute("data-export");
         closeAllPopovers();
-        const fmt = opt.dataset.export;
-        if (fmt === "csv") exportCSV();
-        else if (fmt === "xlsx") exportXLSX();
-        else if (fmt === "pdf") exportPDF();
+        setTimeout(function () { doExport(fmt); }, 50);
       });
     });
 
