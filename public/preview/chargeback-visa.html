@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chargeback Visa — disputekz</title>
+  <link rel="stylesheet" href="_shared.css" />
+  <link rel="stylesheet" href="_app.css" />
+  <style>
+    /* Breadcrumb */
+    .dk-breadcrumb { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--zinc-500); margin-bottom: 20px; }
+    .dk-breadcrumb a { color: var(--zinc-500); text-decoration: none; }
+    .dk-breadcrumb a:hover { color: var(--zinc-900); }
+    .dk-breadcrumb svg { color: var(--zinc-300); flex-shrink: 0; }
+    .dk-breadcrumb__current { color: var(--zinc-900); font-weight: 500; }
+
+    /* Form layout */
+    .dk-form { max-width: 780px; }
+    .dk-form-section { background: #fff; border: 1px solid var(--zinc-200); border-radius: 10px; padding: 24px; margin-bottom: 20px; }
+    .dk-form-section__title { font-size: 15px; font-weight: 600; color: var(--zinc-900); margin: 0 0 4px; letter-spacing: -0.01em; }
+    .dk-form-section__sub { font-size: 13px; color: var(--zinc-500); margin: 0 0 20px; }
+    .dk-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .dk-form-row--3 { grid-template-columns: 1fr 1fr 1fr; }
+    @media (max-width: 640px) { .dk-form-row, .dk-form-row--3 { grid-template-columns: 1fr; } }
+
+    /* Textarea */
+    .dk-textarea {
+      width: 100%;
+      box-sizing: border-box;
+      min-height: 80px;
+      border-radius: 6px;
+      border: 1px solid var(--zinc-200);
+      background: #fff;
+      padding: 10px 12px;
+      font-size: 14px;
+      color: var(--zinc-900);
+      font-family: inherit;
+      resize: vertical;
+      transition: border-color 150ms, box-shadow 150ms;
+    }
+    .dk-textarea::placeholder { color: var(--zinc-400); }
+    .dk-textarea:hover { border-color: var(--zinc-300); }
+    .dk-textarea:focus-visible { outline: none; border-color: var(--zinc-900); box-shadow: 0 0 0 2px var(--zinc-900); }
+
+    /* Upload area */
+    .dk-upload {
+      border: 2px dashed var(--zinc-200);
+      border-radius: 8px;
+      padding: 32px 24px;
+      text-align: center;
+      transition: border-color 150ms, background-color 150ms;
+      cursor: pointer;
+    }
+    .dk-upload:hover { border-color: var(--zinc-300); background: var(--zinc-50); }
+    .dk-upload.dragover { border-color: var(--zinc-900); background: var(--zinc-50); }
+    .dk-upload__icon { color: var(--zinc-400); margin-bottom: 8px; }
+    .dk-upload__text { font-size: 13px; color: var(--zinc-500); }
+    .dk-upload__text span { color: var(--zinc-900); font-weight: 500; text-decoration: underline; text-underline-offset: 3px; }
+    .dk-upload__hint { font-size: 12px; color: var(--zinc-400); margin-top: 6px; }
+
+    /* File list */
+    .dk-files { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+    .dk-file {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      background: var(--zinc-50);
+      border: 1px solid var(--zinc-200);
+      border-radius: 6px;
+      font-size: 13px;
+    }
+    .dk-file__icon { color: var(--zinc-500); flex-shrink: 0; }
+    .dk-file__name { flex: 1; min-width: 0; color: var(--zinc-900); font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .dk-file__size { color: var(--zinc-400); font-size: 12px; flex-shrink: 0; }
+    .dk-file__remove { background: none; border: none; color: var(--zinc-400); cursor: pointer; padding: 2px; display: flex; transition: color 150ms; }
+    .dk-file__remove:hover { color: #b91c1c; }
+
+    /* Footer actions */
+    .dk-form-footer { display: flex; align-items: center; gap: 10px; padding-top: 8px; }
+    .dk-form-footer .dk-btn--ghost {
+      background: #fff;
+      border: 1px solid var(--zinc-200);
+      color: var(--zinc-700);
+    }
+    .dk-form-footer .dk-btn--ghost:hover { background: var(--zinc-50); border-color: var(--zinc-300); }
+    .dk-form-footer__spacer { flex: 1; }
+
+    /* Reason code select highlight */
+    .dk-reason-tag { display: inline-block; font-size: 11px; font-weight: 600; letter-spacing: 0.03em; padding: 2px 7px; border-radius: 4px; background: #eef0ff; color: #1a1f71; margin-left: 8px; }
+
+    /* Generated ID preview */
+    .dk-id-preview {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      background: var(--zinc-50);
+      border: 1px solid var(--zinc-200);
+      border-radius: 8px;
+      font-size: 13px;
+    }
+    .dk-id-preview__num { font-size: 15px; font-weight: 600; color: var(--zinc-900); font-variant-numeric: tabular-nums; }
+    .dk-id-preview__label { font-size: 12px; color: var(--zinc-500); }
+  </style>
+</head>
+<body>
+  <div class="dk-app">
+    <header class="dk-topbar">
+      <div class="dk-topbar__inner">
+        <a href="dashboard.html" class="dk-logo">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="12" height="12" transform="rotate(45 10 10)" stroke="currentColor" stroke-width="1.5" fill="none"/><rect x="10" y="10" width="9" height="9" transform="rotate(45 14.5 14.5)" fill="currentColor"/></svg>
+          <span class="dk-logo__text">disputekz</span>
+        </a>
+        <nav class="dk-nav" id="mainNav">
+          <a href="dashboard.html" data-nav="disputes">Диспуты <span class="dk-nav__badge">18</span></a>
+          <a href="templates.html" class="active" data-nav="templates">Шаблоны</a>
+          <a href="reports.html" data-nav="reports">Отчёты</a>
+          <a href="archive.html" data-nav="archive">Архив</a>
+        </nav>
+        <div class="dk-popover-wrap">
+          <div class="dk-user" data-popover-trigger>
+            <div class="dk-user__meta">
+              <span class="dk-user__name">Иванов Иван</span>
+              <span class="dk-user__role">Kaspi Bank · Отделение №5, Алматы</span>
+            </div>
+            <span class="dk-avatar">И.И.</span>
+          </div>
+          <div class="dk-popover dk-popover--right">
+            <div class="dk-popover__option" data-action="profile">Профиль</div>
+            <div class="dk-popover__option" data-action="settings">Настройки</div>
+            <div class="dk-popover__option" data-action="help">Помощь</div>
+            <div class="dk-popover__divider"></div>
+            <div class="dk-popover__option dk-popover__option--danger" data-action="logout">Выйти</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="dk-page">
+      <nav class="dk-breadcrumb">
+        <a href="templates.html">Шаблоны</a>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        <span class="dk-breadcrumb__current">Chargeback Visa</span>
+      </nav>
+
+      <div class="dk-page__head">
+        <div>
+          <h1 class="dk-page__title">Новый диспут — Chargeback Visa</h1>
+          <p class="dk-page__subtitle">Reason Code 10.4 · Несанкционированная операция</p>
+        </div>
+      </div>
+
+      <div class="dk-form">
+        <!-- Auto-generated ID -->
+        <div class="dk-form-section">
+          <div class="dk-id-preview">
+            <div>
+              <div class="dk-id-preview__label">Номер диспута (сгенерирован)</div>
+              <div class="dk-id-preview__num" id="disputeId">KAS-26-VS-0472</div>
+            </div>
+            <div class="dk-reason-tag">Reason 10.4</div>
+          </div>
+        </div>
+
+        <!-- Section 1: Client -->
+        <div class="dk-form-section">
+          <h2 class="dk-form-section__title">Данные клиента</h2>
+          <p class="dk-form-section__sub">Информация о держателе карты</p>
+
+          <div class="dk-stack">
+            <div class="dk-form-row">
+              <div class="dk-field">
+                <label class="dk-label">ФИО клиента *</label>
+                <input class="dk-input" id="clientName" placeholder="Иванов Иван Петрович" />
+              </div>
+              <div class="dk-field">
+                <label class="dk-label">ИИН</label>
+                <input class="dk-input" id="clientIin" placeholder="000000000000" maxlength="12" />
+              </div>
+            </div>
+            <div class="dk-form-row">
+              <div class="dk-field">
+                <label class="dk-label">Номер карты *</label>
+                <input class="dk-input" id="cardNumber" placeholder="4400 •••• •••• 1234" />
+              </div>
+              <div class="dk-field">
+                <label class="dk-label">Номер счёта</label>
+                <input class="dk-input" id="accountNumber" placeholder="KZ00 0000 0000 0000 0000" />
+              </div>
+            </div>
+            <div class="dk-form-row">
+              <div class="dk-field">
+                <label class="dk-label">Телефон</label>
+                <input class="dk-input" id="phone" placeholder="+7 (7__) ___-__-__" />
+              </div>
+              <div class="dk-field">
+                <label class="dk-label">Дата обращения</label>
+                <input class="dk-input" id="appealDate" type="date" value="2026-04-16" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 2: Transaction -->
+        <div class="dk-form-section">
+          <h2 class="dk-form-section__title">Данные транзакции</h2>
+          <p class="dk-form-section__sub">Оспариваемая операция по карте Visa</p>
+
+          <div class="dk-stack">
+            <div class="dk-form-row--3">
+              <div class="dk-field">
+                <label class="dk-label">Дата транзакции *</label>
+                <input class="dk-input" id="txnDate" type="date" />
+              </div>
+              <div class="dk-field">
+                <label class="dk-label">Сумма *</label>
+                <input class="dk-input" id="txnAmount" placeholder="0.00" inputmode="decimal" />
+              </div>
+              <div class="dk-field">
+                <label class="dk-label">Валюта</label>
+                <div class="dk-select-wrap">
+                  <select class="dk-select" id="txnCurrency">
+                    <option value="KZT" selected>KZT (₸)</option>
+                    <option value="USD">USD ($)</option>
+                    <option value="EUR">EUR (€)</option>
+                    <option value="RUB">RUB (₽)</option>
+                  </select>
+                  <svg class="chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+              </div>
+            </div>
+            <div class="dk-form-row">
+              <div class="dk-field">
+                <label class="dk-label">Наименование мерчанта *</label>
+                <input class="dk-input" id="merchantName" placeholder="ТОО «Алатау Логистик»" />
+              </div>
+              <div class="dk-field">
+                <label class="dk-label">MCC код</label>
+                <input class="dk-input" id="mcc" placeholder="5411" maxlength="4" />
+              </div>
+            </div>
+            <div class="dk-form-row--3">
+              <div class="dk-field">
+                <label class="dk-label">Код авторизации</label>
+                <input class="dk-input" id="authCode" placeholder="A12345" />
+              </div>
+              <div class="dk-field">
+                <label class="dk-label">RRN</label>
+                <input class="dk-input" id="rrn" placeholder="123456789012" maxlength="12" />
+              </div>
+              <div class="dk-field">
+                <label class="dk-label">ARN</label>
+                <input class="dk-input" id="arn" placeholder="74027000000000000000000" maxlength="23" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 3: Dispute details -->
+        <div class="dk-form-section">
+          <h2 class="dk-form-section__title">Детали оспаривания</h2>
+          <p class="dk-form-section__sub">Причина и описание ситуации</p>
+
+          <div class="dk-stack">
+            <div class="dk-form-row">
+              <div class="dk-field">
+                <label class="dk-label">Reason Code *</label>
+                <div class="dk-select-wrap">
+                  <select class="dk-select" id="reasonCode">
+                    <option value="10.4" selected>10.4 — Другое мошенничество (Card Absent)</option>
+                    <option value="10.1">10.1 — EMV Liability Shift (Counterfeit)</option>
+                    <option value="10.2">10.2 — EMV Liability Shift (Non-Counterfeit)</option>
+                    <option value="10.3">10.3 — Другое мошенничество (Card Present)</option>
+                    <option value="10.5">10.5 — Visa Fraud Monitoring Program</option>
+                    <option value="11.1">11.1 — Card Recovery Bulletin</option>
+                    <option value="12.1">12.1 — Late Presentment</option>
+                    <option value="12.2">12.2 — Incorrect Transaction Code</option>
+                    <option value="12.5">12.5 — Incorrect Amount</option>
+                    <option value="12.6">12.6 — Duplicate Processing / Paid by Other Means</option>
+                    <option value="13.1">13.1 — Merchandise / Services Not Received</option>
+                    <option value="13.2">13.2 — Cancelled Recurring Transaction</option>
+                    <option value="13.3">13.3 — Not as Described</option>
+                  </select>
+                  <svg class="chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+              </div>
+              <div class="dk-field">
+                <label class="dk-label">Ответственный</label>
+                <div class="dk-select-wrap">
+                  <select class="dk-select" id="assignee">
+                    <option value="ivanov" selected>Иванов И.</option>
+                    <option value="alieva">Алиева М.</option>
+                    <option value="kasymov">Касымов Е.</option>
+                    <option value="nurtaz">Нуртаз Д.</option>
+                  </select>
+                  <svg class="chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+              </div>
+            </div>
+            <div class="dk-field">
+              <label class="dk-label">Описание ситуации *</label>
+              <textarea class="dk-textarea" id="description" rows="4" placeholder="Клиент обратился в отделение и сообщил, что не совершал данную транзакцию..."></textarea>
+            </div>
+            <div class="dk-field">
+              <label class="dk-label">Комментарий (внутренний)</label>
+              <textarea class="dk-textarea" id="comment" rows="2" placeholder="Заметки для коллег..."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 4: Documents -->
+        <div class="dk-form-section">
+          <h2 class="dk-form-section__title">Документы</h2>
+          <p class="dk-form-section__sub">Приложите подтверждающие файлы — заявление клиента, выписку, чеки</p>
+
+          <div class="dk-upload" id="uploadArea">
+            <input type="file" id="fileInput" multiple accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.xls,.xlsx" style="display:none;" />
+            <div class="dk-upload__icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            </div>
+            <div class="dk-upload__text"><span>Нажмите для загрузки</span> или перетащите файлы</div>
+            <div class="dk-upload__hint">PDF, JPG, PNG, DOC, XLS — до 10 МБ каждый</div>
+          </div>
+          <div class="dk-files" id="fileList"></div>
+        </div>
+
+        <!-- Footer -->
+        <div class="dk-form-footer">
+          <a href="templates.html" class="dk-btn dk-btn--md dk-btn--ghost">Отмена</a>
+          <div class="dk-form-footer__spacer"></div>
+          <button class="dk-btn dk-btn--md dk-btn--ghost" id="saveDraft">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            Сохранить черновик
+          </button>
+          <button class="dk-btn dk-btn--primary dk-btn--md" id="submitBtn">
+            Создать диспут
+          </button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="dk-toasts" id="toasts"></div>
+  <script src="_app.js"></script>
+  <script>
+  (function () {
+    var toast = window.dkToast;
+
+    // ============================================================
+    // File upload
+    // ============================================================
+    var uploadArea = document.getElementById("uploadArea");
+    var fileInput = document.getElementById("fileInput");
+    var fileList = document.getElementById("fileList");
+    var files = [];
+
+    uploadArea.addEventListener("click", function () { fileInput.click(); });
+
+    uploadArea.addEventListener("dragover", function (e) {
+      e.preventDefault();
+      uploadArea.classList.add("dragover");
+    });
+    uploadArea.addEventListener("dragleave", function () {
+      uploadArea.classList.remove("dragover");
+    });
+    uploadArea.addEventListener("drop", function (e) {
+      e.preventDefault();
+      uploadArea.classList.remove("dragover");
+      addFiles(e.dataTransfer.files);
+    });
+
+    fileInput.addEventListener("change", function () {
+      addFiles(fileInput.files);
+      fileInput.value = "";
+    });
+
+    function addFiles(newFiles) {
+      for (var i = 0; i < newFiles.length; i++) {
+        var f = newFiles[i];
+        if (f.size > 10 * 1024 * 1024) {
+          toast("Файл " + f.name + " превышает 10 МБ");
+          continue;
+        }
+        files.push({ name: f.name, size: f.size });
+      }
+      renderFiles();
+    }
+
+    function formatSize(bytes) {
+      if (bytes < 1024) return bytes + " Б";
+      if (bytes < 1024 * 1024) return Math.round(bytes / 1024) + " КБ";
+      return (bytes / (1024 * 1024)).toFixed(1) + " МБ";
+    }
+
+    function renderFiles() {
+      fileList.innerHTML = "";
+      for (var i = 0; i < files.length; i++) {
+        var f = files[i];
+        var el = document.createElement("div");
+        el.className = "dk-file";
+        el.innerHTML =
+          '<svg class="dk-file__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>' +
+          '<span class="dk-file__name">' + f.name + "</span>" +
+          '<span class="dk-file__size">' + formatSize(f.size) + "</span>" +
+          '<button class="dk-file__remove" data-idx="' + i + '" title="Удалить"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>';
+        fileList.appendChild(el);
+      }
+      fileList.querySelectorAll(".dk-file__remove").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          files.splice(Number(btn.getAttribute("data-idx")), 1);
+          renderFiles();
+        });
+      });
+    }
+
+    // ============================================================
+    // Form validation + submit
+    // ============================================================
+    var required = ["clientName", "cardNumber", "txnDate", "txnAmount", "merchantName", "description"];
+
+    function validate() {
+      var ok = true;
+      required.forEach(function (id) {
+        var el = document.getElementById(id);
+        var val = el.value.trim();
+        if (!val) {
+          el.classList.add("error");
+          ok = false;
+        } else {
+          el.classList.remove("error");
+        }
+      });
+      return ok;
+    }
+
+    // Clear error on input
+    required.forEach(function (id) {
+      var el = document.getElementById(id);
+      el.addEventListener("input", function () { el.classList.remove("error"); });
+    });
+
+    document.getElementById("submitBtn").addEventListener("click", function () {
+      if (!validate()) {
+        toast("Заполните обязательные поля");
+        var first = document.querySelector(".error");
+        if (first) first.focus();
+        return;
+      }
+      var id = document.getElementById("disputeId").textContent;
+      toast("Диспут " + id + " создан и отправлен на проверку");
+      setTimeout(function () { window.location.href = "dashboard.html"; }, 1200);
+    });
+
+    document.getElementById("saveDraft").addEventListener("click", function () {
+      var id = document.getElementById("disputeId").textContent;
+      toast("Черновик " + id + " сохранён");
+    });
+
+    // ============================================================
+    // IIN mask (12 digits)
+    // ============================================================
+    document.getElementById("clientIin").addEventListener("input", function (e) {
+      e.target.value = e.target.value.replace(/\D/g, "").slice(0, 12);
+    });
+
+    // Amount formatting
+    document.getElementById("txnAmount").addEventListener("blur", function (e) {
+      var v = e.target.value.replace(/[^\d.]/g, "");
+      if (v) {
+        var n = parseFloat(v);
+        if (!isNaN(n)) e.target.value = n.toLocaleString("ru-RU");
+      }
+    });
+  })();
+  </script>
+</body>
+</html>

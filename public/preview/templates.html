@@ -286,11 +286,18 @@
     });
 
     // Template cards
+    const TEMPLATE_LINKS = {
+      "Chargeback Visa": "chargeback-visa.html",
+    };
     document.querySelectorAll(".dk-tpl-card").forEach((card) => {
       card.addEventListener("click", (e) => {
         if (e.target.closest("[data-edit]")) return;
         const title = card.querySelector(".dk-tpl-card__title").textContent;
-        toast("Создание диспута: " + title);
+        if (TEMPLATE_LINKS[title]) {
+          window.location.href = TEMPLATE_LINKS[title];
+        } else {
+          toast("Шаблон «" + title + "» — в разработке");
+        }
       });
     });
     document.querySelectorAll("[data-edit]").forEach((btn) => {
