@@ -468,6 +468,7 @@
     .dk-table tbody td {
       padding: 14px 16px;
       border-bottom: 1px solid var(--zinc-100);
+      font-size: 13px;
       color: var(--zinc-800);
       vertical-align: middle;
     }
@@ -482,12 +483,13 @@
       background: var(--zinc-50);
     }
     .dk-num {
-      font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-      font-size: 12px;
+      font-size: 13px;
+      font-weight: 500;
       color: var(--zinc-600);
-      font-feature-settings: "tnum";
+      font-variant-numeric: tabular-nums;
     }
     .dk-amount {
+      font-size: 13px;
       font-variant-numeric: tabular-nums;
       font-weight: 500;
       color: var(--zinc-900);
@@ -496,6 +498,7 @@
       color: var(--zinc-500);
     }
     .dk-strong {
+      font-size: 13px;
       color: var(--zinc-900);
       font-weight: 500;
     }
@@ -507,7 +510,7 @@
       gap: 6px;
       font-size: 12px;
       font-weight: 500;
-      padding: 3px 8px;
+      padding: 3px 9px;
       border-radius: 999px;
       border: 1px solid var(--zinc-200);
       background: var(--zinc-50);
@@ -563,16 +566,15 @@
     /* Channel tag */
     .dk-channel {
       display: inline-block;
-      font-size: 10px;
+      font-size: 11px;
       font-weight: 600;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.03em;
       text-transform: uppercase;
-      padding: 2px 6px;
+      padding: 2px 7px;
       border-radius: 4px;
       background: var(--zinc-100);
       color: var(--zinc-600);
       border: 1px solid var(--zinc-200);
-      font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
     }
     .dk-channel--visa { color: #1a1f71; background: #eef0ff; border-color: #d8def7; }
     .dk-channel--mc   { color: #b3321f; background: #fef1ee; border-color: #fcd8cd; }
@@ -595,11 +597,10 @@
 
     /* Amount column */
     .dk-amount {
-      font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-      font-weight: 500;
-      color: var(--zinc-900);
       font-size: 13px;
       font-variant-numeric: tabular-nums;
+      font-weight: 500;
+      color: var(--zinc-900);
       white-space: nowrap;
     }
 
