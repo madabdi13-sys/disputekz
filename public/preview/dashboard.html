@@ -439,7 +439,7 @@
       text-transform: uppercase;
       letter-spacing: 0.04em;
       color: var(--zinc-500);
-      padding: 10px 16px;
+      padding: 10px 12px;
       background: var(--zinc-50);
       border-bottom: 1px solid var(--zinc-200);
       white-space: nowrap;
@@ -476,7 +476,7 @@
       transform: rotate(180deg);
     }
     .dk-table tbody td {
-      padding: 14px 16px;
+      padding: 14px 12px;
       border-bottom: 1px solid var(--zinc-100);
       font-size: 13px;
       color: var(--zinc-800);
@@ -540,9 +540,7 @@
       background: currentColor;
       opacity: 0.8;
     }
-    .dk-badge--draft   { color: #71717a; }
-    .dk-badge--review  { color: #b45309; background: #fffbeb; border-color: #fde68a; }
-    .dk-badge--sign    { color: #1d4ed8; background: #eff6ff; border-color: #bfdbfe; }
+    .dk-badge--work    { color: #b45309; background: #fffbeb; border-color: #fde68a; }
     .dk-badge--return  { color: #b91c1c; background: #fef2f2; border-color: #fecaca; }
     .dk-badge--done    { color: #15803d; background: #f0fdf4; border-color: #bbf7d0; }
 
@@ -1123,11 +1121,11 @@
         <button class="dk-tab" data-tab="mine">
           Мои <span class="dk-tab__count">11</span>
         </button>
-        <button class="dk-tab" data-tab="review">
-          На проверке <span class="dk-tab__count">12</span>
+        <button class="dk-tab" data-tab="work">
+          В работе <span class="dk-tab__count">14</span>
         </button>
-        <button class="dk-tab" data-tab="sign">
-          На подписи <span class="dk-tab__count">8</span>
+        <button class="dk-tab" data-tab="done">
+          Исполнен <span class="dk-tab__count">3</span>
         </button>
         <button class="dk-tab dk-tab--alert" data-tab="overdue">
           Просрочены <span class="dk-tab__count">3</span>
@@ -1153,10 +1151,9 @@
           </button>
           <div class="dk-popover">
             <div class="dk-popover__header">Статус</div>
-            <label class="dk-popover__option"><input type="checkbox" value="review"/>На проверке</label>
-            <label class="dk-popover__option"><input type="checkbox" value="sign"/>На подписи</label>
+            <label class="dk-popover__option"><input type="checkbox" value="work"/>В работе</label>
             <label class="dk-popover__option"><input type="checkbox" value="return"/>Возвращён</label>
-            <label class="dk-popover__option"><input type="checkbox" value="done"/>Завершён</label>
+            <label class="dk-popover__option"><input type="checkbox" value="done"/>Исполнен</label>
             <div class="dk-popover__footer">
               <button class="dk-popover__btn" data-popover-clear>Сбросить</button>
               <button class="dk-popover__btn dk-popover__btn--primary" data-popover-apply>Применить</button>
@@ -1269,7 +1266,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr data-id="KAS-26-VS-0471" data-created="2026-04-16" data-status="review" data-channel="visa" data-assignee="alieva" data-type="dispute" data-search="kas-26-vs-0471 оспаривание транзакции абдуллаев visa 245000 алиева">
+            <tr data-id="KAS-26-VS-0471" data-created="2026-04-16" data-status="done" data-channel="visa" data-assignee="alieva" data-type="dispute" data-search="kas-26-vs-0471 оспаривание транзакции абдуллаев visa 245000 алиева">
               <td class="dk-col-check"><input type="checkbox" class="dk-checkbox" aria-label="Выбрать" /></td>
               <td class="dk-num">KAS-26-VS-0471</td>
               <td class="dk-date" data-sort-value="2026-04-16">16 апр</td>
@@ -1277,8 +1274,8 @@
               <td><span class="dk-channel dk-channel--visa">Visa</span></td>
               <td>Абдуллаев А.К.</td>
               <td data-sort-value="245000"><span class="dk-amount">245 000 ₸</span></td>
-              <td><span class="dk-badge dk-badge--review">На проверке</span></td>
-              <td class="dk-days dk-days--overdue" data-sort-value="0">0</td>
+              <td><span class="dk-badge dk-badge--done">Исполнен</span></td>
+              <td class="dk-days" data-sort-value="99">—</td>
               <td>Алиева М.</td>
               <td class="dk-col-actions">
                 <span class="dk-row-actions">
@@ -1288,7 +1285,7 @@
                 </span>
               </td>
             </tr>
-            <tr data-id="KAS-26-IN-0470" data-created="2026-04-15" data-status="sign" data-channel="int" data-assignee="ivanov" data-type="refund" data-search="kas-26-in-0470 возврат средств омаров internal 89500 иванов">
+            <tr data-id="KAS-26-IN-0470" data-created="2026-04-15" data-status="done" data-channel="int" data-assignee="ivanov" data-type="refund" data-search="kas-26-in-0470 возврат средств омаров internal 89500 иванов">
               <td class="dk-col-check"><input type="checkbox" class="dk-checkbox" aria-label="Выбрать" /></td>
               <td class="dk-num">KAS-26-IN-0470</td>
               <td class="dk-date" data-sort-value="2026-04-15">15 апр</td>
@@ -1296,8 +1293,8 @@
               <td><span class="dk-channel dk-channel--int">Internal</span></td>
               <td>Омаров Б.К.</td>
               <td data-sort-value="89500"><span class="dk-amount">89 500 ₸</span></td>
-              <td><span class="dk-badge dk-badge--sign">На подписи</span></td>
-              <td class="dk-days" data-sort-value="3">3</td>
+              <td><span class="dk-badge dk-badge--done">Исполнен</span></td>
+              <td class="dk-days" data-sort-value="99">—</td>
               <td>Иванов И.</td>
               <td class="dk-col-actions">
                 <span class="dk-row-actions">
@@ -1326,7 +1323,7 @@
                 </span>
               </td>
             </tr>
-            <tr data-id="KAS-26-VS-0465" data-created="2026-04-12" data-status="review" data-channel="visa" data-assignee="alieva" data-type="dispute" data-search="kas-26-vs-0465 chargeback visa жумабаев 56780 алиева">
+            <tr data-id="KAS-26-VS-0465" data-created="2026-04-12" data-status="done" data-channel="visa" data-assignee="alieva" data-type="dispute" data-search="kas-26-vs-0465 chargeback visa жумабаев 56780 алиева">
               <td class="dk-col-check"><input type="checkbox" class="dk-checkbox" aria-label="Выбрать" /></td>
               <td class="dk-num">KAS-26-VS-0465</td>
               <td class="dk-date" data-sort-value="2026-04-12">12 апр</td>
@@ -1334,8 +1331,8 @@
               <td><span class="dk-channel dk-channel--visa">Visa</span></td>
               <td>Жумабаев Д.Т.</td>
               <td data-sort-value="56780"><span class="dk-amount">56 780 ₸</span></td>
-              <td><span class="dk-badge dk-badge--review">На проверке</span></td>
-              <td class="dk-days" data-sort-value="4">4</td>
+              <td><span class="dk-badge dk-badge--done">Исполнен</span></td>
+              <td class="dk-days" data-sort-value="99">—</td>
               <td>Алиева М.</td>
               <td class="dk-col-actions">
                 <span class="dk-row-actions">
@@ -1345,7 +1342,7 @@
                 </span>
               </td>
             </tr>
-            <tr data-id="KAS-26-IN-0463" data-created="2026-04-11" data-status="sign" data-channel="int" data-assignee="nurtaz" data-type="refund" data-search="kas-26-in-0463 возврат средств нурланов internal 3150000 нуртаз">
+            <tr data-id="KAS-26-IN-0463" data-created="2026-04-11" data-status="work" data-channel="int" data-assignee="nurtaz" data-type="refund" data-search="kas-26-in-0463 возврат средств нурланов internal 3150000 нуртаз">
               <td class="dk-col-check"><input type="checkbox" class="dk-checkbox" aria-label="Выбрать" /></td>
               <td class="dk-num">KAS-26-IN-0463</td>
               <td class="dk-date" data-sort-value="2026-04-11">11 апр</td>
@@ -1353,7 +1350,7 @@
               <td><span class="dk-channel dk-channel--int">Internal</span></td>
               <td>Нурланов С.М.</td>
               <td data-sort-value="3150000"><span class="dk-amount">3 150 000 ₸</span></td>
-              <td><span class="dk-badge dk-badge--sign">На подписи</span></td>
+              <td><span class="dk-badge dk-badge--work">В работе</span></td>
               <td class="dk-days" data-sort-value="2">2</td>
               <td>Нуртаз Д.</td>
               <td class="dk-col-actions">
@@ -1364,7 +1361,7 @@
                 </span>
               </td>
             </tr>
-            <tr data-id="KAS-26-MC-0457" data-created="2026-04-09" data-status="review" data-channel="mc" data-assignee="kasymov" data-type="dispute" data-search="kas-26-mc-0457 chargeback mastercard mc тулегенов 72400 касымов">
+            <tr data-id="KAS-26-MC-0457" data-created="2026-04-09" data-status="work" data-channel="mc" data-assignee="kasymov" data-type="dispute" data-search="kas-26-mc-0457 chargeback mastercard mc тулегенов 72400 касымов">
               <td class="dk-col-check"><input type="checkbox" class="dk-checkbox" aria-label="Выбрать" /></td>
               <td class="dk-num">KAS-26-MC-0457</td>
               <td class="dk-date" data-sort-value="2026-04-09">9 апр</td>
@@ -1372,7 +1369,7 @@
               <td><span class="dk-channel dk-channel--mc">MC</span></td>
               <td>Тулегенов К.Б.</td>
               <td data-sort-value="72400"><span class="dk-amount">72 400 ₸</span></td>
-              <td><span class="dk-badge dk-badge--review">На проверке</span></td>
+              <td><span class="dk-badge dk-badge--work">В работе</span></td>
               <td class="dk-days dk-days--overdue" data-sort-value="-2">−2</td>
               <td>Касымов Е.</td>
               <td class="dk-col-actions">
@@ -1383,7 +1380,7 @@
                 </span>
               </td>
             </tr>
-            <tr data-id="KAS-26-VS-0455" data-created="2026-04-07" data-status="sign" data-channel="visa" data-assignee="ivanov" data-type="dispute" data-search="kas-26-vs-0455 chargeback visa токаев 412000 иванов">
+            <tr data-id="KAS-26-VS-0455" data-created="2026-04-07" data-status="work" data-channel="visa" data-assignee="ivanov" data-type="dispute" data-search="kas-26-vs-0455 chargeback visa токаев 412000 иванов">
               <td class="dk-col-check"><input type="checkbox" class="dk-checkbox" aria-label="Выбрать" /></td>
               <td class="dk-num">KAS-26-VS-0455</td>
               <td class="dk-date" data-sort-value="2026-04-07">7 апр</td>
@@ -1391,7 +1388,7 @@
               <td><span class="dk-channel dk-channel--visa">Visa</span></td>
               <td>Токаев А.Б.</td>
               <td data-sort-value="412000"><span class="dk-amount">412 000 ₸</span></td>
-              <td><span class="dk-badge dk-badge--sign">На подписи</span></td>
+              <td><span class="dk-badge dk-badge--work">В работе</span></td>
               <td class="dk-days" data-sort-value="5">5</td>
               <td>Иванов И.</td>
               <td class="dk-col-actions">
@@ -1402,7 +1399,7 @@
                 </span>
               </td>
             </tr>
-            <tr data-id="KAS-26-MC-0452" data-created="2026-04-04" data-status="review" data-channel="mc" data-assignee="nurtaz" data-type="dispute" data-search="kas-26-mc-0452 chargeback mastercard mc серикова 178900 нуртаз">
+            <tr data-id="KAS-26-MC-0452" data-created="2026-04-04" data-status="work" data-channel="mc" data-assignee="nurtaz" data-type="dispute" data-search="kas-26-mc-0452 chargeback mastercard mc серикова 178900 нуртаз">
               <td class="dk-col-check"><input type="checkbox" class="dk-checkbox" aria-label="Выбрать" /></td>
               <td class="dk-num">KAS-26-MC-0452</td>
               <td class="dk-date" data-sort-value="2026-04-04">4 апр</td>
@@ -1410,7 +1407,7 @@
               <td><span class="dk-channel dk-channel--mc">MC</span></td>
               <td>Серикова Г.А.</td>
               <td data-sort-value="178900"><span class="dk-amount">178 900 ₸</span></td>
-              <td><span class="dk-badge dk-badge--review">На проверке</span></td>
+              <td><span class="dk-badge dk-badge--work">В работе</span></td>
               <td class="dk-days" data-sort-value="6">6</td>
               <td>Нуртаз Д.</td>
               <td class="dk-col-actions">
@@ -1421,7 +1418,7 @@
                 </span>
               </td>
             </tr>
-            <tr data-id="KAS-26-AT-0450" data-created="2026-04-02" data-status="sign" data-channel="atm" data-assignee="alieva" data-type="atm" data-search="kas-26-at-0450 спорная операция atm байжанов 28500 алиева">
+            <tr data-id="KAS-26-AT-0450" data-created="2026-04-02" data-status="work" data-channel="atm" data-assignee="alieva" data-type="atm" data-search="kas-26-at-0450 спорная операция atm байжанов 28500 алиева">
               <td class="dk-col-check"><input type="checkbox" class="dk-checkbox" aria-label="Выбрать" /></td>
               <td class="dk-num">KAS-26-AT-0450</td>
               <td class="dk-date" data-sort-value="2026-04-02">2 апр</td>
@@ -1429,7 +1426,7 @@
               <td><span class="dk-channel dk-channel--atm">ATM</span></td>
               <td>Байжанов Е.К.</td>
               <td data-sort-value="28500"><span class="dk-amount">28 500 ₸</span></td>
-              <td><span class="dk-badge dk-badge--sign">На подписи</span></td>
+              <td><span class="dk-badge dk-badge--work">В работе</span></td>
               <td class="dk-days" data-sort-value="7">7</td>
               <td>Алиева М.</td>
               <td class="dk-col-actions">
@@ -1440,7 +1437,7 @@
                 </span>
               </td>
             </tr>
-            <tr data-id="KAS-26-PS-0447" data-created="2026-03-31" data-status="review" data-channel="pos" data-assignee="kasymov" data-type="pos" data-search="kas-26-ps-0447 спорная операция pos мухамедов 925000 касымов">
+            <tr data-id="KAS-26-PS-0447" data-created="2026-03-31" data-status="work" data-channel="pos" data-assignee="kasymov" data-type="pos" data-search="kas-26-ps-0447 спорная операция pos мухамедов 925000 касымов">
               <td class="dk-col-check"><input type="checkbox" class="dk-checkbox" aria-label="Выбрать" /></td>
               <td class="dk-num">KAS-26-PS-0447</td>
               <td class="dk-date" data-sort-value="2026-03-31">31 мар</td>
@@ -1448,7 +1445,7 @@
               <td><span class="dk-channel dk-channel--pos">POS</span></td>
               <td>Мухамедов Т.Р.</td>
               <td data-sort-value="925000"><span class="dk-amount">925 000 ₸</span></td>
-              <td><span class="dk-badge dk-badge--review">На проверке</span></td>
+              <td><span class="dk-badge dk-badge--work">В работе</span></td>
               <td class="dk-days" data-sort-value="1">1</td>
               <td>Касымов Е.</td>
               <td class="dk-col-actions">
@@ -1459,7 +1456,7 @@
                 </span>
               </td>
             </tr>
-            <tr data-id="KAS-26-VS-0445" data-created="2026-03-28" data-status="review" data-channel="visa" data-assignee="nurtaz" data-type="dispute" data-search="kas-26-vs-0445 оспаривание транзакции visa есенова 67200 нуртаз">
+            <tr data-id="KAS-26-VS-0445" data-created="2026-03-28" data-status="work" data-channel="visa" data-assignee="nurtaz" data-type="dispute" data-search="kas-26-vs-0445 оспаривание транзакции visa есенова 67200 нуртаз">
               <td class="dk-col-check"><input type="checkbox" class="dk-checkbox" aria-label="Выбрать" /></td>
               <td class="dk-num">KAS-26-VS-0445</td>
               <td class="dk-date" data-sort-value="2026-03-28">28 мар</td>
@@ -1467,7 +1464,7 @@
               <td><span class="dk-channel dk-channel--visa">Visa</span></td>
               <td>Есенова Л.Д.</td>
               <td data-sort-value="67200"><span class="dk-amount">67 200 ₸</span></td>
-              <td><span class="dk-badge dk-badge--review">На проверке</span></td>
+              <td><span class="dk-badge dk-badge--work">В работе</span></td>
               <td class="dk-days dk-days--overdue" data-sort-value="-3">−3</td>
               <td>Нуртаз Д.</td>
               <td class="dk-col-actions">
@@ -1478,7 +1475,7 @@
                 </span>
               </td>
             </tr>
-            <tr data-id="KAS-26-IN-0442" data-created="2026-03-25" data-status="sign" data-channel="int" data-assignee="ivanov" data-type="refund" data-search="kas-26-in-0442 возврат средств internal сулейменов 156000 иванов">
+            <tr data-id="KAS-26-IN-0442" data-created="2026-03-25" data-status="work" data-channel="int" data-assignee="ivanov" data-type="refund" data-search="kas-26-in-0442 возврат средств internal сулейменов 156000 иванов">
               <td class="dk-col-check"><input type="checkbox" class="dk-checkbox" aria-label="Выбрать" /></td>
               <td class="dk-num">KAS-26-IN-0442</td>
               <td class="dk-date" data-sort-value="2026-03-25">25 мар</td>
@@ -1486,7 +1483,7 @@
               <td><span class="dk-channel dk-channel--int">Internal</span></td>
               <td>Сулейменов А.Ж.</td>
               <td data-sort-value="156000"><span class="dk-amount">156 000 ₸</span></td>
-              <td><span class="dk-badge dk-badge--sign">На подписи</span></td>
+              <td><span class="dk-badge dk-badge--work">В работе</span></td>
               <td class="dk-days" data-sort-value="9">9</td>
               <td>Иванов И.</td>
               <td class="dk-col-actions">
@@ -1497,7 +1494,7 @@
                 </span>
               </td>
             </tr>
-            <tr data-id="KAS-26-VS-0440" data-created="2026-03-21" data-status="review" data-channel="visa" data-assignee="alieva" data-type="dispute" data-search="kas-26-vs-0440 chargeback visa карипова 89000 алиева">
+            <tr data-id="KAS-26-VS-0440" data-created="2026-03-21" data-status="work" data-channel="visa" data-assignee="alieva" data-type="dispute" data-search="kas-26-vs-0440 chargeback visa карипова 89000 алиева">
               <td class="dk-col-check"><input type="checkbox" class="dk-checkbox" aria-label="Выбрать" /></td>
               <td class="dk-num">KAS-26-VS-0440</td>
               <td class="dk-date" data-sort-value="2026-03-21">21 мар</td>
@@ -1505,7 +1502,7 @@
               <td><span class="dk-channel dk-channel--visa">Visa</span></td>
               <td>Карипова М.И.</td>
               <td data-sort-value="89000"><span class="dk-amount">89 000 ₸</span></td>
-              <td><span class="dk-badge dk-badge--review">На проверке</span></td>
+              <td><span class="dk-badge dk-badge--work">В работе</span></td>
               <td class="dk-days" data-sort-value="10">10</td>
               <td>Алиева М.</td>
               <td class="dk-col-actions">
@@ -1516,7 +1513,7 @@
                 </span>
               </td>
             </tr>
-            <tr data-id="KAS-26-MC-0438" data-created="2026-03-18" data-status="sign" data-channel="mc" data-assignee="kasymov" data-type="dispute" data-search="kas-26-mc-0438 chargeback mastercard mc ахметов 234500 касымов">
+            <tr data-id="KAS-26-MC-0438" data-created="2026-03-18" data-status="work" data-channel="mc" data-assignee="kasymov" data-type="dispute" data-search="kas-26-mc-0438 chargeback mastercard mc ахметов 234500 касымов">
               <td class="dk-col-check"><input type="checkbox" class="dk-checkbox" aria-label="Выбрать" /></td>
               <td class="dk-num">KAS-26-MC-0438</td>
               <td class="dk-date" data-sort-value="2026-03-18">18 мар</td>
@@ -1524,7 +1521,7 @@
               <td><span class="dk-channel dk-channel--mc">MC</span></td>
               <td>Ахметов Н.С.</td>
               <td data-sort-value="234500"><span class="dk-amount">234 500 ₸</span></td>
-              <td><span class="dk-badge dk-badge--sign">На подписи</span></td>
+              <td><span class="dk-badge dk-badge--work">В работе</span></td>
               <td class="dk-days" data-sort-value="1">1</td>
               <td>Касымов Е.</td>
               <td class="dk-col-actions">
@@ -1535,7 +1532,7 @@
                 </span>
               </td>
             </tr>
-            <tr data-id="KAS-26-AT-0436" data-created="2026-03-14" data-status="review" data-channel="atm" data-assignee="ivanov" data-type="atm" data-search="kas-26-at-0436 спорная операция atm рахимов 47800 иванов">
+            <tr data-id="KAS-26-AT-0436" data-created="2026-03-14" data-status="work" data-channel="atm" data-assignee="ivanov" data-type="atm" data-search="kas-26-at-0436 спорная операция atm рахимов 47800 иванов">
               <td class="dk-col-check"><input type="checkbox" class="dk-checkbox" aria-label="Выбрать" /></td>
               <td class="dk-num">KAS-26-AT-0436</td>
               <td class="dk-date" data-sort-value="2026-03-14">14 мар</td>
@@ -1543,7 +1540,7 @@
               <td><span class="dk-channel dk-channel--atm">ATM</span></td>
               <td>Рахимов Е.В.</td>
               <td data-sort-value="47800"><span class="dk-amount">47 800 ₸</span></td>
-              <td><span class="dk-badge dk-badge--review">На проверке</span></td>
+              <td><span class="dk-badge dk-badge--work">В работе</span></td>
               <td class="dk-days" data-sort-value="12">12</td>
               <td>Иванов И.</td>
               <td class="dk-col-actions">
@@ -1554,7 +1551,7 @@
                 </span>
               </td>
             </tr>
-            <tr data-id="KAS-26-VS-0433" data-created="2026-03-10" data-status="sign" data-channel="visa" data-assignee="nurtaz" data-type="dispute" data-search="kas-26-vs-0433 оспаривание транзакции visa касымова 1580000 нуртаз">
+            <tr data-id="KAS-26-VS-0433" data-created="2026-03-10" data-status="work" data-channel="visa" data-assignee="nurtaz" data-type="dispute" data-search="kas-26-vs-0433 оспаривание транзакции visa касымова 1580000 нуртаз">
               <td class="dk-col-check"><input type="checkbox" class="dk-checkbox" aria-label="Выбрать" /></td>
               <td class="dk-num">KAS-26-VS-0433</td>
               <td class="dk-date" data-sort-value="2026-03-10">10 мар</td>
@@ -1562,7 +1559,7 @@
               <td><span class="dk-channel dk-channel--visa">Visa</span></td>
               <td>Касымова Д.А.</td>
               <td data-sort-value="1580000"><span class="dk-amount">1 580 000 ₸</span></td>
-              <td><span class="dk-badge dk-badge--sign">На подписи</span></td>
+              <td><span class="dk-badge dk-badge--work">В работе</span></td>
               <td class="dk-days" data-sort-value="11">11</td>
               <td>Нуртаз Д.</td>
               <td class="dk-col-actions">
@@ -1573,7 +1570,7 @@
                 </span>
               </td>
             </tr>
-            <tr data-id="KAS-26-IN-0430" data-created="2026-03-05" data-status="review" data-channel="int" data-assignee="alieva" data-type="refund" data-search="kas-26-in-0430 возврат средств internal бекетов 198000 алиева">
+            <tr data-id="KAS-26-IN-0430" data-created="2026-03-05" data-status="work" data-channel="int" data-assignee="alieva" data-type="refund" data-search="kas-26-in-0430 возврат средств internal бекетов 198000 алиева">
               <td class="dk-col-check"><input type="checkbox" class="dk-checkbox" aria-label="Выбрать" /></td>
               <td class="dk-num">KAS-26-IN-0430</td>
               <td class="dk-date" data-sort-value="2026-03-05">5 мар</td>
@@ -1581,7 +1578,7 @@
               <td><span class="dk-channel dk-channel--int">Internal</span></td>
               <td>Бекетов И.О.</td>
               <td data-sort-value="198000"><span class="dk-amount">198 000 ₸</span></td>
-              <td><span class="dk-badge dk-badge--review">На проверке</span></td>
+              <td><span class="dk-badge dk-badge--work">В работе</span></td>
               <td class="dk-days" data-sort-value="14">14</td>
               <td>Алиева М.</td>
               <td class="dk-col-actions">
@@ -1592,7 +1589,7 @@
                 </span>
               </td>
             </tr>
-            <tr data-id="KAS-26-MC-0427" data-created="2026-02-28" data-status="review" data-channel="mc" data-assignee="kasymov" data-type="dispute" data-search="kas-26-mc-0427 chargeback mastercard mc назарбеков 380000 касымов">
+            <tr data-id="KAS-26-MC-0427" data-created="2026-02-28" data-status="work" data-channel="mc" data-assignee="kasymov" data-type="dispute" data-search="kas-26-mc-0427 chargeback mastercard mc назарбеков 380000 касымов">
               <td class="dk-col-check"><input type="checkbox" class="dk-checkbox" aria-label="Выбрать" /></td>
               <td class="dk-num">KAS-26-MC-0427</td>
               <td class="dk-date" data-sort-value="2026-02-28">28 фев</td>
@@ -1600,7 +1597,7 @@
               <td><span class="dk-channel dk-channel--mc">MC</span></td>
               <td>Назарбеков М.Т.</td>
               <td data-sort-value="380000"><span class="dk-amount">380 000 ₸</span></td>
-              <td><span class="dk-badge dk-badge--review">На проверке</span></td>
+              <td><span class="dk-badge dk-badge--work">В работе</span></td>
               <td class="dk-days dk-days--overdue" data-sort-value="-4">−4</td>
               <td>Касымов Е.</td>
               <td class="dk-col-actions">
@@ -1803,15 +1800,15 @@
     const emptyRow = document.getElementById("emptyRow");
 
     const CHANNEL_LABELS = { visa: "Visa", mc: "Mastercard", pos: "POS", atm: "ATM", int: "Internal" };
-    const STATUS_LABELS  = { review: "На проверке", sign: "На подписи", return: "Возвращён", done: "Завершён" };
+    const STATUS_LABELS  = { work: "В работе", return: "Возвращён", done: "Исполнен" };
     const ASSIGNEE_LABELS = { ivanov: "Иванов И.", alieva: "Алиева М.", kasymov: "Касымов Е.", nurtaz: "Нуртаз Д." };
     const PERIOD_LABELS  = { today: "сегодня", week: "неделя", month: "месяц", quarter: "квартал", all: "всё время" };
 
     function rowMatchesTab(tr, tab) {
       if (tab === "all") return true;
       if (tab === "mine") return tr.dataset.assignee === "ivanov";
-      if (tab === "review") return tr.dataset.status === "review";
-      if (tab === "sign") return tr.dataset.status === "sign";
+      if (tab === "work") return tr.dataset.status === "work";
+      if (tab === "done") return tr.dataset.status === "done";
       if (tab === "overdue") {
         const sla = tr.children[8];
         const v = sla && sla.hasAttribute("data-sort-value")
@@ -2059,8 +2056,8 @@
       const counts = {
         all: allRows.length,
         mine: allRows.filter((tr) => rowMatchesTab(tr, "mine")).length,
-        review: allRows.filter((tr) => rowMatchesTab(tr, "review")).length,
-        sign: allRows.filter((tr) => rowMatchesTab(tr, "sign")).length,
+        work: allRows.filter((tr) => rowMatchesTab(tr, "work")).length,
+        done: allRows.filter((tr) => rowMatchesTab(tr, "done")).length,
         overdue: allRows.filter((tr) => rowMatchesTab(tr, "overdue")).length,
         drafts: 0,
       };
