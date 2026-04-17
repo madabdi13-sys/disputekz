@@ -589,11 +589,6 @@
       color: var(--zinc-600);
       border: 1px solid var(--zinc-200);
     }
-    .dk-channel--visa { color: #1a1f71; background: #eef0ff; border-color: #d8def7; }
-    .dk-channel--mc   { color: #b3321f; background: #fef1ee; border-color: #fcd8cd; }
-    .dk-channel--pos  { color: #3f3f46; background: var(--zinc-100); border-color: var(--zinc-200); }
-    .dk-channel--atm  { color: #15803d; background: #f0fdf4; border-color: #bbf7d0; }
-    .dk-channel--int  { color: #52525b; background: #fafafa; border-color: var(--zinc-200); }
 
     /* Days remaining */
     .dk-table th.dk-col-days,
@@ -1268,7 +1263,7 @@
               <td class="dk-num">KAS-26-PS-0468</td>
               <td class="dk-date" data-sort-value="2026-04-14">14 апр</td>
               <td class="dk-strong">Спорная операция POS</td>
-              <td><span class="dk-channel dk-channel--pos">POS</span></td>
+              <td><span class="dk-channel">POS</span></td>
               <td>Сатбаев Р.Н.</td>
               <td data-sort-value="1240000"><span class="dk-amount">1 240 000 ₸</span></td>
               <td><span class="dk-badge dk-badge--overdue">Просрочен</span></td>
@@ -1287,7 +1282,7 @@
               <td class="dk-num">KAS-26-IN-0463</td>
               <td class="dk-date" data-sort-value="2026-04-11">11 апр</td>
               <td class="dk-strong">Возврат средств</td>
-              <td><span class="dk-channel dk-channel--int">Internal</span></td>
+              <td><span class="dk-channel">Internal</span></td>
               <td>Нурланов С.М.</td>
               <td data-sort-value="3150000"><span class="dk-amount">3 150 000 ₸</span></td>
               <td><span class="dk-badge dk-badge--work">В работе</span></td>
@@ -1306,7 +1301,7 @@
               <td class="dk-num">KAS-26-MC-0457</td>
               <td class="dk-date" data-sort-value="2026-04-09">9 апр</td>
               <td class="dk-strong">Chargeback Mastercard</td>
-              <td><span class="dk-channel dk-channel--mc">MC</span></td>
+              <td><span class="dk-channel">MC</span></td>
               <td>Тулегенов К.Б.</td>
               <td data-sort-value="72400"><span class="dk-amount">72 400 ₸</span></td>
               <td><span class="dk-badge dk-badge--overdue">Просрочен</span></td>
@@ -1325,7 +1320,7 @@
               <td class="dk-num">KAS-26-VS-0455</td>
               <td class="dk-date" data-sort-value="2026-04-07">7 апр</td>
               <td class="dk-strong">Chargeback Visa</td>
-              <td><span class="dk-channel dk-channel--visa">Visa</span></td>
+              <td><span class="dk-channel">Visa</span></td>
               <td>Токаев А.Б.</td>
               <td data-sort-value="412000"><span class="dk-amount">412 000 ₸</span></td>
               <td><span class="dk-badge dk-badge--work">В работе</span></td>
@@ -1344,7 +1339,7 @@
               <td class="dk-num">KAS-26-MC-0452</td>
               <td class="dk-date" data-sort-value="2026-04-04">4 апр</td>
               <td class="dk-strong">Chargeback Mastercard</td>
-              <td><span class="dk-channel dk-channel--mc">MC</span></td>
+              <td><span class="dk-channel">MC</span></td>
               <td>Серикова Г.А.</td>
               <td data-sort-value="178900"><span class="dk-amount">178 900 ₸</span></td>
               <td><span class="dk-badge dk-badge--work">В работе</span></td>
@@ -1363,7 +1358,7 @@
               <td class="dk-num">KAS-26-AT-0450</td>
               <td class="dk-date" data-sort-value="2026-04-02">2 апр</td>
               <td class="dk-strong">Спорная операция ATM</td>
-              <td><span class="dk-channel dk-channel--atm">ATM</span></td>
+              <td><span class="dk-channel">ATM</span></td>
               <td>Байжанов Е.К.</td>
               <td data-sort-value="28500"><span class="dk-amount">28 500 ₸</span></td>
               <td><span class="dk-badge dk-badge--return">Возвращён</span></td>
@@ -1382,7 +1377,7 @@
               <td class="dk-num">KAS-26-PS-0447</td>
               <td class="dk-date" data-sort-value="2026-03-31">31 мар</td>
               <td class="dk-strong">Спорная операция POS</td>
-              <td><span class="dk-channel dk-channel--pos">POS</span></td>
+              <td><span class="dk-channel">POS</span></td>
               <td>Мухамедов Т.Р.</td>
               <td data-sort-value="925000"><span class="dk-amount">925 000 ₸</span></td>
               <td><span class="dk-badge dk-badge--work">В работе</span></td>
@@ -1401,7 +1396,7 @@
               <td class="dk-num">KAS-26-VS-0445</td>
               <td class="dk-date" data-sort-value="2026-03-28">28 мар</td>
               <td class="dk-strong">Оспаривание транзакции</td>
-              <td><span class="dk-channel dk-channel--visa">Visa</span></td>
+              <td><span class="dk-channel">Visa</span></td>
               <td>Есенова Л.Д.</td>
               <td data-sort-value="67200"><span class="dk-amount">67 200 ₸</span></td>
               <td><span class="dk-badge dk-badge--overdue">Просрочен</span></td>
@@ -1420,7 +1415,7 @@
               <td class="dk-num">KAS-26-IN-0442</td>
               <td class="dk-date" data-sort-value="2026-03-25">25 мар</td>
               <td class="dk-strong">Возврат средств</td>
-              <td><span class="dk-channel dk-channel--int">Internal</span></td>
+              <td><span class="dk-channel">Internal</span></td>
               <td>Сулейменов А.Ж.</td>
               <td data-sort-value="156000"><span class="dk-amount">156 000 ₸</span></td>
               <td><span class="dk-badge dk-badge--work">В работе</span></td>
@@ -1439,7 +1434,7 @@
               <td class="dk-num">KAS-26-VS-0440</td>
               <td class="dk-date" data-sort-value="2026-03-21">21 мар</td>
               <td class="dk-strong">Chargeback Visa</td>
-              <td><span class="dk-channel dk-channel--visa">Visa</span></td>
+              <td><span class="dk-channel">Visa</span></td>
               <td>Карипова М.И.</td>
               <td data-sort-value="89000"><span class="dk-amount">89 000 ₸</span></td>
               <td><span class="dk-badge dk-badge--work">В работе</span></td>
@@ -1458,7 +1453,7 @@
               <td class="dk-num">KAS-26-MC-0438</td>
               <td class="dk-date" data-sort-value="2026-03-18">18 мар</td>
               <td class="dk-strong">Chargeback Mastercard</td>
-              <td><span class="dk-channel dk-channel--mc">MC</span></td>
+              <td><span class="dk-channel">MC</span></td>
               <td>Ахметов Н.С.</td>
               <td data-sort-value="234500"><span class="dk-amount">234 500 ₸</span></td>
               <td><span class="dk-badge dk-badge--work">В работе</span></td>
@@ -1477,7 +1472,7 @@
               <td class="dk-num">KAS-26-AT-0436</td>
               <td class="dk-date" data-sort-value="2026-03-14">14 мар</td>
               <td class="dk-strong">Спорная операция ATM</td>
-              <td><span class="dk-channel dk-channel--atm">ATM</span></td>
+              <td><span class="dk-channel">ATM</span></td>
               <td>Рахимов Е.В.</td>
               <td data-sort-value="47800"><span class="dk-amount">47 800 ₸</span></td>
               <td><span class="dk-badge dk-badge--work">В работе</span></td>
@@ -1496,7 +1491,7 @@
               <td class="dk-num">KAS-26-VS-0433</td>
               <td class="dk-date" data-sort-value="2026-03-10">10 мар</td>
               <td class="dk-strong">Оспаривание транзакции</td>
-              <td><span class="dk-channel dk-channel--visa">Visa</span></td>
+              <td><span class="dk-channel">Visa</span></td>
               <td>Касымова Д.А.</td>
               <td data-sort-value="1580000"><span class="dk-amount">1 580 000 ₸</span></td>
               <td><span class="dk-badge dk-badge--work">В работе</span></td>
@@ -1515,7 +1510,7 @@
               <td class="dk-num">KAS-26-IN-0430</td>
               <td class="dk-date" data-sort-value="2026-03-05">5 мар</td>
               <td class="dk-strong">Возврат средств</td>
-              <td><span class="dk-channel dk-channel--int">Internal</span></td>
+              <td><span class="dk-channel">Internal</span></td>
               <td>Бекетов И.О.</td>
               <td data-sort-value="198000"><span class="dk-amount">198 000 ₸</span></td>
               <td><span class="dk-badge dk-badge--work">В работе</span></td>
@@ -1534,7 +1529,7 @@
               <td class="dk-num">KAS-26-MC-0427</td>
               <td class="dk-date" data-sort-value="2026-02-28">28 фев</td>
               <td class="dk-strong">Chargeback Mastercard</td>
-              <td><span class="dk-channel dk-channel--mc">MC</span></td>
+              <td><span class="dk-channel">MC</span></td>
               <td>Назарбеков М.Т.</td>
               <td data-sort-value="380000"><span class="dk-amount">380 000 ₸</span></td>
               <td><span class="dk-badge dk-badge--overdue">Просрочен</span></td>
