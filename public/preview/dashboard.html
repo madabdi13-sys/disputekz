@@ -415,7 +415,8 @@
       background: #fff;
       border: 1px solid var(--zinc-200);
       border-radius: 8px;
-      overflow: hidden;
+      overflow-x: auto;
+      overflow-y: hidden;
     }
     .dk-table {
       width: 100%;
@@ -443,7 +444,22 @@
       background: var(--zinc-50);
       border-bottom: 1px solid var(--zinc-200);
       white-space: nowrap;
+      position: relative;
     }
+    .dk-resize-handle {
+      position: absolute;
+      right: 0; top: 0; bottom: 0;
+      width: 5px;
+      cursor: col-resize;
+      z-index: 2;
+      user-select: none;
+    }
+    .dk-resize-handle:hover,
+    body.dk-resizing .dk-resize-handle.active {
+      background: var(--zinc-300);
+    }
+    body.dk-resizing { cursor: col-resize !important; user-select: none !important; }
+    body.dk-resizing * { cursor: col-resize !important; }
     .dk-table thead th.sortable {
       cursor: pointer;
       user-select: none;
@@ -481,6 +497,9 @@
       font-size: 13px;
       color: var(--zinc-800);
       vertical-align: middle;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
     .dk-table tbody tr:last-child td {
       border-bottom: none;
@@ -2418,6 +2437,58 @@
     // Initial render
     updateTabBadges();
     render();
+
+    /* ── Column resize (Excel-style) ── */
+    (function initColResize() {
+      var table = document.getElementById("disputesTable");
+      var ths = table.querySelectorAll("thead th");
+
+      var colgroup = document.createElement("colgroup");
+      for (var i = 0; i < ths.length; i++) {
+        var col = document.createElement("col");
+        col.style.width = ths[i].offsetWidth + "px";
+        colgroup.appendChild(col);
+      }
+      table.insertBefore(colgroup, table.firstChild);
+      table.style.tableLayout = "fixed";
+
+      var cols = colgroup.querySelectorAll("col");
+      var MIN_W = 50;
+
+      for (var i = 0; i < ths.length; i++) {
+        (function (idx) {
+          var th = ths[idx];
+          if (th.classList.contains("dk-col-check") || th.classList.contains("dk-col-actions")) return;
+
+          var handle = document.createElement("div");
+          handle.className = "dk-resize-handle";
+          th.appendChild(handle);
+
+          handle.addEventListener("mousedown", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var startX = e.pageX;
+            var startW = cols[idx].offsetWidth || parseInt(cols[idx].style.width);
+            handle.classList.add("active");
+            document.body.classList.add("dk-resizing");
+
+            function onMove(ev) {
+              var w = Math.max(MIN_W, startW + ev.pageX - startX);
+              cols[idx].style.width = w + "px";
+            }
+            function onUp() {
+              handle.classList.remove("active");
+              document.body.classList.remove("dk-resizing");
+              document.removeEventListener("mousemove", onMove);
+              document.removeEventListener("mouseup", onUp);
+            }
+            document.addEventListener("mousemove", onMove);
+            document.addEventListener("mouseup", onUp);
+          });
+        })(i);
+      }
+    })();
+
   })();
   </script>
 </body>
