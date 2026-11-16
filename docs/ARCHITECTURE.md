@@ -1,4 +1,4 @@
-# DisputeKZ — Архитектура системы (v0.2)
+# DisputeKZ — Архитектура системы (v0.3)
 
 ## Концепция
 
@@ -40,6 +40,7 @@ SaaS-платформа для управления диспутами в бан
 - [x] Деактивация сотрудников (не удаление)
 - [x] Аудит-лог действий пользователей
 - [x] In-app уведомления (badge-счётчики)
+- [x] Отчёты: KPI за период + готовые выгрузки в Excel/PDF
 
 ### Что НЕ входит в MVP
 
@@ -51,7 +52,7 @@ SaaS-платформа для управления диспутами в бан
 - SLA и автоэскалации
 - Интеграция с кадровой системой банка
 - Автоматическая биллинг-система (Stripe и т.д.)
-- Аналитика и отчёты
+- Конструктор произвольных отчётов (в MVP — фиксированный набор)
 
 ---
 
@@ -60,7 +61,7 @@ SaaS-платформа для управления диспутами в бан
 ```
 ┌─────────────────────────────────────────────┐
 │                Frontend                      │
-│          Next.js 14 (App Router)            │
+│          Next.js 16 (App Router)            │
 │          Tailwind CSS + shadcn/ui           │
 │          TypeScript                         │
 └──────────────┬──────────────────────────────┘
@@ -134,6 +135,8 @@ PDF:        @react-pdf/renderer
 | Отправить ответ / вернуть       | ❌          | ❌        | ❌             | ✅         |
 | Видеть все диспуты банка        | ❌          | ✅        | ❌             | ❌         |
 | Видеть аудит-лог банка          | ❌          | ✅        | ❌             | ❌         |
+| Видеть отчёты (весь банк)       | ❌          | ✅        | ❌             | ✅         |
+| Видеть отчёты (своё отделение)  | ❌          | ✅        | ✅             | ✅         |
 
 ---
 
@@ -284,6 +287,7 @@ model Branch {
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id])
   users          User[]
+  disputes       Dispute[]
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
 
@@ -379,6 +383,20 @@ model Dispute {
   templateId     String
   template       Template      @relation(fields: [templateId], references: [id])
   formData       Json          // Заполненные данные формы
+
+  // Ключевые поля, вынесенные из formData — нужны для фильтров дашборда и отчётов
+  channel        Channel       // Visa / Mastercard / POS / ATM / Internal
+  amount         Decimal       @db.Decimal(18, 2) // Сумма спорной операции
+  currency       String        @default("KZT")
+  clientName     String        // ФИО клиента
+  reasonCode     String?       // Reason code МПС (для chargeback)
+  deadlineAt     DateTime?     // Срок ответа (для «Осталось дней» и SLA)
+  outcome        DisputeOutcome? // Итог: выигран / проигран (для архива и отчётов)
+  refundedAmount Decimal?      @db.Decimal(18, 2) // Сколько возвращено клиенту
+  closedAt       DateTime?     // Когда ушёл в COMPLETED / CANCELLED
+
+  branchId       String?       // Отделение-инициатор (отчёт «По отделениям»)
+  branch         Branch?       @relation(fields: [branchId], references: [id])
   organizationId String
   organization   Organization  @relation(fields: [organizationId], references: [id])
   creatorId      String
@@ -392,8 +410,23 @@ model Dispute {
   updatedAt      DateTime      @updatedAt
 
   @@index([organizationId, status])
+  @@index([organizationId, createdAt])
+  @@index([branchId])
   @@index([creatorId])
   @@index([assigneeId])
+}
+
+enum Channel {
+  VISA
+  MASTERCARD
+  POS
+  ATM
+  INTERNAL
+}
+
+enum DisputeOutcome {
+  WON   // решён в пользу клиента
+  LOST  // отклонён
 }
 
 enum DisputeStatus {
@@ -505,6 +538,7 @@ SELECT 'DSP-' || EXTRACT(YEAR FROM NOW()) || '-' ||
 /disputes/[id]                 → Карточка диспута (статус, timeline, документы, вложения)
 /disputes/[id]/pdf             → Предпросмотр и скачивание PDF
 /disputes/archive              → Архив завершённых/отменённых
+/reports                       → Отчёты: KPI за период + выгрузки (ORG_ADMIN, HQ_MANAGER, BRANCH_MANAGER — своё отделение)
 
 /admin/requests                → Заявки на регистрацию (ORG_ADMIN)
 /admin/users                   → Управление пользователями банка (ORG_ADMIN)
@@ -653,6 +687,7 @@ disputekz/
 │   │   ├── (dashboard)/             # Защищённые страницы
 │   │   │   ├── layout.tsx           # Sidebar + Header
 │   │   │   ├── dashboard/
+│   │   │   ├── reports/
 │   │   │   ├── disputes/
 │   │   │   │   ├── new/
 │   │   │   │   ├── archive/
@@ -677,6 +712,7 @@ disputekz/
 │   │       ├── registration-requests/
 │   │       ├── organizations/
 │   │       ├── attachments/
+│   │       ├── reports/
 │   │       └── audit/
 │   ├── components/
 │   │   ├── ui/                      # shadcn/ui компоненты
@@ -698,6 +734,7 @@ disputekz/
 │   │   ├── template.service.ts
 │   │   ├── user.service.ts
 │   │   ├── registration.service.ts
+│   │   ├── report.service.ts
 │   │   └── organization.service.ts
 │   └── types/
 │       └── index.ts
@@ -837,19 +874,27 @@ volumes:
 - [ ] Поиск
 - [ ] Архив завершённых/отменённых
 
-### Этап 7 — Суперадмин (1-2 дня)
+### Этап 7 — Отчёты (2-3 дня)
+- [ ] KPI за период: всего диспутов, доля решённых, среднее время, возвращено клиентам
+- [ ] Сравнение с прошлым периодом (дельта)
+- [ ] Выгрузки: SLA, структура по каналам, по отделениям, chargeback с reason code (Excel)
+- [ ] Выгрузки: аудит и compliance (PDF), финансовая сводка (Excel)
+- [ ] Ограничение по роли: менеджер отделения видит только своё отделение
+- [ ] Экспорт списка диспутов с дашборда (Excel/CSV/PDF)
+
+### Этап 8 — Суперадмин (1-2 дня)
 - [ ] Управление организациями
 - [ ] Управление подписками
 - [ ] Создание ORG_ADMIN для банка
 
-### Этап 8 — Полировка (2-3 дня)
+### Этап 9 — Полировка (2-3 дня)
 - [ ] Аудит-лог (запись + просмотр)
 - [ ] Мобильная адаптивность
 - [ ] Empty states
 - [ ] Email-уведомления (одобрение/отказ заявки)
 - [ ] Тестирование
 
-**Итого MVP: ~15-20 рабочих дней для соло-разработчика**
+**Итого MVP: ~17-23 рабочих дня для соло-разработчика**
 
 ---
 
@@ -863,7 +908,7 @@ volumes:
 | SLA и эскалации               | Высокий   | Автоматические дедлайны по Visa/MC правилам       |
 | Интеграция с АБС              | Средний   | Подтягивать данные по транзакциям                 |
 | SMS/Push уведомления           | Средний   | Оповещения о смене статуса                       |
-| Аналитика и отчёты             | Средний   | Дашборд с метриками по диспутам                  |
+| Конструктор отчётов            | Средний   | Произвольные срезы и графики поверх базовых отчётов |
 | Интеграция с кадровой системой | Низкий    | Автоматическая деактивация при увольнении         |
 | Автоматический биллинг         | Низкий    | Stripe/Kaspi Pay для подписок                    |
 | Мобильное приложение           | Низкий    | React Native / PWA                               |
