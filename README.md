@@ -1,36 +1,36 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# DisputeKZ
 
-## Getting Started
+SaaS для управления диспутами (chargeback и спорные операции) в банках Казахстана.
+Архитектура, роли, статусы и план работ — [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+Дизайн-система — [`docs/DESIGN.md`](docs/DESIGN.md).
+Кликабельный HTML-прототип — `public/preview/` (открывается в браузере без сборки).
 
-First, run the development server:
+## Запуск для разработки
+
+Нужны Node.js 20+ и Docker.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install                 # зависимости + генерация Prisma Client
+cp .env.example .env        # настройки; при необходимости поправьте
+npm run db:up               # PostgreSQL 16 в Docker
+npm run db:migrate          # применить миграции
+npm run db:seed             # суперадмин (+ демо-банк при SEED_DEMO=1)
+npm run dev                 # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Демо-сотрудники (при `SEED_DEMO=1`): `admin@`, `hq@`, `branch5@`, `branch2@demo-bank.kz`, пароль `demo12345`.
+Вход заработает на этапе 2.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Команды
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Команда | Что делает |
+|---|---|
+| `npm run dev` | dev-сервер |
+| `npm run build` / `npm start` | production-сборка и запуск |
+| `npm run lint` / `npm run typecheck` | проверки |
+| `npm run db:migrate` | создать/применить миграцию после правки `prisma/schema.prisma` |
+| `npm run db:seed` | начальные данные (повторный запуск ничего не дублирует) |
+| `npm run db:reset` | пересоздать БД с нуля (удаляет данные) |
+| `npm run db:studio` | просмотр БД в браузере |
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+`GET /api/health` — проверка приложения и подключения к БД.

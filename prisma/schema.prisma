@@ -1,0 +1,290 @@
+// DisputeKZ — схема БД. Описание и решения: docs/ARCHITECTURE.md, раздел «Схема БД».
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ============================================================
+// Организация (банк) — корень мультитенантности
+// ============================================================
+
+model Organization {
+  id                   String                @id @default(cuid())
+  name                 String // Название банка
+  bin                  String?               @unique // БИН организации
+  isActive             Boolean               @default(true)
+  subscription         Subscription?
+  branches             Branch[]
+  users                User[]
+  templates            Template[]
+  disputes             Dispute[]
+  auditLogs            AuditLog[]
+  registrationRequests RegistrationRequest[]
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+}
+
+// ============================================================
+// Подписка
+// ============================================================
+
+model Subscription {
+  id             String       @id @default(cuid())
+  organizationId String       @unique
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  plan           String       @default("basic") // На будущее
+  isActive       Boolean      @default(true)
+  startsAt       DateTime
+  expiresAt      DateTime?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+
+// ============================================================
+// Отделение (филиал)
+// ============================================================
+
+model Branch {
+  id             String       @id @default(cuid())
+  name           String // «Отделение №5, ул. Абая»
+  code           String? // Внутренний код филиала
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  users          User[]
+  disputes       Dispute[]
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@unique([organizationId, code])
+}
+
+// ============================================================
+// Пользователь
+// ============================================================
+
+model User {
+  id             String          @id @default(cuid())
+  email          String          @unique
+  password       String // bcrypt hash
+  name           String // ФИО
+  phone          String?
+  role           Role
+  isActive       Boolean         @default(true)
+  organizationId String? // null для SUPER_ADMIN
+  organization   Organization?   @relation(fields: [organizationId], references: [id])
+  branchId       String? // null для ORG_ADMIN и HQ_MANAGER
+  branch         Branch?         @relation(fields: [branchId], references: [id])
+  orderNumber    String? // Номер приказа о приёме
+  disputes       Dispute[]       @relation("creator")
+  assignments    Dispute[]       @relation("assignee")
+  comments       Comment[]
+  statusChanges  StatusHistory[]
+  attachments    Attachment[]
+  auditLogs      AuditLog[]
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  @@index([organizationId])
+}
+
+enum Role {
+  SUPER_ADMIN
+  ORG_ADMIN
+  HQ_MANAGER
+  BRANCH_MANAGER
+}
+
+// ============================================================
+// Заявка на регистрацию
+// ============================================================
+
+model RegistrationRequest {
+  id              String             @id @default(cuid())
+  email           String
+  name            String
+  phone           String?
+  password        String // bcrypt hash (хранится до одобрения)
+  role            Role // Запрашиваемая роль
+  branchId        String? // Если BRANCH_MANAGER
+  orderNumber     String // Номер приказа о приёме
+  organizationId  String
+  organization    Organization       @relation(fields: [organizationId], references: [id])
+  status          RegistrationStatus @default(PENDING)
+  reviewedById    String? // Кто одобрил/отклонил
+  rejectionReason String?
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+
+  @@index([organizationId, status])
+}
+
+enum RegistrationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+// ============================================================
+// Шаблон диспута
+// ============================================================
+
+model Template {
+  id             String       @id @default(cuid())
+  name           String // «Заявление на chargeback»
+  description    String?
+  fields         Json // Массив полей: [{name, type, label, required, options?}]
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  isActive       Boolean      @default(true)
+  disputes       Dispute[]
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@index([organizationId])
+}
+
+// ============================================================
+// Диспут
+// ============================================================
+
+model Dispute {
+  id         String        @id @default(cuid())
+  number     String        @unique // DSP-2026-000001 (sequence dispute_number_seq)
+  status     DisputeStatus @default(DRAFT)
+  templateId String
+  template   Template      @relation(fields: [templateId], references: [id])
+  formData   Json // Заполненные данные формы
+
+  // Ключевые поля, вынесенные из formData — нужны для фильтров дашборда и отчётов
+  channel        Channel // Visa / Mastercard / POS / ATM / Internal
+  amount         Decimal         @db.Decimal(18, 2) // Сумма спорной операции
+  currency       String          @default("KZT")
+  clientName     String // ФИО клиента
+  reasonCode     String? // Reason code МПС (для chargeback)
+  deadlineAt     DateTime? // Срок ответа (для «Осталось дней» и SLA)
+  outcome        DisputeOutcome? // Итог: выигран / проигран (для архива и отчётов)
+  refundedAmount Decimal?        @db.Decimal(18, 2) // Сколько возвращено клиенту
+  closedAt       DateTime? // Когда ушёл в COMPLETED / CANCELLED
+
+  branchId       String? // Отделение-инициатор (отчёт «По отделениям»)
+  branch         Branch?         @relation(fields: [branchId], references: [id])
+  organizationId String
+  organization   Organization    @relation(fields: [organizationId], references: [id])
+  creatorId      String
+  creator        User            @relation("creator", fields: [creatorId], references: [id])
+  assigneeId     String?
+  assignee       User?           @relation("assignee", fields: [assigneeId], references: [id])
+  comments       Comment[]
+  history        StatusHistory[]
+  attachments    Attachment[]
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  @@index([organizationId, status])
+  @@index([organizationId, createdAt])
+  @@index([branchId])
+  @@index([creatorId])
+  @@index([assigneeId])
+}
+
+enum Channel {
+  VISA
+  MASTERCARD
+  POS
+  ATM
+  INTERNAL
+}
+
+enum DisputeOutcome {
+  WON // решён в пользу клиента
+  LOST // отклонён
+}
+
+enum DisputeStatus {
+  DRAFT
+  SUBMITTED
+  IN_REVIEW
+  APPROVED
+  RETURNED
+  COMPLETED
+  CANCELLED
+}
+
+// ============================================================
+// История статусов
+// ============================================================
+
+model StatusHistory {
+  id         String         @id @default(cuid())
+  disputeId  String
+  dispute    Dispute        @relation(fields: [disputeId], references: [id])
+  fromStatus DisputeStatus?
+  toStatus   DisputeStatus
+  userId     String
+  user       User           @relation(fields: [userId], references: [id])
+  comment    String? // Причина возврата, комментарий при смене
+  createdAt  DateTime       @default(now())
+
+  @@index([disputeId, createdAt])
+}
+
+// ============================================================
+// Комментарии
+// ============================================================
+
+model Comment {
+  id        String   @id @default(cuid())
+  text      String
+  disputeId String
+  dispute   Dispute  @relation(fields: [disputeId], references: [id])
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@index([disputeId, createdAt])
+}
+
+// ============================================================
+// Вложения (сканы подписанных документов и т.д.)
+// ============================================================
+
+model Attachment {
+  id        String   @id @default(cuid())
+  filename  String // Оригинальное имя файла
+  path      String // Путь в хранилище
+  mimeType  String // application/pdf, image/jpeg и т.д.
+  size      Int // Размер в байтах
+  disputeId String
+  dispute   Dispute  @relation(fields: [disputeId], references: [id])
+  userId    String // Кто загрузил
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@index([disputeId])
+}
+
+// ============================================================
+// Аудит-лог (все действия пользователей)
+// ============================================================
+
+model AuditLog {
+  id             String        @id @default(cuid())
+  action         String // LOGIN, LOGOUT, DISPUTE_CREATED, PDF_DOWNLOADED, STATUS_CHANGED...
+  entity         String? // dispute, template, user...
+  entityId       String? // ID сущности
+  details        Json? // Дополнительные данные
+  userId         String
+  user           User          @relation(fields: [userId], references: [id])
+  organizationId String? // null — действие суперадмина на уровне платформы
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+  ipAddress      String?
+  createdAt      DateTime      @default(now())
+
+  @@index([organizationId, createdAt])
+  @@index([userId])
+}

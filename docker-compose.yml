@@ -1,0 +1,22 @@
+# Локальная разработка: только PostgreSQL. Приложение запускается через npm run dev.
+# Production-конфигурация (app + db) — этап деплоя, см. docs/ARCHITECTURE.md → «Деплой».
+services:
+  db:
+    image: postgres:16-alpine
+    ports:
+      - "127.0.0.1:5432:5432"
+    environment:
+      POSTGRES_DB: disputekz
+      POSTGRES_USER: ${DB_USER:-disputekz}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-disputekz}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-disputekz} -d disputekz"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+volumes:
+  pgdata:

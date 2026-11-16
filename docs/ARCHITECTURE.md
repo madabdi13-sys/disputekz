@@ -239,6 +239,8 @@ PDF:        @react-pdf/renderer
 
 ## Схема БД (Prisma)
 
+> Рабочая схема — `prisma/schema.prisma`. Здесь — описание; при расхождении верна схема в коде.
+
 ```prisma
 // ============================================================
 // Организация (банк) — корень мультитенантности
@@ -482,6 +484,7 @@ model Attachment {
   disputeId String
   dispute   Dispute  @relation(fields: [disputeId], references: [id])
   userId    String   // Кто загрузил
+  user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
 }
 
@@ -497,8 +500,8 @@ model AuditLog {
   details        Json?        // Дополнительные данные
   userId         String
   user           User         @relation(fields: [userId], references: [id])
-  organizationId String
-  organization   Organization @relation(fields: [organizationId], references: [id])
+  organizationId String?      // null — действие суперадмина на уровне платформы
+  organization   Organization? @relation(fields: [organizationId], references: [id])
   ipAddress      String?
   createdAt      DateTime     @default(now())
 
@@ -834,11 +837,12 @@ volumes:
 
 ## План реализации (поэтапно)
 
-### Этап 1 — Фундамент (1-2 дня)
-- [ ] Инициализация Next.js + TypeScript + Tailwind + shadcn/ui
-- [ ] Настройка Prisma + PostgreSQL + Docker Compose
-- [ ] Prisma-схема + миграции + seed (суперадмин)
-- [ ] Базовый layout: sidebar, header
+### Этап 1 — Фундамент (1-2 дня) ✅
+- [x] Инициализация Next.js + TypeScript + Tailwind + shadcn/ui
+- [x] Настройка Prisma + PostgreSQL + Docker Compose (БД для разработки)
+- [x] Prisma-схема + миграции + seed (суперадмин; демо-банк по флагу `SEED_DEMO=1`)
+- [x] Базовый layout: верхняя панель с навигацией (как в прототипе), заглушки разделов
+- [x] `GET /api/health` — проверка приложения и БД
 
 ### Этап 2 — Авторизация (2-3 дня)
 - [ ] NextAuth: email/пароль
