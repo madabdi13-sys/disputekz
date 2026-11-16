@@ -21,6 +21,8 @@ export type CurrentUser = {
   organizationName: string | null;
   branchId: string | null;
   branchName: string | null;
+  /** Пароль сброшен администратором — до смены пароля работать нельзя. */
+  mustChangePassword: boolean;
 };
 
 /** Текущий пользователь или null. Кэшируется на время одного запроса. */
@@ -39,6 +41,7 @@ export const getCurrentUser = cache(async (): Promise<CurrentUser | null> => {
           email: true,
           role: true,
           isActive: true,
+          mustChangePassword: true,
           organizationId: true,
           organization: { select: { name: true, isActive: true } },
           branchId: true,
@@ -64,12 +67,14 @@ export const getCurrentUser = cache(async (): Promise<CurrentUser | null> => {
     organizationName: user.organization?.name ?? null,
     branchId: user.branchId,
     branchName: user.branch?.name ?? null,
+    mustChangePassword: user.mustChangePassword,
   };
 });
 
 export async function requireUser(): Promise<CurrentUser> {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
+  if (user.mustChangePassword) redirect("/change-password");
   return user;
 }
 

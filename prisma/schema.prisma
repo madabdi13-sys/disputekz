@@ -53,6 +53,7 @@ model Branch {
   id             String       @id @default(cuid())
   name           String // «Отделение №5, ул. Абая»
   code           String? // Внутренний код филиала
+  isActive       Boolean      @default(true) // Закрытое отделение не предлагается при регистрации; история сохраняется
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id])
   users          User[]
@@ -68,28 +69,29 @@ model Branch {
 // ============================================================
 
 model User {
-  id             String          @id @default(cuid())
-  email          String          @unique
-  password       String // bcrypt hash
-  name           String // ФИО
-  phone          String?
-  role           Role
-  isActive       Boolean         @default(true)
-  organizationId String? // null для SUPER_ADMIN
-  organization   Organization?   @relation(fields: [organizationId], references: [id])
-  branchId       String? // null для ORG_ADMIN и HQ_MANAGER
-  branch         Branch?         @relation(fields: [branchId], references: [id])
-  orderNumber    String? // Номер приказа о приёме
-  disputes       Dispute[]       @relation("creator")
-  assignments    Dispute[]       @relation("assignee")
-  comments       Comment[]
-  statusChanges  StatusHistory[]
-  attachments    Attachment[]
-  auditLogs      AuditLog[]
-  sessions       Session[]
-  lastLoginAt    DateTime?
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
+  id                 String          @id @default(cuid())
+  email              String          @unique
+  password           String // bcrypt hash
+  name               String // ФИО
+  phone              String?
+  role               Role
+  isActive           Boolean         @default(true)
+  mustChangePassword Boolean         @default(false) // После сброса пароля администратором
+  organizationId     String? // null для SUPER_ADMIN
+  organization       Organization?   @relation(fields: [organizationId], references: [id])
+  branchId           String? // null для ORG_ADMIN и HQ_MANAGER
+  branch             Branch?         @relation(fields: [branchId], references: [id])
+  orderNumber        String? // Номер приказа о приёме
+  disputes           Dispute[]       @relation("creator")
+  assignments        Dispute[]       @relation("assignee")
+  comments           Comment[]
+  statusChanges      StatusHistory[]
+  attachments        Attachment[]
+  auditLogs          AuditLog[]
+  sessions           Session[]
+  lastLoginAt        DateTime?
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
 
   @@index([organizationId])
 }

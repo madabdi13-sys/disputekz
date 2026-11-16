@@ -48,12 +48,4 @@ export type FormState<F extends string> =
     }
   | undefined;
 
-/** Первая ошибка по каждому полю — для вывода под инпутом. */
-export function fieldErrors<F extends string>(error: z.ZodError): Partial<Record<F, string>> {
-  const out: Partial<Record<F, string>> = {};
-  for (const issue of error.issues) {
-    const key = issue.path[0] as F | undefined;
-    if (key && !out[key]) out[key] = issue.message;
-  }
-  return out;
-}
+export { zodFieldErrors as fieldErrors } from "@/lib/action-result";

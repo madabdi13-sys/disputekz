@@ -6,9 +6,17 @@ import type { Prisma } from "@/generated/prisma/client";
 export type AuditAction =
   | "LOGIN"
   | "LOGOUT"
-  | "REGISTRATION_REQUESTED"
   | "REGISTRATION_APPROVED"
   | "REGISTRATION_REJECTED"
+  | "USER_UPDATED"
+  | "USER_DEACTIVATED"
+  | "USER_ACTIVATED"
+  | "PASSWORD_RESET"
+  | "PASSWORD_CHANGED"
+  | "BRANCH_CREATED"
+  | "BRANCH_UPDATED"
+  | "BRANCH_CLOSED"
+  | "BRANCH_REOPENED"
   | "DISPUTE_CREATED"
   | "STATUS_CHANGED"
   | "PDF_DOWNLOADED";

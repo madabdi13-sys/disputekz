@@ -1,4 +1,5 @@
-import { LogOut } from "lucide-react";
+import Link from "next/link";
+import { KeyRound, LogOut } from "lucide-react";
 import { logout } from "@/app/actions/auth";
 import { ROLE_LABELS } from "@/lib/permissions";
 import type { CurrentUser } from "@/lib/dal";
@@ -28,6 +29,14 @@ export function UserMenu({ user }: { user: CurrentUser }) {
       >
         {initials(user.name)}
       </span>
+      <Link
+        href="/change-password"
+        aria-label="Сменить пароль"
+        title="Сменить пароль"
+        className="inline-flex h-8 w-8 items-center justify-center rounded-md text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-900"
+      >
+        <KeyRound size={14} strokeWidth={1.5} aria-hidden="true" />
+      </Link>
       <form action={logout}>
         <button
           type="submit"

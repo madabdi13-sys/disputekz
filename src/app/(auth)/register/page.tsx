@@ -21,7 +21,7 @@ export default async function RegisterPage() {
     select: {
       id: true,
       name: true,
-      branches: { orderBy: { name: "asc" }, select: { id: true, name: true } },
+      branches: { where: { isActive: true }, orderBy: { name: "asc" }, select: { id: true, name: true } },
     },
   });
 

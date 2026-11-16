@@ -62,6 +62,7 @@ export async function login(_prev: FormState<LoginField>, formData: FormData): P
       password: true,
       role: true,
       isActive: true,
+      mustChangePassword: true,
       organizationId: true,
       organization: { select: { isActive: true } },
     },
@@ -99,6 +100,7 @@ export async function login(_prev: FormState<LoginField>, formData: FormData): P
   await prisma.user.update({ where: { id: user.id }, data: { lastLoginAt: new Date() } });
   await logAudit({ action: "LOGIN", userId: user.id, organizationId: user.organizationId });
 
+  if (user.mustChangePassword) redirect("/change-password");
   redirect(safeNextPath(formData.get("next")) ?? homePathFor(user.role));
 }
 
@@ -161,7 +163,7 @@ export async function register(
 
   if (data.role === "BRANCH_MANAGER") {
     const branch = await prisma.branch.findFirst({
-      where: { id: data.branchId, organizationId: organization.id },
+      where: { id: data.branchId, organizationId: organization.id, isActive: true },
       select: { id: true },
     });
     if (!branch) return { errors: { branchId: "Отделение не найдено в этом банке" }, values };
