@@ -70,7 +70,7 @@ SaaS-платформа для управления диспутами в бан
 │                Backend                       │
 │          Next.js API Routes                 │
 │          Prisma ORM                         │
-│          NextAuth.js (auth)                 │
+│          Сессии в БД (auth, см. ниже)       │
 │          Zod (валидация)                    │
 └──────────────┬──────────────────────────────┘
                │
@@ -94,7 +94,7 @@ PDF:        @react-pdf/renderer
 | **Tailwind + shadcn/ui** | Строгий банковский UI из коробки, кастомизируется        |
 | **Prisma**            | Type-safe ORM, миграции, удобная работа с PostgreSQL       |
 | **PostgreSQL**        | Надёжная СУБД, JSON-поля для гибких форм шаблонов          |
-| **NextAuth**          | Простая авторизация с ролями, расширяется до SSO           |
+| **Сессии в БД** (вместо NextAuth) | Мгновенный выход при деактивации сотрудника; next-auth v5 всё ещё beta, а Credentials-провайдер не умеет отзывать JWT. SSO/LDAP добавляется поверх (OIDC) — сессии те же |
 | **Zod**               | Валидация форм, API-запросов и JSON-полей шаблонов         |
 | **@react-pdf/renderer** | Генерация PDF из React-компонентов                      |
 | **Docker**            | Унифицированный деплой на любой инфраструктуре             |
@@ -596,7 +596,9 @@ SELECT 'DSP-' || EXTRACT(YEAR FROM NOW()) || '-' ||
 
 ---
 
-## Middleware: Tenant Isolation
+## Tenant Isolation
+
+> Реализовано в `src/lib/tenant.ts`: `orgScope(user)` даёт фильтр `{ organizationId }` для каждого запроса, `assertSameOrg(user, record)` проверяет уже загруженный объект. Суперадмин через `orgScope` данных банков не получает. Пример ниже — исходная идея.
 
 Критически важный слой — автоматическая фильтрация по `organizationId`.
 
@@ -782,7 +784,8 @@ disputekz/
 | Мера                         | Реализация                               |
 |------------------------------|------------------------------------------|
 | Хеширование паролей          | bcrypt (12 rounds)                       |
-| Rate limiting на /login      | next-rate-limit или middleware            |
+| Rate limiting на /login      | `lib/rate-limit.ts` (в памяти; при нескольких инстансах — Redis/PG) |
+| Сессии                       | Только в БД, cookie httpOnly + SameSite=Lax + Secure (prod), без продления |
 | CSRF protection              | Встроено в Next.js Server Actions        |
 | HTTPS                        | Обязательно (nginx/traefik proxy)        |
 | Tenant isolation             | organizationId в каждом запросе          |
@@ -844,14 +847,16 @@ volumes:
 - [x] Базовый layout: верхняя панель с навигацией (как в прототипе), заглушки разделов
 - [x] `GET /api/health` — проверка приложения и БД
 
-### Этап 2 — Авторизация (2-3 дня)
-- [ ] NextAuth: email/пароль
-- [ ] Страница логина
-- [ ] Страница регистрации (заявка с выбором банка)
-- [ ] Страница «ожидание одобрения»
-- [ ] Middleware для защиты роутов
-- [ ] RBAC middleware (проверка ролей)
-- [ ] Tenant isolation middleware
+### Этап 2 — Авторизация (2-3 дня) ✅
+- [x] Вход по email/паролю: сессии в БД (`Session`), в cookie — случайный токен, в БД — его SHA-256, срок 12 ч
+- [x] Страница логина (ошибки, возврат на исходную страницу через `?next=`, защита от открытого редиректа)
+- [x] Страница регистрации (заявка с выбором банка и отделения из БД)
+- [x] Страница «ожидание одобрения»; вход с неодобренной заявкой ведёт туда же
+- [x] `src/proxy.ts` (бывший middleware в Next 16): без cookie — на /login
+- [x] RBAC: `lib/permissions.ts` (матрица прав) + `lib/dal.ts` (`requireUser`/`requireRole`/`requirePermission`)
+- [x] Tenant isolation: `lib/tenant.ts` (`orgScope`, `assertSameOrg`)
+- [x] Деактивация сотрудника или банка закрывает доступ сразу, без ожидания конца сессии
+- [x] Ограничение попыток входа (5 на email / 30 на IP за 15 мин), аудит LOGIN/LOGOUT
 
 ### Этап 3 — Админ банка (2-3 дня)
 - [ ] Панель одобрения заявок на регистрацию

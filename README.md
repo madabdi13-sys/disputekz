@@ -18,8 +18,15 @@ npm run db:seed             # суперадмин (+ демо-банк при S
 npm run dev                 # http://localhost:3000
 ```
 
-Демо-сотрудники (при `SEED_DEMO=1`): `admin@`, `hq@`, `branch5@`, `branch2@demo-bank.kz`, пароль `demo12345`.
-Вход заработает на этапе 2.
+Вход: суперадмин — данные из `SEED_SUPERADMIN_*` в `.env`.
+Демо-сотрудники (при `SEED_DEMO=1`), пароль `demo12345`:
+
+| Email | Роль |
+|---|---|
+| `admin@demo-bank.kz` | администратор банка |
+| `hq@demo-bank.kz` | менеджер головного офиса |
+| `branch5@demo-bank.kz` | менеджер отделения №5, Алматы |
+| `branch2@demo-bank.kz` | менеджер отделения №2, Астана |
 
 ## Команды
 

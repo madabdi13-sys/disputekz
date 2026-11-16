@@ -2,10 +2,13 @@ import type { Metadata } from "next";
 import { FileText } from "lucide-react";
 import { PageHeader } from "@/components/layout/page-header";
 import { EmptyState } from "@/components/ui/empty-state";
+import { requirePermission } from "@/lib/dal";
 
 export const metadata: Metadata = { title: "Новый диспут — DisputeKZ" };
 
-export default function NewDisputePage() {
+export default async function NewDisputePage() {
+  await requirePermission("disputes.create");
+
   return (
     <>
       <PageHeader title="Новый диспут" subtitle="Выберите шаблон и заполните форму" />

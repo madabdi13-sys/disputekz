@@ -2,10 +2,13 @@ import type { Metadata } from "next";
 import { BarChart3 } from "lucide-react";
 import { PageHeader } from "@/components/layout/page-header";
 import { EmptyState } from "@/components/ui/empty-state";
+import { requirePermission } from "@/lib/dal";
 
 export const metadata: Metadata = { title: "Отчёты — DisputeKZ" };
 
-export default function ReportsPage() {
+export default async function ReportsPage() {
+  await requirePermission("reports.view");
+
   return (
     <>
       <PageHeader title="Отчёты" subtitle="Сводная аналитика по диспутам за выбранный период" />

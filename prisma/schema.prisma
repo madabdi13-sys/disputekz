@@ -86,10 +86,31 @@ model User {
   statusChanges  StatusHistory[]
   attachments    Attachment[]
   auditLogs      AuditLog[]
+  sessions       Session[]
+  lastLoginAt    DateTime?
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
 
   @@index([organizationId])
+}
+
+// ============================================================
+// Сессия входа
+// ============================================================
+// В cookie лежит случайный токен, в БД — только его SHA-256 (id).
+// Утечка таблицы не даёт войти; удаление строки мгновенно разлогинивает.
+
+model Session {
+  id        String   @id // sha256(token), hex
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([expiresAt])
 }
 
 enum Role {

@@ -2,10 +2,13 @@ import type { Metadata } from "next";
 import { Archive } from "lucide-react";
 import { PageHeader } from "@/components/layout/page-header";
 import { EmptyState } from "@/components/ui/empty-state";
+import { requireRole } from "@/lib/dal";
 
 export const metadata: Metadata = { title: "Архив — DisputeKZ" };
 
-export default function ArchivePage() {
+export default async function ArchivePage() {
+  await requireRole("ORG_ADMIN", "HQ_MANAGER", "BRANCH_MANAGER");
+
   return (
     <>
       <PageHeader title="Архив" subtitle="Завершённые и отменённые диспуты" />
